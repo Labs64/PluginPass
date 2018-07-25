@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       PluginPass - PRO Plugin/Theme Licensing
  * Plugin URI:        https://github.com/Labs64/PluginPass
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       WordPress Plugin/Theme Licensing powered by Labs64 NetLicensing
  * Version:           1.0.0
  * Author:            Labs64
  * Author URI:        https://netlicensing.io
