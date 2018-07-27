@@ -1,24 +1,23 @@
-# PluginPass - WordPress PRO Plugin/Theme Licensing
+## WordPress WP_List_Table Demo
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-## How to enable WordPress Plugin or Theme licensing
+## Description
+A Basic WordPress Plugin to explore the WP_List_Table class for an accompanying article.
 
-With Labs64 NetLicensing, it’s incredibly easy to enable license management for any software product, whether you’re selling a WordPress plugin, theme, desktop app, or even SaaS and IoT products.
+## Installation Manually
+1. Download the latest archive and extract to a folder
+2. Upload the plugin to the `/wp-content/plugins/` directory
+3. Activate the plugin through the 'Plugins' menu in WordPress
 
-PluginPass is a WordPress license manager that makes it easy to monetize your WordPress plugins and themes.
+## i18n Tools
 
-It’s simply a plugin, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin's activation and validation.
+The Plugin uses a variable to store the text domain used when internationalizing strings throughout the code. To take advantage of this method, there are tools that are recommended for providing correct, translatable files:
 
-## Development
+* [Poedit](http://www.poedit.net/)
+* [makepot](http://i18n.svn.wordpress.org/tools/trunk/)
+* [i18n](https://github.com/grappler/i18n)
 
-start environment
-```
-$ docker-compose up -d
-```
+Any of the above tools should provide you with the proper tooling to internationalize the plugin.
 
-stop environment
-```
-$ docker-compose down
-```
-
-local url
-http://localhost:8000 (user/pass: pluginpass/pluginpass)
+However, if you still face problems translating the strings with an automated tool/process, replace `$this->plugin_text_domain` with the literal string of your plugin's text domain.

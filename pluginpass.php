@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -25,58 +24,98 @@
  * Domain Path:       /languages
  */
 
+namespace PluginPass;
+
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
 /**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
+ * Define Constants
  */
-define( 'PLUGIN_NAME_VERSION', '1.0.0' );
+
+define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
+
+define( NS . 'PLUGIN_NAME', 'pluginpass' );
+
+define( NS . 'PLUGIN_VERSION', '1.0.0' );
+
+define( NS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
+
+define( NS . 'PLUGIN_NAME_URL', plugin_dir_url( __FILE__ ) );
+
+define( NS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+
+define( NS . 'PLUGIN_TEXT_DOMAIN', 'pluginpass' );
+
 
 /**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-pluginpass-activator.php
+ * Autoload Classes
  */
-function activate_pluginpass() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pluginpass-activator.php';
-	Pluginpass_Activator::activate();
-}
+
+require_once( PLUGIN_NAME_DIR . 'inc/libraries/autoloader.php' );
+
+/**
+ * Register Activation and Deactivation Hooks
+ * This action is documented in inc/core/class-activator.php
+ */
+
+register_activation_hook( __FILE__, array( NS . 'Inc\Core\Activator', 'activate' ) );
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-pluginpass-deactivator.php
+ * This action is documented inc/core/class-deactivator.php
  */
-function deactivate_pluginpass() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pluginpass-deactivator.php';
-	Pluginpass_Deactivator::deactivate();
+
+register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deactivate' ) );
+
+
+/**
+ * Plugin Singleton Container
+ *
+ * Maintains a single copy of the plugin app object
+ *
+ * @since    1.0.0
+ */
+class PluginPass {
+
+	static $init;
+	/**
+	 * Loads the plugin
+	 *
+	 * @access    public
+	 */
+	public static function init() {
+
+		if ( null == self::$init ) {
+			self::$init = new Inc\Core\Init();
+			self::$init->run();
+		}
+
+		return self::$init;
+	}
+
 }
 
-register_activation_hook( __FILE__, 'activate_pluginpass' );
-register_deactivation_hook( __FILE__, 'deactivate_pluginpass' );
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/class-pluginpass.php';
-
-/**
- * Begins execution of the plugin.
+/*
+ * Begins execution of the plugin
  *
  * Since everything within the plugin is registered via hooks,
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    1.0.0
+ * Also returns copy of the app object so 3rd party developers
+ * can interact with the plugin's hooks contained within.
+ *
  */
-function run_pluginpass() {
-
-	$plugin = new Pluginpass();
-	$plugin->run();
-
+function pluginpass_init() {
+		return PluginPass::init();
 }
-run_pluginpass();
+
+$min_php = '5.6.0';
+
+// Check the minimum required PHP version and run the plugin.
+if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
+		pluginpass_init();
+}
