@@ -1,3 +1,15 @@
+# IDE files & folders
+.idea
+*.iml
+.DS_Store
+Thumbs.db
+.buildpath
+.project
+.settings*
+!.gitkeep
+data/
+
+# WordPress folders
 *.log
 wp-config.php
 wp-content/advanced-cache.php
@@ -17,4 +29,5 @@ wp-content/plugins/hello.php
 /sitemap.xml
 /sitemap.xml.gz
 
+# Docker folders
 data/
