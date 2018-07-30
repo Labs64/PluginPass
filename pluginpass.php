@@ -53,7 +53,9 @@ define( NS . 'PLUGIN_TEXT_DOMAIN', 'pluginpass' );
 /**
  * Autoload Classes
  */
-
+// external dependencies (composer)
+require_once( PLUGIN_NAME_DIR . 'vendor/autoload.php');
+// included dependencies
 require_once( PLUGIN_NAME_DIR . 'inc/libraries/autoloader.php' );
 
 /**

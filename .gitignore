@@ -31,3 +31,8 @@ wp-content/plugins/hello.php
 
 # Docker folders
 data/
+
+# Composer files
+*.phar
+composer.lock
+vendor/
