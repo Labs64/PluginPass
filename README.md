@@ -13,9 +13,13 @@
 
 ---
 
-PluginPass is the WordPress Plugin/Theme Licensing System powered by [Labs64 NetLicensing](https://netlicensing.io). PluginPass is the best way for WordPress developers to monetize their works.
+## How to enable WordPress Plugin or Theme licensing
 
-The Plugin is designed to be easy-to-use and to fit easily and neatly within the WordPress instance.
+With [Labs64 NetLicensing](https://netlicensing.io), it’s incredibly easy to enable license management for any software product, whether you’re selling a WordPress plugin, theme, desktop app, or even SaaS and IoT products.
+
+PluginPass is a WordPress license manager that makes it easy to monetize your WordPress plugins and themes.
+
+The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin's & theme's features activation and validation.
 
 ## Features
 
@@ -25,17 +29,33 @@ The Plugin is designed to be easy-to-use and to fit easily and neatly within the
 * Enable up-selling by offering additional plugin/theme features
 * Use plugin or theme on the given domain only
 * License as many plugins/themes as you want
-* Need more fatures? - [Let us know](https://github.com/Labs64/PluginPass/issues)
+* Need more features? - [Let us know](https://github.com/Labs64/PluginPass/issues)
 
-## Documentation
+## Quickstart
 
-### Quick start
+1. Clone repository
+```
+$ git clone https://github.com/Labs64/PluginPass.git
+```
 
-Choose one of the following options:
+2. Start environment
+```
+$ docker-compose up -d
+```
 
-1. Download the latest stable release from [WordPress plugin page](http://wordpress.org/plugins/PluginPass/) or a custom build from [PluginPass GitHub repository](https://github.com/Labs64/PluginPass).
-2. Clone the git repo — `git clone https://github.com/Labs64/PluginPass.git` or checkout the tagged release you'd like to use.
+3. Build project
+```
+$ docker exec pluginpass-wordpress ./build.sh
+```
 
+Now you can browse the site at [http://localhost:8000](http://localhost:8000) (user/pass: pluginpass/pluginpass)
+
+---
+
+5. Stop environment
+```
+$ docker-compose down
+```
 
 ## Contributing
 
