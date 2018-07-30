@@ -12,8 +12,8 @@ echo
 # Get some user input
 # Can't use the -i flag for read, since that doesn't work for bash 3
 
-default_pluginslug="DigiPass"
-default_pluginslug_lovercase="digipass"
+default_pluginslug="PluginPass"
+default_pluginslug_lovercase="pluginpass"
 
 echo "1a) WordPress Repo Plugin Slug."
 read -e -p "Plugin Slug ($default_pluginslug): " input
