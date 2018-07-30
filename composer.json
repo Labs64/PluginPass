@@ -1,0 +1,28 @@
+{
+    "name": "labs64/pluginpass",
+    "description": "PluginPass - WordPress PRO Plugin/Theme Licensing",
+    "type": "wordpress-plugin",
+    "keywords": [
+        "wordpress", "wordpress-plugin", "wordpress-theme", "wordpress-development", "licensing", "license-management", "license", "licensing-as-a-service", "NetLicensing"
+    ],
+    "homepage": "https://wordpress.org/plugins/pluginpass/",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Labs64 NetLicensing",
+            "email": "netlicensing@labs64.com",
+            "homepage": "https://netlicensing.io"
+        }
+    ],
+    "support": {
+        "email": "netlicensing@labs64.com",
+        "issues": "https://github.com/Labs64/PluginPass/issues",
+        "source": "https://github.com/Labs64/PluginPass",
+        "docs": "https://wordpress.org/plugins/pluginpass/faq/"
+    },
+    "require": {
+        "php": ">=5.6",
+        "Labs64/NetLicensingClient-php": "2.3.9"
+    },
+    "prefer-stable": true
+}
