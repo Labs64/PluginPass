@@ -4,7 +4,7 @@ namespace PluginPass\Inc\Admin;
 use PluginPass\Inc\Libraries;
 
 /**
- * Display PliginPass registered plugins
+ * Display PluginPass registered plugins
  *
  *
  * @link       http://nuancedesignstudio.in
