@@ -8,22 +8,18 @@
 [![WordPress Plugin version](http://img.shields.io/wordpress/plugin/v/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
 [![WordPress Plugin Downloads](http://img.shields.io/wordpress/plugin/dt/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
 [![WordPress Plugin Rating](http://img.shields.io/wordpress/plugin/r/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![License](http://img.shields.io/badge/license-GPLv2-red.svg?style=flat-square)](http://opensource.org/licenses/GPL-3.0)
-[![Stories in Ready](https://badge.waffle.io/labs64/PluginPass.svg?label=ready&title=Ready)](http://waffle.io/labs64/PluginPass)
+[![License](http://img.shields.io/badge/license-GPLv2-red.svg?style=flat-square)](http://opensource.org/licenses/GPL-2.0)
+
 
 ---
 
-PluginPass is the best way for publishers and bloggers to monetize their digital content.
+PluginPass is the WordPress Plugin/Theme Licensing powered by [Labs64 NetLicensing](https://netlicensing.io). This is the best way for developers to monetize their works.
 
-The Plugin is designed to be easy-to-use and to fit easily and neatly within the current design of your website with fully customisable colours, fonts and styles.
+The Plugin is designed to be easy-to-use and to fit easily and neatly within the WordPress instance.
 
 ## Features
 
-* Integration based on a simple shortcode <!-- PluginPass -->
-* Real-time sales statistics: no cronjob or batch needed
-* Paid articles: set a price on articles of your choosing; users will only see an excerpt and have the option to purchase the full article
-* No programming/scripting experience needed
-* PluginPass takes less than 10 minutes to set up
+* _TBD_
 
 ## Documentation
 
@@ -42,7 +38,7 @@ Anyone and everyone is welcome to contribute. Dozens of developers have helped m
 
 ## Related Links
 
-* WordPress plugin page: [http://wordpress.org/plugins/PluginPass/](http://wordpress.org/plugins/PluginPass/)
-* NetLicensing page: [http://netlicensing.io](http://netlicensing.io)
 * Source: [https://github.com/Labs64/PluginPass](https://github.com/Labs64/PluginPass)
-* Author: [Labs64](http://www.labs64.com)
+* WordPress plugin page: [https://wordpress.org/plugins/PluginPass/](https://wordpress.org/plugins/PluginPass/)
+* NetLicensing page: [https://netlicensing.io](https://netlicensing.io)
+* Author: [Labs64](https://www.labs64.com)
