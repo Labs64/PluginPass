@@ -13,13 +13,19 @@
 
 ---
 
-PluginPass is the WordPress Plugin/Theme Licensing powered by [Labs64 NetLicensing](https://netlicensing.io). This is the best way for developers to monetize their works.
+PluginPass is the WordPress Plugin/Theme Licensing System powered by [Labs64 NetLicensing](https://netlicensing.io). PluginPass is the best way for WordPress developers to monetize their works.
 
 The Plugin is designed to be easy-to-use and to fit easily and neatly within the WordPress instance.
 
 ## Features
 
-* _TBD_
+* Enable the subscription model for the plugin/theme
+* Sell PRO versions of your plugin/theme
+* Offer trial/evaluation version on the PRO features (with the fallback to the lite version)
+* Enable up-selling by offering additional plugin/theme features
+* Use plugin or theme on the given domain only
+* License as many plugins/themes as you want
+* Need more fatures? - [Let us know](https://github.com/Labs64/PluginPass/issues)
 
 ## Documentation
 
