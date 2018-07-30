@@ -45,7 +45,7 @@ $ docker-compose up -d
 
 3. Build project
 ```
-$ docker exec  --workdir=/var/www/html/wp-content/plugins/pluginpass pluginpass-wordpress ./prj-build.sh
+$ docker exec --workdir=/var/www/html/wp-content/plugins/pluginpass pluginpass-wordpress ./dockerfiles/bin/prj-build.sh
 ```
 
 Now you can browse the site at [http://localhost:8000](http://localhost:8000) (user/pass: pluginpass/pluginpass)
