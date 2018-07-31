@@ -21,7 +21,7 @@ PluginPass is a WordPress license manager that makes it easy to monetize your Wo
 
 The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin's & theme's features activation and validation.
 
-## Features
+### Features
 
 * Enable the subscription model for the plugin/theme
 * Sell PRO versions of your plugin/theme
@@ -30,6 +30,22 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 * Use plugin or theme on the given domain only
 * License as many plugins/themes as you want
 * Need more features? - [Let us know](https://github.com/Labs64/PluginPass/issues)
+
+### Payment Gateways
+
+Payment gateways supported in the core, free plugin:
+
+* PayPal Standard
+* Stripe
+
+Payment gateways supported in the premium version:
+
+* Braintree - *PLANNED*
+* Authorize.net - *PLANNED*
+* 2Checkout - *PLANNED*
+* SOFORT Banking - *PLANNED*
+* BitPay - *PLANNED*
+* Coinbase - *PLANNED*
 
 ## Quickstart
 
