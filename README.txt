@@ -75,6 +75,10 @@ _TODO_
 
 == Frequently Asked Questions ==
 
+= Are recurring payments supported? =
+
+Yes
+
 = How do I adjust the Plugin Settings? =
 
 Once you have activated the plugin you can tinker with the settings to your heart’s content. If you head to "Settings > PluginPass" and you can adjust all settings from there.
@@ -82,6 +86,10 @@ Once you have activated the plugin you can tinker with the settings to your hear
 = Will PluginPass work with my plugin or theme? =
 
 Yes. PluginPass is designed to work with any plugin and theme, but it may require some coding to achieve that seamless integration.
+
+= Where can I find complete documentation? =
+
+Full searchable docs can be found at [GitHub Wiki](https://github.com/Labs64/PluginPass/wiki)
 
 = Can I request new features and extensions to be included in future releases of the plugin? =
 
