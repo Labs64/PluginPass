@@ -52,7 +52,7 @@ Now you can browse the site at [http://localhost:8000](http://localhost:8000) (u
 
 ---
 
-5. Stop environment
+4. Stop environment
 ```
 $ docker-compose down
 ```
