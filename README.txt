@@ -1,10 +1,13 @@
-=== Plugin Name ===
+=== PluginPass - WordPress PRO Plugin/Theme Licensing ===
+Author URI: https://netlicensing.io
+Plugin URI: https://github.com/Labs64/PluginPass
 Contributors: labs64
 Donate link: https://netlicensing.io
 Tags: API, license, license key, activation, validation, digital-downloads, purchase-validator, monetization, licensing, license-management, LaaS, Licensing-as-a-Service, NetLicensing
 Requires at least: 4.9.7
 Tested up to: 4.9.7
-Stable tag: 4.9
+Requires PHP: 5.6
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +39,10 @@ e.g.
 1. Upload `pluginpass.php` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+
+== Upgrade Notice ==
+
+_TODO_
 
 == Frequently Asked Questions ==
 
