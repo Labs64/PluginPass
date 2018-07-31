@@ -34,11 +34,23 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 
 This section describes how to install the plugin and get it working.
 
-e.g.
+= Minimum Requirements =
 
-1. Upload `pluginpass.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+* WordPress 4.9.7 or greater
+* PHP version 5.6 or greater
+
+= via Upload (FTP, SCP etc.) =
+
+1. Upload the extracted archive folder 'pluginpass' to the `/wp-content/plugins/` directory
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. *(optional)* Go to "Settings > PluginPass" to adjust settings
+
+= via WordPress Admin =
+
+1. Go to "Plugins > Add New"
+2. Search for `PluginPass`
+3. Install the plugin called `PluginPass` and activate it
+4. *(optional)* Go to "Settings > PluginPass" to adjust settings
 
 == Upgrade Notice ==
 
@@ -46,21 +58,29 @@ _TODO_
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= How do I adjust the Plugin Settings? =
 
-An answer to that question.
+Once you have activated the plugin you can tinker with the settings to your heart’s content. If you head to "Settings > PluginPass" and you can adjust all settings from there.
 
-= What about foo bar? =
+= Will PluginPass work with my plugin or theme? =
 
-Answer to foo bar dilemma.
+Yes. PluginPass is designed to work with any plugin and theme, but it may require some coding to achieve that seamless integration.
+
+= Can I request new features and extensions to be included in future releases of the plugin? =
+
+We always welcome your feedback and would love to know what you would like to see done next with the plugin and what features you would like integrated. You can vote on and request new features and extensions in our PluginPass [Issue Tracker](https://github.com/Labs64/PluginPass/issues)
+
+= Where can I report bugs? =
+
+If you have discovered a bug, we want to know so that we can get it fixed as soon as possible! We always work to make sure that the plugin is working fully prior to releasing an update but sometimes problems do arise. All bugs and issues can be reported on the PluginPass [Issue Tracker](https://github.com/Labs64/PluginPass/issues).
+
+= I love PluginPass, it’s awesome! Can I contribute? =
+
+Yes you can! Join in on our [GitHub repository](https://github.com/Labs64/PluginPass) :) You can also leave us a nice review on the WordPress site to let others know what you think of the plugin!
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Adjust PluginPass Tracker Settings from within the WordPress CMS
 
 == Changelog ==
 
