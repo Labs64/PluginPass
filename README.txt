@@ -101,7 +101,7 @@ If you have discovered a bug, we want to know so that we can get it fixed as soo
 
 = I love PluginPass, it’s awesome! Can I contribute? =
 
-Yes you can! Join in on our [GitHub repository](https://github.com/Labs64/PluginPass) :) You can also leave us a nice review on the WordPress site to let others know what you think of the plugin!
+Yes, you can! Join in on our [GitHub repository](https://github.com/Labs64/PluginPass) :) You can also leave us a nice review on the WordPress site to let others know what you think of the plugin!
 
 == Screenshots ==
 
