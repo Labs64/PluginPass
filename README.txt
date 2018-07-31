@@ -80,9 +80,12 @@ Yes you can! Join in on our [GitHub repository](https://github.com/Labs64/Plugin
 
 == Screenshots ==
 
-1. Adjust PluginPass Tracker Settings from within the WordPress CMS
+1. Adjust PluginPass Settings
 
 == Changelog ==
 
 = 1.0.0 =
-* Initial version
+* New: PluginPass is born! This release is only available via download at https://github.com/Labs64/PluginPass
+* New: new feature added
+* Fix: bug fixed
+* Tweak: improved functionality
