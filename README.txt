@@ -15,11 +15,9 @@ PluginPass is a WordPress license manager that makes it easy to monetize your Wo
 
 == Description ==
 
-With [Labs64 NetLicensing](https://netlicensing.io "Software License Management"), it’s incredibly easy to enable license management for any software product, whether you’re selling a WordPress plugin, theme, desktop app, or even SaaS and IoT products.
+PluginPass is a WordPress License Manager that makes it easy to control the use and monetize your WordPress plugins and themes.
 
-PluginPass is a WordPress license manager that makes it easy to monetize your WordPress plugins and themes.
-
-The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin's & theme's features activation and validation.
+The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin’s & theme’s features activation and validation.
 
 = Features =
 
@@ -102,6 +100,20 @@ If you have discovered a bug, we want to know so that we can get it fixed as soo
 = I love PluginPass, it’s awesome! Can I contribute? =
 
 Yes, you can! Join in on our [GitHub repository](https://github.com/Labs64/PluginPass) :) You can also leave us a nice review on the WordPress site to let others know what you think of the plugin!
+
+== Privacy Policy ==
+
+This plugin integrating components of an external service - [Labs64 NetLicensing](https://netlicensing.io "Software License Management") (processor). Labs64 NetLicensing is an online license management service provider. License validation requests are processed using plugin or theme developer (controller) NetLicensing account.
+
+By using this plugin validation requests will be sent to the Labs64 NetLicensing in order to verify valid use of the plugin or theme. Personal data may be transferred with these requests such as Unique Identifiers, Plugin and Theme Details, WordPress Instance Name, Domain Name, System Details of the data subject.
+
+The European operating company of Labs64 NetLicensing is:
+Labs64 GmbH
+Radlkoferstr. 2
+81373 Munich, Germany
+Labs64 NetLicensing website: [https://netlicensing.io](https://netlicensing.io)
+
+The applicable data protection provisions of Labs64 NetLicensing may be retrieved under [https://www.labs64.com/legal/privacy-policy/](https://www.labs64.com/legal/privacy-policy/).
 
 == Screenshots ==
 
