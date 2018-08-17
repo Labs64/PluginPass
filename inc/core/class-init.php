@@ -9,10 +9,10 @@ use PluginPass\Inc\Frontend as Frontend;
  * The core plugin class.
  * Defines internationalization, admin-specific hooks, and public-facing site hooks.
  *
- * @link       https://www.nuancedesignstudio.in
+ * @link       https://www.labs64.com
  * @since      1.0.0
  *
- * @author     Karan NA Gupta
+ * @author     Labs64 <info@labs64.com>
  */
 class Init {
 
@@ -57,8 +57,8 @@ class Init {
 
 		$this->plugin_name = NS\PLUGIN_NAME;
 		$this->version = NS\PLUGIN_VERSION;
-				$this->plugin_basename = NS\PLUGIN_BASENAME;
-				$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
+		$this->plugin_basename = NS\PLUGIN_BASENAME;
+		$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -107,7 +107,7 @@ class Init {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Admin\Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
+		$plugin_admin = new Admin\Pluginpass_Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -119,7 +119,7 @@ class Init {
 		$this->loader->add_action( 'admin_post_pluginpass_form_response', $plugin_admin, 'the_form_response');
 
 		//when a form is submitted to admin-ajax.php
-		$this->loader->add_action( 'wp_ajax_pluginpass_form_response', $plugin_admin, 'the_form_response');				
+		$this->loader->add_action( 'wp_ajax_pluginpass_form_response', $plugin_admin, 'the_form_response');
 	}
 
 	/**
@@ -130,7 +130,7 @@ class Init {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Frontend\Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
+		$plugin_public = new Frontend\Pluginpass_Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );

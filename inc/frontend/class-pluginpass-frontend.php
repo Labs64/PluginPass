@@ -8,13 +8,13 @@ namespace PluginPass\Inc\Frontend;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @link       https://www.nuancedesignstudio.in
+ * @link       https://www.labs64.com
  * @since      1.0.0
  *
- * @author    Karan NA Gupta
+ * @author    Labs64 <info@labs64.com>
  */
 
-class Frontend {
+class Pluginpass_Frontend {
 
 	/**
 	 * The ID of this plugin.

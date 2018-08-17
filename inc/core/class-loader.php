@@ -5,10 +5,10 @@ namespace PluginPass\Inc\Core;
 /**
  * Register all actions and filters for the plugin
  *
- * @link       https://www.nuancedesignstudio.in
+ * @link       https://www.labs64.com
  * @since      1.0.0
  *
- * @author     Karan NA Gupta
+ * @author     Labs64 <info@labs64.com>
  */
 
 /**

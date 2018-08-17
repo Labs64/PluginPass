@@ -8,10 +8,10 @@ namespace PluginPass\Inc\Core;
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       https://www.nuancedesignstudio.in
+ * @link       https://www.labs64.com
  * @since      1.0.0
  *
- * @author     Karan NA Gupta
+ * @author     Labs64 <info@labs64.com>
  */
 class Internationalization_i18n {
 

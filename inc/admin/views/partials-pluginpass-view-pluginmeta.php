@@ -8,7 +8,7 @@
 		<h2> <?php echo __('Displaying Pluginmeta for ' . $user->display_name . ' (' . $user->user_login . ')', $this->plugin_text_domain ); ?> </h2>
 <?php
 
-		$pluginmeta = get_user_meta( $user_id );
+		$pluginmeta = get_user_meta( $plugin_id );
 		echo '<div class="card">';
 		foreach( $pluginmeta as $key => $value ) {
 			$v = (is_array($value)) ? implode(', ', $value) : $value;

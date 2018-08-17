@@ -7,10 +7,10 @@ namespace PluginPass\Inc\Core;
  *
  * This class defines all code necessary to run during the plugin's activation.
 
- * @link       https://www.nuancedesignstudio.in
+ * @link       https://www.labs64.com
  * @since      1.0.0
  *
- * @author     Karan NA Gupta
+ * @author     Labs64 <info@labs64.com>
  */
 
 class Activator {

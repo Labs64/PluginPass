@@ -7,10 +7,10 @@ use PluginPass\Inc\Libraries;
  * Display PluginPass registered plugins
  *
  *
- * @link       http://nuancedesignstudio.in
+ * @link       hhttps://www.labs64.com
  * @since      1.0.0
  *
- * @author     Karan NA Gupta
+ * @author     Labs64 <info@labs64.com>
  */
 class Pluginpass_Table extends Libraries\WP_List_Table  {
 
@@ -244,30 +244,30 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 		/*
 		 *  Build pluginmeta row actions.
 		 *
-		 * e.g. /options-general.php?page=pluginpass&action=view_pluginmeta&plugin=18&_wpnonce=1984253e5e
+		 * e.g. /options-general.php?page=pluginpass&action=validate&plugin_id=18&_wpnonce=1984253e5e
 		 */
 
 		$admin_page_url =  admin_url( 'options-general.php' );
 
 		// row actions to view pluginmeta.
-		$query_args_view_pluginmeta = array(
+		$query_args_validate_plugin = array(
 			'page'		=>  wp_unslash( $_REQUEST['page'] ),
-			'action'	=> 'view_pluginmeta',
-			'user_id'		=> absint( $item['ID']),
-			'_wpnonce'	=> wp_create_nonce( 'view_pluginmeta_nonce' ),
+			'action'	=> 'validate_plugin',
+			'plugin_id'		=> absint( $item['ID']),
+			'_wpnonce'	=> wp_create_nonce( 'validate_plugin_nonce' ),
 		);
-		$view_pluginmeta_link = esc_url( add_query_arg( $query_args_view_pluginmeta, $admin_page_url ) );
-		$actions['view_pluginmeta'] = '<a href="' . $view_pluginmeta_link . '">' . __( 'View Meta', $this->plugin_text_domain ) . '</a>';
+		$validate_plugin_link = esc_url( add_query_arg( $query_args_validate_plugin, $admin_page_url ) );
+		$actions['validate_plugin'] = '<a href="' . $validate_plugin_link . '">' . __( 'Validate', $this->plugin_text_domain ) . '</a>';
 
 		// row actions to add pluginmeta.
-		$query_args_add_pluginmeta = array(
+		$query_args_deregister_plugin = array(
 			'page'		=>  wp_unslash( $_REQUEST['page'] ),
-			'action'	=> 'add_pluginmeta',
-			'user_id'		=> absint( $item['ID']),
-			'_wpnonce'	=> wp_create_nonce( 'add_pluginmeta_nonce' ),
+			'action'	=> 'deregister_plugin',
+			'plugin_id'		=> absint( $item['ID']),
+			'_wpnonce'	=> wp_create_nonce( 'deregister_plugin_nonce' ),
 		);
-		$add_pluginmeta_link = esc_url( add_query_arg( $query_args_add_pluginmeta, $admin_page_url ) );
-		$actions['add_pluginmeta'] = '<a href="' . $add_pluginmeta_link . '">' . __( 'Add  Meta', $this->plugin_text_domain ) . '</a>';
+		$deregister_plugin_link = esc_url( add_query_arg( $query_args_deregister_plugin, $admin_page_url ) );
+		$actions['deregister_plugin'] = '<a href="' . $deregister_plugin_link . '">' . __( 'Deregister', $this->plugin_text_domain ) . '</a>';
 
 
 		$row_value = '<strong>' . $item['user_login'] . '</strong>';
@@ -298,7 +298,7 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	}
 
 	/**
-	 * Process actions triggered by the user
+	 * Process plugin actions
 	 *
 	 * @since    1.0.0
 	 *
@@ -315,26 +315,26 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 		// check for individual row actions
 		$the_table_action = $this->current_action();
 
-		if ( 'view_pluginmeta' === $the_table_action ) {
+		if ( 'validate_plugin' === $the_table_action ) {
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
 			// verify the nonce.
-			if ( ! wp_verify_nonce( $nonce, 'view_pluginmeta_nonce' ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'validate_plugin_nonce' ) ) {
 				$this->invalid_nonce_redirect();
 			}
 			else {
-				$this->page_view_pluginmeta( absint( $_REQUEST['user_id']) );
+				$this->validate_plugin( absint( $_REQUEST['plugin_id']) );
 				$this->graceful_exit();
 			}
 		}
 
-		if ( 'add_pluginmeta' === $the_table_action ) {
+		if ( 'deregister_plugin' === $the_table_action ) {
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
 			// verify the nonce.
-			if ( ! wp_verify_nonce( $nonce, 'add_pluginmeta_nonce' ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'deregister_plugin_nonce' ) ) {
 				$this->invalid_nonce_redirect();
 			}
 			else {
-				$this->page_add_pluginmeta( absint( $_REQUEST['user_id']) );
+				$this->deregister_plugin( absint( $_REQUEST['user_id']) );
 				$this->graceful_exit();
 			}
 		}
@@ -361,15 +361,15 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	}
 
 	/**
-	 * View a plugin's meta information.
+	 * Validate plugin.
 	 *
 	 * @since   1.0.0
 	 *
 	 * @param int $plugin_id  plugin's ID
 	 */
-	public function page_view_pluginmeta( $user_id ) {
+	public function validate_plugin( $plugin_id ) {
 
-		$user = get_user_by( 'id', $user_id );
+		$user = get_user_by( 'id', $plugin_id );
 		include_once( 'views/partials-pluginpass-view-pluginmeta.php' );
 	}
 
@@ -381,7 +381,7 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 * @param int $plugin_id  plugin's ID
 	 */
 
-	public function page_add_pluginmeta( $plugin_id ) {
+	public function deregister_plugin( $plugin_id ) {
 
 		$user = get_user_by( 'id', $plugin_id );
 		include_once( 'views/partials-pluginpass-add-pluginmeta.php' );

@@ -8,12 +8,12 @@ namespace PluginPass\Inc\Admin;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @link       https://www.nuancedesignstudio.in
+ * @link       https://www.labs64.com
  * @since      1.0.0
  *
- * @author    Karan NA Gupta
+ * @author    Labs64 <info@labs64.com>
  */
-class Admin {
+class Pluginpass_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -57,7 +57,7 @@ class Admin {
 	 * @since    1.0.0
 	 * @param    string $plugin_name	The name of this plugin.
 	 * @param    string $version	The version of this plugin.
-	 * @param	 string $plugin_text_domain	The text domain of this plugin
+	 * @param	   string $plugin_text_domain	The text domain of this plugin
 	 */
 	public function __construct( $plugin_name, $version, $plugin_text_domain ) {
 
