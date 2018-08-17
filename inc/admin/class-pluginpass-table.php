@@ -242,14 +242,14 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	protected function column_plugin_name( $item ) {
 
 		/*
-		 *  Build pluginmeta row actions.
+		 *  Build table row actions.
 		 *
 		 * e.g. /options-general.php?page=pluginpass&action=validate&plugin_id=18&_wpnonce=1984253e5e
 		 */
 
 		$admin_page_url =  admin_url( 'options-general.php' );
 
-		// row actions to view pluginmeta.
+		// row actions to validate plugin
 		$query_args_validate_plugin = array(
 			'page'		=>  wp_unslash( $_REQUEST['page'] ),
 			'action'	=> 'validate_plugin',
@@ -259,7 +259,17 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 		$validate_plugin_link = esc_url( add_query_arg( $query_args_validate_plugin, $admin_page_url ) );
 		$actions['validate_plugin'] = '<a href="' . $validate_plugin_link . '">' . __( 'Validate', $this->plugin_text_domain ) . '</a>';
 
-		// row actions to add pluginmeta.
+		// row actions to show validation details
+		$query_args_validation_details = array(
+			'page'		=>  wp_unslash( $_REQUEST['page'] ),
+			'action'	=> 'validation_details',
+			'plugin_id'		=> absint( $item['ID']),
+			'_wpnonce'	=> wp_create_nonce( 'validation_details_nonce' ),
+		);
+		$validation_details_link = esc_url( add_query_arg( $query_args_validation_details, $admin_page_url ) );
+		$actions['validation_details'] = '<a href="' . $validation_details_link . '">' . __( 'Details', $this->plugin_text_domain ) . '</a>';
+
+		// row actions to deregister plugin
 		$query_args_deregister_plugin = array(
 			'page'		=>  wp_unslash( $_REQUEST['page'] ),
 			'action'	=> 'deregister_plugin',
@@ -285,13 +295,14 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 
 		/*
 		 * on hitting apply in bulk actions the url paramas are set as
-		 * ?action=bulk-download&paged=1&action2=-1
+		 * ?action=bulk-validate/bulk-deregister&paged=1&action2=-1
 		 *
 		 * action and action2 are set based on the triggers above or below the table
 		 *
 		 */
 		 $actions = array(
-			 'bulk-download' => 'Download Pluginmeta'
+			 'bulk-validate' => 'Validate Plugins',
+			 'bulk-deregister' => 'Deregister Plugins'
 		 );
 
 		 return $actions;
@@ -327,6 +338,18 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 			}
 		}
 
+		if ( 'validation_details' === $the_table_action ) {
+			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
+			// verify the nonce.
+			if ( ! wp_verify_nonce( $nonce, 'validation_details_nonce' ) ) {
+				$this->invalid_nonce_redirect();
+			}
+			else {
+				$this->show_validation_details( absint( $_REQUEST['plugin_id']) );
+				$this->graceful_exit();
+			}
+		}
+
 		if ( 'deregister_plugin' === $the_table_action ) {
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
 			// verify the nonce.
@@ -340,7 +363,7 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 		}
 
 		// check for table bulk actions
-		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'bulk-download' ) || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] === 'bulk-download' ) ) {
+		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'bulk-validate' ) || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] === 'bulk-validate' ) ) {
 
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
 			// verify the nonce.
@@ -349,11 +372,29 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 			 * wp_nonce_field( 'bulk-' . $this->_args['plural'] );
 			 *
 			 */
-			if ( ! wp_verify_nonce( $nonce, 'bulk-users' ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'bulk-plugins' ) ) {
 				$this->invalid_nonce_redirect();
 			}
 			else {
-				$this->page_bulk_download( $_REQUEST['users']);
+				$this->bulk_validate( $_REQUEST['plugins']);
+				$this->graceful_exit();
+			}
+		}
+
+		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'bulk-deregister' ) || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] === 'bulk-deregister' ) ) {
+
+			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
+			// verify the nonce.
+			/*
+			 * Note: the nonce field is set by the parent class
+			 * wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+			 *
+			 */
+			if ( ! wp_verify_nonce( $nonce, 'bulk-plugins' ) ) {
+				$this->invalid_nonce_redirect();
+			}
+			else {
+				$this->bulk_deregister( $_REQUEST['plugins']);
 				$this->graceful_exit();
 			}
 		}
@@ -368,9 +409,20 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 * @param int $plugin_id  plugin's ID
 	 */
 	public function validate_plugin( $plugin_id ) {
-
 		$user = get_user_by( 'id', $plugin_id );
-		include_once( 'views/partials-pluginpass-view-pluginmeta.php' );
+		// TODO: validate plugin
+	}
+
+	/**
+	 * Show validation details.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param int $plugin_id  plugin's ID
+	 */
+	public function show_validation_details( $plugin_id ) {
+		$user = get_user_by( 'id', $plugin_id );
+		include_once( 'views/partials-pluginpass-validation-details.php' );
 	}
 
 	/**
@@ -380,23 +432,31 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 *
 	 * @param int $plugin_id  plugin's ID
 	 */
-
 	public function deregister_plugin( $plugin_id ) {
-
 		$user = get_user_by( 'id', $plugin_id );
-		include_once( 'views/partials-pluginpass-add-pluginmeta.php' );
+		// TODO: degeregister plugin
 	}
 
 	/**
-	 * Bulk process plugins.
+	 * Bulk validate plugins.
 	 *
 	 * @since   1.0.0
 	 *
-	 * @param array $bulk_user_ids
+	 * @param array $bulk_plugin_ids
 	 */
-	public function page_bulk_download( $bulk_user_ids ) {
+	public function bulk_validate( $plugin_ids ) {
+		// TODO: bulk plugin validate
+	}
 
-		include_once( 'views/partials-pluginpass-bulk-download.php' );
+	/**
+	 * Bulk deregister plugins.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param array $bulk_plugin_ids
+	 */
+	public function bulk_deregister( $plugin_ids ) {
+		// TODO: bulk deregister plugin
 	}
 
 	/**

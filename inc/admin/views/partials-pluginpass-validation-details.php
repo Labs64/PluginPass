@@ -1,16 +1,16 @@
 <?php
 
 /**
- * The plugin area to view the pluginmeta
+ * The plugin area to show plugin validation details
  */
 
 	if( current_user_can('edit_users' ) ) { ?>
-		<h2> <?php echo __('Displaying Pluginmeta for ' . $user->display_name . ' (' . $user->user_login . ')', $this->plugin_text_domain ); ?> </h2>
+		<h2> <?php echo __('Show plugin validation details for ' . $user->display_name . ' (' . $user->user_login . ')', $this->plugin_text_domain ); ?> </h2>
 <?php
 
-		$pluginmeta = get_user_meta( $plugin_id );
+		$validation_details = get_user_meta( $plugin_id );
 		echo '<div class="card">';
-		foreach( $pluginmeta as $key => $value ) {
+		foreach( $validation_details as $key => $value ) {
 			$v = (is_array($value)) ? implode(', ', $value) : $value;
 			echo '<p">'. $key . ': ' . $v . '</p>';
 		}
