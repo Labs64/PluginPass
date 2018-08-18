@@ -32,6 +32,24 @@ class Activator {
 			wp_die( 'This plugin requires a minmum PHP Version of ' . $min_php );
 		}
 
+    // create plugin database tables
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'pluginpass';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE $table_name (
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			plugin_slug varchar(255) NOT NULL,
+			plugin_name tinytext NOT NULL,
+			expires_at datetime,
+			last_validated datetime,
+			ttl datetime,
+			response_cache text NOT NULL,
+			PRIMARY KEY  (id)
+		) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 	}
 
 }
