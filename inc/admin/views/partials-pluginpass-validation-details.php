@@ -6,7 +6,7 @@
 ?>
 
 <div class="wrap">
-    <h2><?php echo $plugin->name; ?></h2>
+    <h2> <?php echo __('Show plugin validation details for "' . $plugin->name . '"', $this->plugin_text_domain ); ?> </h2>
 
     <div class="pluginpass-card">
         <ul class="list-group clear-list">
@@ -26,4 +26,8 @@
 			<?php endforeach; ?>
         </ul>
     </div>
+
+    <a href="<?php echo esc_url( add_query_arg( array( 'page' => wp_unslash( $_REQUEST['page'] ) ) , admin_url( 'options-general.php' ) ) ); ?>">
+        <?php _e( 'Back', $this->plugin_text_domain ) ?>
+    </a
 </div>

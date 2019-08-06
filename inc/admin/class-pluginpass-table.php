@@ -489,21 +489,9 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				throw new \Exception( __( 'Plugin not found' ) );
 			}
 
-			$result = self::validate( $plugin->api_key, $plugin->number );
-
-			/** @var  $ttl \DateTime */
-			$ttl        = $result->getTtl();
-			$expires_at = $ttl->format( DATE_ATOM );
-			$validation = json_encode( $result->getValidations() );
-
-			$this->update_plugin( [
-				'expires_at' => $expires_at,
-				'validation' => $validation
-			], [ 'ID' => $plugin_id ] );
-
 			$validation_details = [];
 
-			foreach ( $result->getValidations() as $data ) {
+			foreach ($plugin->validation as $data ) {
 				if ( $data['licensingModel'] === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
 					foreach ( $data as $features ) {
 						if ( is_array( $features ) ) {
