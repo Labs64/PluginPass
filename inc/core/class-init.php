@@ -1,6 +1,7 @@
 <?php
 
 namespace PluginPass\Inc\Core;
+
 use PluginPass as NS;
 use PluginPass\Inc\Admin as Admin;
 use PluginPass\Inc\Frontend as Frontend;
@@ -9,10 +10,10 @@ use PluginPass\Inc\Frontend as Frontend;
  * The core plugin class.
  * Defines internationalization, admin-specific hooks, and public-facing site hooks.
  *
- * @link       https://www.labs64.com
- * @since      1.0.0
+ * @link https://www.labs64.com
+ * @since 1.0.0
  *
- * @author     Labs64 <info@labs64.com>
+ * @author Labs64 <info@labs64.com>
  */
 class Init {
 
@@ -20,7 +21,7 @@ class Init {
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
-	 * @var      Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -29,7 +30,7 @@ class Init {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $plugin_base_name    The string used to uniquely identify this plugin.
+	 * @var string $plugin_base_name The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_basename;
 
@@ -38,7 +39,7 @@ class Init {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
+	 * @var string $version The current version of the plugin.
 	 */
 	protected $version;
 
@@ -47,7 +48,7 @@ class Init {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
+	 * @var string $version The current version of the plugin.
 	 */
 	protected $plugin_text_domain;
 
@@ -55,9 +56,9 @@ class Init {
 	// define the core functionality of the plugin.
 	public function __construct() {
 
-		$this->plugin_name = NS\PLUGIN_NAME;
-		$this->version = NS\PLUGIN_VERSION;
-		$this->plugin_basename = NS\PLUGIN_BASENAME;
+		$this->plugin_name        = NS\PLUGIN_NAME;
+		$this->version            = NS\PLUGIN_VERSION;
+		$this->plugin_basename    = NS\PLUGIN_BASENAME;
 		$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
 
 		$this->load_dependencies();
@@ -74,11 +75,10 @@ class Init {
 	 * - Admin - Defines all hooks for the admin area.
 	 * - Frontend - Defines all hooks for the public side of the site.
 	 *
-	 * @access    private
+	 * @access private
 	 */
 	private function load_dependencies() {
 		$this->loader = new Loader();
-
 	}
 
 	/**
@@ -87,14 +87,13 @@ class Init {
 	 * Uses the Internationalization_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
-	 * @access    private
+	 * @access private
 	 */
 	private function set_locale() {
 
 		$plugin_i18n = new Internationalization_i18n( $this->plugin_text_domain );
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -116,25 +115,23 @@ class Init {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 
 		//when a form is submitted to admin-post.php
-		$this->loader->add_action( 'admin_post_pluginpass_form_response', $plugin_admin, 'the_form_response');
+		$this->loader->add_action( 'admin_post_pluginpass_form_response', $plugin_admin, 'the_form_response' );
 
 		//when a form is submitted to admin-ajax.php
-		$this->loader->add_action( 'wp_ajax_pluginpass_form_response', $plugin_admin, 'the_form_response');
+		$this->loader->add_action( 'wp_ajax_pluginpass_form_response', $plugin_admin, 'the_form_response' );
 	}
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
-	 * @access    private
+	 * @access private
 	 */
 	private function define_public_hooks() {
-
 		$plugin_public = new Frontend\Pluginpass_Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
 	}
 
 	/**
@@ -155,7 +152,7 @@ class Init {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @return    Loader    Orchestrates the hooks of the plugin.
+	 * @return Loader Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;
@@ -164,8 +161,8 @@ class Init {
 	/**
 	 * Retrieve the version number of the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_version() {
 		return $this->version;
@@ -174,11 +171,10 @@ class Init {
 	/**
 	 * Retrieve the text domain of the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The text domain of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_plugin_text_domain() {
 		return $this->plugin_text_domain;
 	}
-
 }

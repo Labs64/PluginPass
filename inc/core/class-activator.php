@@ -2,18 +2,24 @@
 
 namespace PluginPass\Inc\Core;
 
+use PluginPass as NS;
+use PluginPass\PluginPass;
+
 /**
  * Fired during plugin activation
  *
  * This class defines all code necessary to run during the plugin's activation.
-
  * @link       https://www.labs64.com
  * @since      1.0.0
  *
  * @author     Labs64 <info@labs64.com>
  */
-
 class Activator {
+	public static function get_plugins_table_name() {
+		global $wpdb;
+
+		return $wpdb->prefix . 'pluginpass_plugins';
+	}
 
 	/**
 	 * Short Description.
@@ -23,33 +29,31 @@ class Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-
-		$min_php = '5.6.0';
-
 		// Check PHP Version and deactivate & die if it doesn't meet minimum requirements.
-		if ( version_compare( PHP_VERSION, $min_php, '<' ) ) {
-					deactivate_plugins( plugin_basename( __FILE__ ) );
-			wp_die( 'This plugin requires a minmum PHP Version of ' . $min_php );
+		if ( version_compare( PHP_VERSION, constant( __NAMESPACE__ . '//PLUGIN_MIN_PHP_VERSION' ), '<' ) ) {
+			deactivate_plugins( plugin_basename( __FILE__ ) );
+			wp_die( 'This plugin requires a minmum PHP Version of ' . constant( __NAMESPACE__ . '//PLUGIN_MIN_PHP_VERSION' ) );
 		}
 
-    // create plugin database tables
+		// create plugin database tables
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'pluginpass';
+
+		$plugins_table   = $wpdb->prefix . self::get_plugins_table_name();
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE $table_name (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			plugin_slug varchar(255) NOT NULL,
-			plugin_name tinytext NOT NULL,
-			expires_at datetime,
-			last_validated datetime,
-			ttl datetime,
-			response_cache text NOT NULL,
-			PRIMARY KEY  (id)
+		$sql = "CREATE TABLE $plugins_table (
+			ID bigint(20) NOT NULL AUTO_INCREMENT,
+			number varchar(255) NOT NULL,
+			name tinytext NOT NULL,
+			api_key varchar(255) NOT NULL,
+			validated_at timestamp,
+			expires_at timestamp ,
+			validation json NOT NULL,
+			PRIMARY KEY (ID),
+			UNIQUE KEY (number)
 		) $charset_collate;";
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 	}
-
 }

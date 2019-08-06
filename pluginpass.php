@@ -27,6 +27,9 @@
 namespace PluginPass;
 
 // If this file is called directly, abort.
+use PluginPass\Inc\Common\PluginPass_Guard;
+use PluginPass\Inc\Core\Init;
+
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
@@ -49,14 +52,16 @@ define( NS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 define( NS . 'PLUGIN_TEXT_DOMAIN', 'pluginpass' );
 
+define( NS . 'PLUGIN_MIN_PHP_VERSION', '5.6.0' );
+
 
 /**
  * Autoload Classes
  */
 // external dependencies (composer)
-require_once( PLUGIN_NAME_DIR . 'vendor/autoload.php');
+require_once( constant( NS . 'PLUGIN_NAME_DIR' ) . 'vendor/autoload.php' );
 // included dependencies
-require_once( PLUGIN_NAME_DIR . 'inc/libraries/autoloader.php' );
+require_once( constant( NS . 'PLUGIN_NAME_DIR' ) . 'inc/libraries/autoloader.php' );
 
 /**
  * Register Activation and Deactivation Hooks
@@ -72,7 +77,6 @@ register_activation_hook( __FILE__, array( NS . 'Inc\Core\Activator', 'activate'
 
 register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deactivate' ) );
 
-
 /**
  * Plugin Singleton Container
  *
@@ -81,8 +85,8 @@ register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deact
  * @since    1.0.0
  */
 class PluginPass {
-
 	static $init;
+
 	/**
 	 * Loads the plugin
 	 *
@@ -91,13 +95,12 @@ class PluginPass {
 	public static function init() {
 
 		if ( null == self::$init ) {
-			self::$init = new Inc\Core\Init();
+			self::$init = new Init();
 			self::$init->run();
 		}
 
 		return self::$init;
 	}
-
 }
 
 /*
@@ -112,12 +115,19 @@ class PluginPass {
  *
  */
 function pluginpass_init() {
-		return PluginPass::init();
+	return PluginPass::init();
 }
 
-$min_php = '5.6.0';
-
 // Check the minimum required PHP version and run the plugin.
-if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
-		pluginpass_init();
+if ( version_compare( PHP_VERSION, constant( NS . 'PLUGIN_MIN_PHP_VERSION' ), '>=' ) ) {
+	pluginpass_init();
+
+	try {
+		$guard = new PluginPass_Guard( '10f510dc-cec9-45fc-92bc-42dc8c1c074a', 'digipass', 'Digipass' );
+
+//		var_dump( $guard->allow( 'pro_version' ) );
+
+	} catch ( \Exception $exception ) {
+		print_r( $exception );
+	}
 }

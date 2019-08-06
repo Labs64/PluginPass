@@ -7,12 +7,11 @@ namespace PluginPass\Inc\Core;
  *
  * This class defines all code necessary to run during the plugin's deactivation.
  *
- * @link       https://www.labs64.com
- * @since      1.0.0
+ * @link https://www.labs64.com
+ * @since 1.0.0
  *
- * @author     Labs64 <info@labs64.com>
+ * @author Labs64 <info@labs64.com>
  */
-
 class Deactivator {
 
 	/**
@@ -25,5 +24,4 @@ class Deactivator {
 	public static function deactivate() {
 
 	}
-
 }

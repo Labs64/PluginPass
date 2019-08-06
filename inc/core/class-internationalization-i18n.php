@@ -8,10 +8,10 @@ namespace PluginPass\Inc\Core;
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       https://www.labs64.com
- * @since      1.0.0
+ * @link https://www.labs64.com
+ * @since 1.0.0
  *
- * @author     Labs64 <info@labs64.com>
+ * @author Labs64 <info@labs64.com>
  */
 class Internationalization_i18n {
 
@@ -20,14 +20,13 @@ class Internationalization_i18n {
 	/**
 	 * Initialize the class and set its properties.
 	 *
+	 * @param string $plugin_name The name of this plugin.
+	 * @param string $version The version of this plugin.
+	 *
 	 * @since    1.0.0
-	 * @param      string $plugin_name       The name of this plugin.
-	 * @param      string $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_text_domain ) {
-
 		$this->text_domain = $plugin_text_domain;
-
 	}
 
 
@@ -37,7 +36,6 @@ class Internationalization_i18n {
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
-
 		load_plugin_textdomain(
 			$this->text_domain,
 			false,

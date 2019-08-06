@@ -1,7 +1,13 @@
 <?php
 
 namespace PluginPass\Inc\Admin;
+
+use NetLicensing\Constants;
+use PluginPass\Inc\Common\Traits\PluginPass_Plugable;
+use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
+use PluginPass\Inc\Core\Activator;
 use PluginPass\Inc\Libraries;
+use SelvinOrtiz\Dot\Dot;
 
 /**
  * Display PluginPass registered plugins
@@ -12,18 +18,21 @@ use PluginPass\Inc\Libraries;
  *
  * @author     Labs64 <info@labs64.com>
  */
-class Pluginpass_Table extends Libraries\WP_List_Table  {
+class PluginPass_Table extends Libraries\WP_List_Table {
+	use PluginPass_Validatable;
+	use PluginPass_Plugable;
+
 
 	/**
 	 * The text domain of this plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @var      string    $plugin_text_domain    The text domain of this plugin.
+	 * @var      string $plugin_text_domain The text domain of this plugin.
 	 */
 	protected $plugin_text_domain;
 
-    /*
+	/*
 	 * Call the parent constructor to override the defaults $args
 	 *
 	 * @param string $plugin_text_domain	Text domain of the plugin.
@@ -35,10 +44,10 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 		$this->plugin_text_domain = $plugin_text_domain;
 
 		parent::__construct( array(
-				'plural'	=>	'plugins',	// Plural value used for labels and the objects being listed.
-				'singular'	=>	'plugin',		// Singular label for an object being listed, e.g. 'post'.
-				'ajax'		=>	false,		// If true, the parent class will call the _js_vars() method in the footer
-			) );
+			'plural'   => 'plugins',    // Plural value used for labels and the objects being listed.
+			'singular' => 'plugin',  // Singular label for an object being listed, e.g. 'post'.
+			'ajax'     => false,        // If true, the parent class will call the _js_vars() method in the footer
+		) );
 	}
 
 	/**
@@ -49,58 +58,58 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 * @since   1.0.0
 	 */
 	public function prepare_items() {
-
-		// check if a search was performed.
-		$user_search_key = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-
 		$this->_column_headers = $this->get_column_info();
-
 		// check and process any actions such as bulk actions.
 		$this->handle_table_actions();
 
-		// fetch table data
-		$table_data = $this->fetch_table_data();
-		// filter the data in case of a search.
-		if( $user_search_key ) {
-			$table_data = $this->filter_table_data( $table_data, $user_search_key );
+		// check if a search was performed.
+		$search_key = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : null;
+
+		if ( $search_key ) {
+			$search_key = "%$search_key%";
 		}
 
 		// required for pagination
-		$plugins_per_page = $this->get_items_per_page( 'plugins_per_page' );
-		$table_page = $this->get_pagenum();
+		$page     = $this->get_pagenum() - 1;
+		$per_page = $this->get_items_per_page( 'plugins_per_page' );
+		$order_by = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'name';
+		$order    = ( isset( $_GET['order'] ) ) ? esc_sql( $_GET['order'] ) : 'ASC';
+
+		// fetch table data
+		$data = $this->fetch_table_data( $page, $per_page, $order_by, $order, $search_key );
 
 		// provide the ordered data to the List Table.
 		// we need to manually slice the data based on the current pagination.
-		$this->items = array_slice( $table_data, ( ( $table_page - 1 ) * $plugins_per_page ), $plugins_per_page );
+		$this->items = $data['items'];
 
 		// set the pagination arguments
-		$total_users = count( $table_data );
-		$this->set_pagination_args( array (
-					'total_items' => $total_users,
-					'per_page'    => $plugins_per_page,
-					'total_pages' => ceil( $total_users/$plugins_per_page )
-				) );
+		$total_items = $data['total_items'];
+
+		$this->set_pagination_args( array(
+			'total_items' => $total_items,
+			'per_page'    => $per_page,
+			'total_pages' => ceil( $total_items / $per_page )
+		) );
 	}
 
 	/**
 	 * Get a list of columns. The format is:
 	 * 'internal-name' => 'Title'
 	 *
+	 * @return array
 	 * @since 1.0.0
 	 *
-	 * @return array
 	 */
 	public function get_columns() {
-
 		$table_columns = array(
-			'cb'				=> '<input type="checkbox" />', // to display the checkbox.
-			'plugin_name'		=>	__( 'Plugin Name', $this->plugin_text_domain ),
-			'user_registered'	=> _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
-			'ID'				=>	__( 'Last validated', $this->plugin_text_domain ),
+			'cb'           => '<input type="checkbox" />', // to display the checkbox.
+			'name'         => __( 'Plugin Name', $this->plugin_text_domain ),
+			'expires_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
+			'validated_at' => __( 'Last validated', $this->plugin_text_domain ),
+			'status'       => __( 'Status', $this->plugin_text_domain ),
 		);
 
 		return $table_columns;
-
 	}
 
 	/**
@@ -111,12 +120,11 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 *
 	 * The second format will make the initial sorting order be descending
 	 *
+	 * @return array
 	 * @since 1.1.0
 	 *
-	 * @return array
 	 */
 	protected function get_sortable_columns() {
-
 		/*
 		 * actual sorting still needs to be done by prepare_items.
 		 * specify which columns should have the sort icon.
@@ -124,11 +132,11 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 		 * key => value
 		 * column name_in_list_table => columnname in the db
 		 */
-		$sortable_columns = array (
-				'ID' => array( 'ID', true ),
-				'plugin_name'=>'plugin_name',
-				'user_registered'=>'user_registered'
-			);
+		$sortable_columns = array(
+			'name'         => 'name',
+			'expires_at'   => 'expires_at',
+			'validated_at' => 'last_validated',
+		);
 
 		return $sortable_columns;
 	}
@@ -136,9 +144,9 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	/**
 	 * Text displayed when no plugin data is available
 	 *
+	 * @return void
 	 * @since   1.0.0
 	 *
-	 * @return void
 	 */
 	public function no_items() {
 		_e( 'No plugins avaliable.', $this->plugin_text_domain );
@@ -152,47 +160,31 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 * @return	Array
 	 */
 
-	public function fetch_table_data() {
-
+	public function fetch_table_data( $page, $per_page, $order_by = 'name', $order = 'ASC', $search_key = null ) {
 		global $wpdb;
 
-		$wpdb_table = $wpdb->prefix . 'users';
-		$orderby = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'user_registered';
-		$order = ( isset( $_GET['order'] ) ) ? esc_sql( $_GET['order'] ) : 'ASC';
+		$plugins_table = Activator::get_plugins_table_name();
 
-    // TODO: get plugins list: https://codex.wordpress.org/Function_Reference/get_plugins
+		$query      = "SELECT * FROM $plugins_table";
+		$countQuery = "SELECT COUNT(ID) as total_items FROM $plugins_table";
 
-		$user_query = "SELECT
-							user_login, user_registered, ID
-						FROM $wpdb_table ORDER BY $orderby $order";
+		if ( $search_key ) {
+			$query      .= " WHERE name LIKE '$search_key'";
+			$countQuery .= " WHERE name LIKE '$search_key'";
+		}
+
+		$query .= " ORDER BY $order_by $order LIMIT $page, $per_page";
 
 		// query output_type will be an associative array with ARRAY_A.
-		$query_results = $wpdb->get_results( $user_query, ARRAY_A  );
+		$items       = $wpdb->get_results( $query, ARRAY_A );
+		$total_items = $wpdb->get_row( $countQuery )->total_items;
+
+		foreach ( $items as &$item ) {
+			$item['validation'] = json_decode( $item['validation'], true );
+		}
 
 		// return result array to prepare_items.
-		return $query_results;
-	}
-
-	/*
-	 * Filter the table data based on the plugin search key
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $table_data
-	 * @param string $search_key
-	 * @returns array
-	 */
-	public function filter_table_data( $table_data, $search_key ) {
-		$filtered_table_data = array_values( array_filter( $table_data, function( $row ) use( $search_key ) {
-			foreach( $row as $row_val ) {
-				if( stripos( $row_val, $search_key ) !== false ) {
-					return true;
-				}
-			}
-		} ) );
-
-		return $filtered_table_data;
-
+		return [ 'items' => $items, 'total_items' => $total_items ];
 	}
 
 	/**
@@ -204,14 +196,7 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 * @return mixed
 	 */
 	public function column_default( $item, $column_name ) {
-
-		switch ( $column_name ) {
-			case 'user_registered':
-			case 'ID':
-				return $item[$column_name];
-			default:
-			  return $item[$column_name];
-		}
+		return $item[ $column_name ];
 	}
 
 	/**
@@ -220,76 +205,134 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 * The special 'cb' column
 	 *
 	 * @param object $item A row's data
+	 *
 	 * @return string Text to be placed inside the column <td>.
 	 */
 	protected function column_cb( $item ) {
 		return sprintf(
-				'<label class="screen-reader-text" for="user_' . $item['ID'] . '">' . sprintf( __( 'Select %s' ), $item['user_login'] ) . '</label>'
-				. "<input type='checkbox' name='users[]' id='user_{$item['ID']}' value='{$item['ID']}' />"
-			);
+			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s' ), $item['name'] ) . '</label>'
+			. "<input type='checkbox' name='plugins[]' id='plugins_{$item['ID']}' value='{$item['ID']}' />"
+		);
 	}
 
 
 	/*
-	 * Method for rendering the plugin_name column.
+	 * Method for rendering the name column.
 	 *
-	 * Adds row action links to the plugin_name column.
+	 * Adds row action links to the name column.
 	 *
 	 * @param object $item A singular item (one full row's worth of data).
 	 * @return string Text to be placed inside the column <td>.
 	 *
 	 */
-	protected function column_plugin_name( $item ) {
-
+	/**
+	 * @param $item
+	 *
+	 * @return string
+	 */
+	protected function column_name( $item ) {
 		/*
 		 *  Build table row actions.
 		 *
 		 * e.g. /options-general.php?page=pluginpass&action=validate&plugin_id=18&_wpnonce=1984253e5e
 		 */
 
-		$admin_page_url =  admin_url( 'options-general.php' );
+		$admin_page_url = admin_url( 'options-general.php' );
 
 		// row actions to validate plugin
 		$query_args_validate_plugin = array(
-			'page'		=>  wp_unslash( $_REQUEST['page'] ),
-			'action'	=> 'validate_plugin',
-			'plugin_id'		=> absint( $item['ID']),
-			'_wpnonce'	=> wp_create_nonce( 'validate_plugin_nonce' ),
+			'page'      => wp_unslash( $_REQUEST['page'] ),
+			'action'    => 'validate_plugin',
+			'plugin_id' => absint( $item['ID'] ),
+			'_wpnonce'  => wp_create_nonce( 'validate_plugin_nonce' ),
 		);
-		$validate_plugin_link = esc_url( add_query_arg( $query_args_validate_plugin, $admin_page_url ) );
+
+		$validate_plugin_link       = esc_url( add_query_arg( $query_args_validate_plugin, $admin_page_url ) );
 		$actions['validate_plugin'] = '<a href="' . $validate_plugin_link . '">' . __( 'Validate', $this->plugin_text_domain ) . '</a>';
 
 		// row actions to show validation details
 		$query_args_validation_details = array(
-			'page'		=>  wp_unslash( $_REQUEST['page'] ),
-			'action'	=> 'validation_details',
-			'plugin_id'		=> absint( $item['ID']),
-			'_wpnonce'	=> wp_create_nonce( 'validation_details_nonce' ),
+			'page'      => wp_unslash( $_REQUEST['page'] ),
+			'action'    => 'validation_details',
+			'plugin_id' => absint( $item['ID'] ),
+			'_wpnonce'  => wp_create_nonce( 'validation_details_nonce' ),
 		);
-		$validation_details_link = esc_url( add_query_arg( $query_args_validation_details, $admin_page_url ) );
+		$validation_details_link       = esc_url( add_query_arg( $query_args_validation_details, $admin_page_url ) );
 		$actions['validation_details'] = '<a href="' . $validation_details_link . '">' . __( 'Details', $this->plugin_text_domain ) . '</a>';
 
 		// row actions to deregister plugin
-		$query_args_deregister_plugin = array(
-			'page'		=>  wp_unslash( $_REQUEST['page'] ),
-			'action'	=> 'deregister_plugin',
-			'plugin_id'		=> absint( $item['ID']),
-			'_wpnonce'	=> wp_create_nonce( 'deregister_plugin_nonce' ),
-		);
-		$deregister_plugin_link = esc_url( add_query_arg( $query_args_deregister_plugin, $admin_page_url ) );
-		$actions['deregister_plugin'] = '<a href="' . $deregister_plugin_link . '">' . __( 'Deregister', $this->plugin_text_domain ) . '</a>';
+//        $query_args_deregister_plugin = array(
+//            'page' => wp_unslash($_REQUEST['page']),
+//            'action' => 'deregister_plugin',
+//            'plugin_id' => absint($item['ID']),
+//            '_wpnonce' => wp_create_nonce('deregister_plugin_nonce'),
+//        );
+//        $deregister_plugin_link = esc_url(add_query_arg($query_args_deregister_plugin, $admin_page_url));
+//        $actions['deregister_plugin'] = '<a href="' . $deregister_plugin_link . '">' . __('Deregister', $this->plugin_text_domain) . '</a>';
 
 
-		$row_value = '<strong>' . $item['user_login'] . '</strong>';
+		$row_value = '<strong>' . $item['name'] . '</strong>';
+
 		return $row_value . $this->row_actions( $actions );
 	}
+
+	/*
+	 * Method for rendering the status column.
+	 *
+	 * @param object $item A singular item (one full row's worth of data).
+	 * @return string Text to be placed inside the column <td>.
+	 *
+	 */
+	/**
+	 * @param $item
+	 *
+	 * @return string
+	 */
+	protected function column_status( $item ) {
+		$valid   = 0;
+		$invalid = 0;
+
+		foreach ( $item['validation'] as $product_module => $results ) {
+			$licensing_model = $results['licensingModel'];
+
+			if ( $licensing_model === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
+				foreach ( $results as $key => $result ) {
+					if ( is_array( $result ) ) {
+						if ( Dot::get( $result, '0.valid' ) === 'true' ) {
+							$valid ++;
+						} else {
+							$invalid ++;
+						}
+					}
+				}
+			} else {
+				if ( $results['valid'] === 'true' ) {
+					$valid ++;
+				} else {
+					$invalid ++;
+				}
+			}
+		}
+
+
+		if ( $valid > 0 && $invalid === 0 ) {
+			return '<span class="label label-primary">' . __( 'valid' ) . '</span>';
+		}
+
+		if ( $invalid > 0 && $valid === 0 ) {
+			return '<span class="label label-danger">' . __( 'invalid' ) . '</span>';
+		}
+
+		return '<span class="label label-warning">' . $valid . '/' . $invalid . ' ' . __( 'valid' ) . '</span>';
+	}
+
 
 	/**
 	 * Returns an associative array containing the bulk action
 	 *
+	 * @return array
 	 * @since    1.0.0
 	 *
-	 * @return array
 	 */
 	public function get_bulk_actions() {
 
@@ -300,12 +343,12 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 		 * action and action2 are set based on the triggers above or below the table
 		 *
 		 */
-		 $actions = array(
-			 'bulk-validate' => 'Validate Plugins',
-			 'bulk-deregister' => 'Deregister Plugins'
-		 );
+		$actions = array(
+			'bulk-validate' => 'Validate Plugins',
+//            'bulk-deregister' => 'Deregister Plugins'
+		);
 
-		 return $actions;
+		return $actions;
 	}
 
 	/**
@@ -315,7 +358,6 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	 *
 	 */
 	public function handle_table_actions() {
-
 		/*
 		 * Note: Table bulk_actions can be identified by checking $_REQUEST['action'] and $_REQUEST['action2']
 		 *
@@ -331,10 +373,9 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 			// verify the nonce.
 			if ( ! wp_verify_nonce( $nonce, 'validate_plugin_nonce' ) ) {
 				$this->invalid_nonce_redirect();
-			}
-			else {
-				$this->validate_plugin( absint( $_REQUEST['plugin_id']) );
-				$this->graceful_exit();
+			} else {
+				$this->validate_plugin( absint( $_REQUEST['plugin_id'] ) );
+//				$this->graceful_exit();
 			}
 		}
 
@@ -343,10 +384,9 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 			// verify the nonce.
 			if ( ! wp_verify_nonce( $nonce, 'validation_details_nonce' ) ) {
 				$this->invalid_nonce_redirect();
-			}
-			else {
-				$this->show_validation_details( absint( $_REQUEST['plugin_id']) );
-				$this->graceful_exit();
+			} else {
+				$this->show_validation_details( absint( $_REQUEST['plugin_id'] ) );
+//				$this->graceful_exit();
 			}
 		}
 
@@ -355,9 +395,8 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 			// verify the nonce.
 			if ( ! wp_verify_nonce( $nonce, 'deregister_plugin_nonce' ) ) {
 				$this->invalid_nonce_redirect();
-			}
-			else {
-				$this->deregister_plugin( absint( $_REQUEST['user_id']) );
+			} else {
+				$this->deregister_plugin( absint( $_REQUEST['user_id'] ) );
 				$this->graceful_exit();
 			}
 		}
@@ -374,9 +413,8 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 			 */
 			if ( ! wp_verify_nonce( $nonce, 'bulk-plugins' ) ) {
 				$this->invalid_nonce_redirect();
-			}
-			else {
-				$this->bulk_validate( $_REQUEST['plugins']);
+			} else {
+				$this->bulk_validate( $_REQUEST['plugins'] );
 				$this->graceful_exit();
 			}
 		}
@@ -392,45 +430,108 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 			 */
 			if ( ! wp_verify_nonce( $nonce, 'bulk-plugins' ) ) {
 				$this->invalid_nonce_redirect();
-			}
-			else {
-				$this->bulk_deregister( $_REQUEST['plugins']);
+			} else {
+				$this->bulk_deregister( $_REQUEST['plugins'] );
 				$this->graceful_exit();
 			}
 		}
-
 	}
 
 	/**
 	 * Validate plugin.
 	 *
+	 * @param int $plugin_id plugin's ID
+	 *
 	 * @since   1.0.0
 	 *
-	 * @param int $plugin_id  plugin's ID
 	 */
 	public function validate_plugin( $plugin_id ) {
-		$user = get_user_by( 'id', $plugin_id );
-		// TODO: validate plugin
+		try {
+			// get plugin
+			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
+
+			if ( ! $plugin ) {
+				throw new \Exception( __( 'Plugin not found' ) );
+			}
+
+			$result = self::validate( $plugin->api_key, $plugin->number );
+
+			/** @var  $ttl \DateTime */
+			$ttl        = $result->getTtl();
+			$expires_at = $ttl->format( DATE_ATOM );
+			$validation = json_encode( $result->getValidations() );
+
+			$this->update_plugin( [
+				'expires_at' => $expires_at,
+				'validation' => $validation
+			], [ 'ID' => $plugin_id ] );
+
+			$this->show_notice( __( 'Plugins have been validated', $this->plugin_text_domain ), 'success', true );
+		} catch ( \Exception $exception ) {
+			$this->show_notice( $exception->getMessage(), 'error', true );
+		}
 	}
 
 	/**
 	 * Show validation details.
 	 *
+	 * @param int $plugin_id plugin's ID
+	 *
 	 * @since   1.0.0
 	 *
-	 * @param int $plugin_id  plugin's ID
 	 */
 	public function show_validation_details( $plugin_id ) {
-		$user = get_user_by( 'id', $plugin_id );
-		include_once( 'views/partials-pluginpass-validation-details.php' );
+		try {
+			// get plugin
+			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
+
+			if ( ! $plugin ) {
+				throw new \Exception( __( 'Plugin not found' ) );
+			}
+
+			$result = self::validate( $plugin->api_key, $plugin->number );
+
+			/** @var  $ttl \DateTime */
+			$ttl        = $result->getTtl();
+			$expires_at = $ttl->format( DATE_ATOM );
+			$validation = json_encode( $result->getValidations() );
+
+			$this->update_plugin( [
+				'expires_at' => $expires_at,
+				'validation' => $validation
+			], [ 'ID' => $plugin_id ] );
+
+			$validation_details = [];
+
+			foreach ( $result->getValidations() as $data ) {
+				if ( $data['licensingModel'] === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
+					foreach ( $data as $features ) {
+						if ( is_array( $features ) ) {
+							$feature                                       = reset( $features );
+							$validation_details[ $feature['featureName'] ] = $feature['valid'] === 'true';
+						}
+					}
+
+					continue;
+				}
+
+				$validation_details[ $data['productModuleName'] ] = $data['valid'] === 'true';
+			}
+
+			include_once( 'views/partials-pluginpass-validation-details.php' );
+			$this->graceful_exit();
+		} catch ( \Exception $exception ) {
+			$this->show_notice( $exception->getMessage(), 'error', true );
+		}
 	}
 
 	/**
 	 * Add a meta information for a plugin.
 	 *
+	 * @param int $plugin_id plugin's ID
+	 *
 	 * @since   1.0.0
 	 *
-	 * @param int $plugin_id  plugin's ID
 	 */
 	public function deregister_plugin( $plugin_id ) {
 		$user = get_user_by( 'id', $plugin_id );
@@ -440,9 +541,10 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	/**
 	 * Bulk validate plugins.
 	 *
+	 * @param array $bulk_plugin_ids
+	 *
 	 * @since   1.0.0
 	 *
-	 * @param array $bulk_plugin_ids
 	 */
 	public function bulk_validate( $plugin_ids ) {
 		// TODO: bulk plugin validate
@@ -451,9 +553,10 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	/**
 	 * Bulk deregister plugins.
 	 *
+	 * @param array $bulk_plugin_ids
+	 *
 	 * @since   1.0.0
 	 *
-	 * @param array $bulk_plugin_ids
 	 */
 	public function bulk_deregister( $plugin_ids ) {
 		// TODO: bulk deregister plugin
@@ -462,30 +565,37 @@ class Pluginpass_Table extends Libraries\WP_List_Table  {
 	/**
 	 * Stop execution and exit
 	 *
+	 * @return void
 	 * @since    1.0.0
 	 *
-	 * @return void
 	 */
-	 public function graceful_exit() {
-		 exit;
-	 }
+	public function graceful_exit() {
+		exit;
+	}
 
 	/**
 	 * Die when the nonce check fails.
 	 *
+	 * @return void
 	 * @since    1.0.0
 	 *
-	 * @return void
 	 */
-	 public function invalid_nonce_redirect() {
+	public function invalid_nonce_redirect() {
 		wp_die( __( 'Invalid Nonce', $this->plugin_text_domain ),
-				__( 'Error', $this->plugin_text_domain ),
-				array(
-						'response' 	=> 403,
-						'back_link' =>  esc_url( add_query_arg( array( 'page' => wp_unslash( $_REQUEST['page'] ) ) , admin_url( 'options-general.php' ) ) ),
-					)
+			__( 'Error', $this->plugin_text_domain ),
+			array(
+				'response'  => 403,
+				'back_link' => esc_url( add_query_arg( array( 'page' => wp_unslash( $_REQUEST['page'] ) ), admin_url( 'options-general.php' ) ) ),
+			)
 		);
-	 }
+	}
 
 
+	protected function show_notice( $message, $type = 'success', $dismiss = true ) {
+		$is_dismissible = $dismiss ? 'is-dismissible' : '';
+
+		echo "<div class=\"notice notice-$type $is_dismissible\">
+                <p>$message</p>
+             </div>";
+	}
 }

@@ -3,7 +3,24 @@
     "description": "PluginPass - WordPress PRO Plugin/Theme Licensing",
     "type": "wordpress-plugin",
     "keywords": [
-        "wordpress", "wordpress-plugin", "wordpress-theme", "wordpress-development", "licensing", "license-management", "license", "licensing-as-a-service", "netlicensing", "api", "license-key", "activation", "validation", "digital-downloads", "purchase-validator", "monetization", "laas", "monetize"
+        "wordpress",
+        "wordpress-plugin",
+        "wordpress-theme",
+        "wordpress-development",
+        "licensing",
+        "license-management",
+        "license",
+        "licensing-as-a-service",
+        "netlicensing",
+        "api",
+        "license-key",
+        "activation",
+        "validation",
+        "digital-downloads",
+        "purchase-validator",
+        "monetization",
+        "laas",
+        "monetize"
     ],
     "homepage": "https://wordpress.org/plugins/pluginpass/",
     "license": "GPL-2.0",
@@ -22,7 +39,8 @@
     },
     "require": {
         "php": ">=5.6",
-        "Labs64/NetLicensingClient-php": "2.3.9"
+        "Labs64/NetLicensingClient-php": "^2.4.0",
+        "selvinortiz/dot": "^1.1"
     },
     "prefer-stable": true
 }

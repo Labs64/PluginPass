@@ -3,3 +3,76 @@
  *
  * The file is enqueued from inc/admin/class-admin.php.
  */
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+.label-primary {
+    background-color: #337ab7;
+}
+
+.label-warning {
+    background-color: #f0ad4e;
+}
+
+.label-danger {
+    background-color: #d9534f;
+}
+
+.list-group {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.pluginpass-card {
+    background-color: #fff;
+    -o-border-image: none;
+    border-image: none;
+    border-color: #e7eaec;
+    border-style: solid solid none;
+    color: inherit;
+    padding: 15px 20px 20px;
+    border-width: 1px 0;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+.list-group-item {
+    background-color: inherit;
+    border: 1px solid #e7eaec;
+    display: block;
+    margin-bottom: -1px;
+    padding: 10px 15px;
+    position: relative;
+}
+
+.float-right {
+    float: right !important;
+}
+
+.pluginpass-card .dashicons-yes {
+    color: #337ab7;
+}
+
+.pluginpass-card .dashicons-no-alt {
+    color: #d9534f;
+}
