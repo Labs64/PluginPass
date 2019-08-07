@@ -3,6 +3,8 @@
 namespace PluginPass\Inc\Common;
 
 use NetLicensing\Constants;
+use NetLicensing\Token;
+use NetLicensing\TokenService;
 use PluginPass\Inc\Common\Traits\PluginPass_Plugable;
 use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
 use SelvinOrtiz\Dot\Dot;
@@ -59,6 +61,54 @@ class PluginPass_Guard {
 
 	public function denies( $ability ) {
 		return ! $this->allow( $ability );
+	}
+
+	public function buy( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
+
+		$shopUrl = $shopToken->getShopURL();
+
+		header( "Location:$shopUrl", true, 307 );
+	}
+
+	public function buy_link( $title, array $attrs = [], $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
+
+		$shopUrl = $shopToken->getShopURL();
+
+		$attrsMap = array_map( function ( $key, $value ) {
+			return "$key=\"$value\"";
+		}, array_keys( $attrs ), $attrs );
+
+		$attrsString = implode( " ", $attrsMap );
+
+		echo "<a href='$shopUrl' $attrsString>$title</a>";
+	}
+
+	protected function get_shop_token( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+		$shopToken = new Token();
+		$shopToken->setTokenType( 'SHOP' );
+		$shopToken->setLicenseeNumber( self::get_licensee_number() );
+
+		if ( $successUrl ) {
+			$shopToken->setSuccessURL( $successUrl );
+		}
+
+		if ( $successUrlTitle ) {
+			$shopToken->setSuccessURLTitle( $successUrlTitle );
+		}
+
+		if ( $cancelUrl ) {
+			$shopToken->setCancelURL( $cancelUrl );
+		}
+
+		if ( $cancelUrlTitle ) {
+			$shopToken->setCancelURLTitle( $cancelUrlTitle );
+		}
+
+		$shopToken = TokenService::create( self::get_context( $this->plugin->api_key ), $shopToken );
+
+		return $shopToken;
 	}
 
 	protected function is_plugin_not_exits_or_validation_expired() {

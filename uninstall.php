@@ -1,5 +1,7 @@
 <?php
 
+include_once __DIR__ . '/inc/core/class-activator.php';
+
 /**
  * Fired when the plugin is uninstalled.
  *
@@ -29,3 +31,10 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+global $wpdb;
+
+$plugin_table = \PluginPass\Inc\Core\Activator::get_plugins_table_name();
+
+$wpdb->query( "DROP TABLE $plugin_table; " );
+

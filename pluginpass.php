@@ -121,13 +121,4 @@ function pluginpass_init() {
 // Check the minimum required PHP version and run the plugin.
 if ( version_compare( PHP_VERSION, constant( NS . 'PLUGIN_MIN_PHP_VERSION' ), '>=' ) ) {
 	pluginpass_init();
-
-	try {
-		$guard = new PluginPass_Guard( '10f510dc-cec9-45fc-92bc-42dc8c1c074a', 'digipass', 'Digipass' );
-
-//		var_dump( $guard->allow( 'pro_version' ) );
-
-	} catch ( \Exception $exception ) {
-		print_r( $exception );
-	}
 }
