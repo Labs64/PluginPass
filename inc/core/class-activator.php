@@ -38,7 +38,7 @@ class Activator {
 		// create plugin database tables
 		global $wpdb;
 
-		$plugins_table   = $wpdb->prefix . self::get_plugins_table_name();
+		$plugins_table   = self::get_plugins_table_name();
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE $plugins_table (
