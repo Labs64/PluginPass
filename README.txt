@@ -5,7 +5,7 @@ Contributors: labs64
 Donate link: https://netlicensing.io
 Tags: API, license, license key, activation, validation, digital-downloads, purchase-validator, monetization, licensing, license-management, LaaS, Licensing-as-a-Service, NetLicensing
 Requires at least: 4.9.7
-Tested up to: 4.9.7
+Tested up to: 5.2.2
 Requires PHP: 5.6
 Stable tag: 1.0.0
 License: GPLv2 or later
