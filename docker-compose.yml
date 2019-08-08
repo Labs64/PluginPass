@@ -24,8 +24,10 @@ services:
        WORDPRESS_DB_HOST: db:3306
        WORDPRESS_DB_USER: pluginpass
        WORDPRESS_DB_PASSWORD: pluginpass
+       WORDPRESS_DEBUG: 1
      volumes:
        - ".:/var/www/html/wp-content/plugins/pluginpass"
+       - "./data/testplugin:/var/www/html/wp-content/plugins/testplugin"
    phpmyadmin:
      image: phpmyadmin/phpmyadmin
      links:
