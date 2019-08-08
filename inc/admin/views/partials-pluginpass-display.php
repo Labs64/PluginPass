@@ -6,7 +6,7 @@
 ?>
 
 <div class="wrap">
-    <h2><?php _e( 'PluginPass', $this->plugin_text_domain ); ?></h2>
+    <h2><?php _e( 'PluginPass Settings', $this->plugin_text_domain ); ?></h2>
 
     <div id="pluginpass">
         <div id="pluginpass-post-body">

@@ -120,7 +120,7 @@ class Pluginpass_Admin {
 	 */
 	public function load_pluginpass_table_screen_options() {
 		$arguments = array(
-			'label'   => __( 'Plugins Per Page', $this->plugin_text_domain ),
+			'label'   => __( 'Number of items per page:', $this->plugin_text_domain ),
 			'default' => 5,
 			'option'  => 'plugins_per_page'
 		);

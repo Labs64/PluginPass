@@ -40,7 +40,7 @@ class PluginPass_Guard {
 		}
 	}
 
-	public function allow( $ability ) {
+	public function validate( $ability ) {
 
 		if ( ! Dot::has( $this->plugin->validation, $ability ) ) {
 			return false;
@@ -59,11 +59,7 @@ class PluginPass_Guard {
 		return Dot::get( $this->plugin->validation, $ability ) === 'true';
 	}
 
-	public function denies( $ability ) {
-		return ! $this->allow( $ability );
-	}
-
-	public function buy( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+	public function open_shop( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
 
 		$shopUrl = $shopToken->getShopURL();
@@ -71,7 +67,7 @@ class PluginPass_Guard {
 		header( "Location:$shopUrl", true, 307 );
 	}
 
-	public function buy_link( $title, array $attrs = [], $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+	public function get_shop_url( $title, array $attrs = [], $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
 
 		$shopUrl = $shopToken->getShopURL();

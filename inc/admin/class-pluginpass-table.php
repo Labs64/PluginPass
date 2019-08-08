@@ -105,7 +105,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			'cb'           => '<input type="checkbox" />', // to display the checkbox.
 			'name'         => __( 'Plugin Name', $this->plugin_text_domain ),
 			'expires_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
-			'validated_at' => __( 'Last validated', $this->plugin_text_domain ),
+			'validated_at' => __( 'Last Validated', $this->plugin_text_domain ),
 			'status'       => __( 'Status', $this->plugin_text_domain ),
 		);
 
@@ -149,7 +149,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function no_items() {
-		_e( 'No plugins avaliable.', $this->plugin_text_domain );
+		_e( 'No plugins registered', $this->plugin_text_domain );
 	}
 
 	/*
