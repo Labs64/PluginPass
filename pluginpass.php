@@ -27,7 +27,6 @@
 namespace PluginPass;
 
 // If this file is called directly, abort.
-use PluginPass\Inc\Common\PluginPass_Guard;
 use PluginPass\Inc\Core\Init;
 
 if ( ! defined( 'WPINC' ) ) {
