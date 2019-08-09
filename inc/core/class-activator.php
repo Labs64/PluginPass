@@ -49,7 +49,7 @@ class Activator {
 			validated_at timestamp,
 			expires_at timestamp ,
 			validation json NOT NULL,
-			PRIMARY KEY (ID),
+			PRIMARY KEY (ID)
 		) $charset_collate;";
 
 
