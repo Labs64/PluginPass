@@ -5,9 +5,9 @@ namespace PluginPass\Inc\Common;
 use NetLicensing\Constants;
 use NetLicensing\Token;
 use NetLicensing\TokenService;
+use NetLicensing\ValidationResults;
 use PluginPass\Inc\Common\Traits\PluginPass_Plugable;
 use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
-use SelvinOrtiz\Dot\Dot;
 
 class PluginPass_Guard {
 	use PluginPass_Validatable;
@@ -23,11 +23,14 @@ class PluginPass_Guard {
 	 * @param    string               $api_key             NetLicensing APIKey.
 	 * @param    string               $plugin_number       NetLicensing product number.
 	 * @param    string               $plugin_name         The plugin name.
+	 *
+	 * @throws \Exception
 	 */
 	public function __construct( $api_key, $plugin_number, $plugin_name ) {
 		$this->plugin = $this->get_plugin( [ 'number' => $plugin_number ] );
 
 		if ( $this->is_plugin_not_exits_or_validation_expired() ) {
+			/** @var  $result ValidationResults*/
 			$result = self::validate( $api_key, $plugin_number );
 
 			/** @var  $ttl \DateTime */
@@ -59,12 +62,12 @@ class PluginPass_Guard {
 	 */
 	public function validate( $feature ) {
 
-		if ( ! Dot::has( $this->plugin->validation, $feature ) ) {
+		if ( ! PluginPass_Dot::has( $this->plugin->validation, $feature ) ) {
 			return false;
 		}
 
 		$product_module = reset( explode( '.', $feature ) );
-		$licensingModel = Dot::get( $this->plugin->validation, "$product_module.licensingModel" );
+		$licensingModel = PluginPass_Dot::get( $this->plugin->validation, "$product_module.licensingModel" );
 
 		if ( is_null( $licensingModel ) ) {
 			return false;
@@ -73,7 +76,7 @@ class PluginPass_Guard {
 		$feature .= ( $licensingModel === Constants::LICENSING_MODEL_MULTI_FEATURE )
 			? '.0.valid' : '.valid';
 
-		return Dot::get( $this->plugin->validation, $feature ) === 'true';
+		return PluginPass_Dot::get( $this->plugin->validation, $feature ) === 'true';
 	}
 
 	/**
@@ -81,6 +84,10 @@ class PluginPass_Guard {
 	 *
 	 * @since 1.0.0
 	 * @access   public
+	 * @param string $successUrl
+	 * @param string $successUrlTitle
+	 * @param string $cancelUrl
+	 * @param string $cancelUrlTitle
 	 */
 	public function open_shop( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
@@ -95,7 +102,6 @@ class PluginPass_Guard {
 	 *
 	 * @since 1.0.0
 	 * @access   public
-	 * @return   string                                Shop URL to acquire plugin licenses.
 	 */
 	public function get_shop_url( $title, array $attrs = [], $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );

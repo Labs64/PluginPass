@@ -7,7 +7,9 @@ use PluginPass\Inc\Common\Traits\PluginPass_Plugable;
 use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
 use PluginPass\Inc\Core\Activator;
 use PluginPass\Inc\Libraries;
-use SelvinOrtiz\Dot\Dot;
+use PluginPass\Inc\Common\PluginPass_Dot;
+use Exception;
+use DateTime;
 
 /**
  * Display PluginPass registered plugins
@@ -298,7 +300,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			if ( $licensing_model === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
 				foreach ( $results as $key => $result ) {
 					if ( is_array( $result ) ) {
-						if ( Dot::get( $result, '0.valid' ) === 'true' ) {
+						if ( PluginPass_Dot::get( $result, '0.valid' ) === 'true' ) {
 							$valid ++;
 						} else {
 							$invalid ++;
@@ -451,12 +453,12 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
 
 			if ( ! $plugin ) {
-				throw new \Exception( __( 'Plugin not found' ) );
+				throw new Exception( __( 'Plugin not found' ) );
 			}
 
 			$result = self::validate( $plugin->api_key, $plugin->number );
 
-			/** @var  $ttl \DateTime */
+			/** @var  $ttl DateTime */
 			$ttl        = $result->getTtl();
 			$expires_at = $ttl->format( DATE_ATOM );
 			$validation = json_encode( $result->getValidations() );
@@ -467,7 +469,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			], [ 'ID' => $plugin_id ] );
 
 			$this->show_notice( __( 'Plugins have been validated', $this->plugin_text_domain ), 'success', true );
-		} catch ( \Exception $exception ) {
+		} catch ( Exception $exception ) {
 			$this->show_notice( $exception->getMessage(), 'error', true );
 		}
 	}
@@ -486,7 +488,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
 
 			if ( ! $plugin ) {
-				throw new \Exception( __( 'Plugin not found' ) );
+				throw new Exception( __( 'Plugin not found' ) );
 			}
 
 			$validation_details = [];
@@ -508,7 +510,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 			include_once( 'views/partials-pluginpass-validation-details.php' );
 			$this->graceful_exit();
-		} catch ( \Exception $exception ) {
+		} catch ( Exception $exception ) {
 			$this->show_notice( $exception->getMessage(), 'error', true );
 		}
 	}
@@ -522,7 +524,6 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function deregister_plugin( $plugin_id ) {
-		$user = get_user_by( 'id', $plugin_id );
 		// TODO: degeregister plugin
 	}
 
