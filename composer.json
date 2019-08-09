@@ -39,8 +39,7 @@
     },
     "require": {
         "php": ">=5.6",
-        "Labs64/NetLicensingClient-php": "^2.4.0",
-        "selvinortiz/dot": "^1.1"
+        "Labs64/NetLicensingClient-php": "^2.4.0"
     },
     "prefer-stable": true
 }
