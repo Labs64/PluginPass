@@ -18,7 +18,7 @@ class PluginPass_Guard {
 	/**
 	 * Initialize and register plugin.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   public
 	 * @param    string               $api_key             NetLicensing APIKey.
 	 * @param    string               $plugin_number       NetLicensing product number.
@@ -52,7 +52,7 @@ class PluginPass_Guard {
 	/**
 	 * Validate plugin feature for the current wordpress instance.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   public
 	 * @param    string               $feature         The plugin feature to be checked.
 	 * @return   boolean                               The status, whether this feature is available.
@@ -79,7 +79,7 @@ class PluginPass_Guard {
 	/**
 	 * Redirect user to the Shop URL for license acquisition.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   public
 	 */
 	public function open_shop( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
@@ -93,7 +93,7 @@ class PluginPass_Guard {
 	/**
 	 * Generate shop URL for license acquisition.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   public
 	 * @return   string                                Shop URL to acquire plugin licenses.
 	 */

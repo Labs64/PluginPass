@@ -14,7 +14,7 @@ use SelvinOrtiz\Dot\Dot;
  *
  *
  * @link       hhttps://www.labs64.com
- * @since      1.0.0
+ * @since 1.0.0
  *
  * @author     Labs64 <info@labs64.com>
  */
@@ -26,7 +26,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	/**
 	 * The text domain of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   private
 	 * @var      string $plugin_text_domain The text domain of this plugin.
 	 */
@@ -55,7 +55,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 * Query, filter data, handle sorting, and pagination, and any other data-manipulation required prior to rendering
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 */
 	public function prepare_items() {
 		$this->_column_headers = $this->get_column_info();
@@ -145,7 +145,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 * Text displayed when no plugin data is available
 	 *
 	 * @return void
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function no_items() {
@@ -331,7 +331,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 * Returns an associative array containing the bulk action
 	 *
 	 * @return array
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function get_bulk_actions() {
@@ -354,7 +354,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	/**
 	 * Process plugin actions
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function handle_table_actions() {
@@ -442,7 +442,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 * @param int $plugin_id plugin's ID
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function validate_plugin( $plugin_id ) {
@@ -477,7 +477,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 * @param int $plugin_id plugin's ID
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function show_validation_details( $plugin_id ) {
@@ -518,7 +518,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 * @param int $plugin_id plugin's ID
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function deregister_plugin( $plugin_id ) {
@@ -531,7 +531,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 * @param array $bulk_plugin_ids
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function bulk_validate( $plugin_ids ) {
@@ -543,7 +543,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 * @param array $bulk_plugin_ids
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function bulk_deregister( $plugin_ids ) {
@@ -554,7 +554,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 * Stop execution and exit
 	 *
 	 * @return void
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function graceful_exit() {
@@ -565,7 +565,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 * Die when the nonce check fails.
 	 *
 	 * @return void
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	public function invalid_nonce_redirect() {

@@ -45,7 +45,7 @@ class Pluginpass_Admin {
 	/**
 	 * WP_List_Table object
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   private
 	 * @var      pluginpass_table $pluginpass_table
 	 */

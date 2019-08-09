@@ -7,10 +7,11 @@ Tags: API, license, license key, activation, validation, digital-downloads, purc
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 1.0.0
+Stable tag: 0.9.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
+*Public Alpha*
 PluginPass is a WordPress license manager that makes it easy to monetize your WordPress plugins and themes.
 
 == Description ==
@@ -121,8 +122,11 @@ The applicable data protection provisions of Labs64 NetLicensing may be retrieve
 
 == Changelog ==
 
-= 1.0.0 =
-* New: PluginPass is born! This release is only available via download at https://github.com/Labs64/PluginPass
+= 0.9.1 =
+* *TODO*
 * New: new feature added
 * Fix: bug fixed
 * Tweak: improved functionality
+
+= 0.9.0 =
+* New: PluginPass is born! This release is only available via download at https://github.com/Labs64/PluginPass

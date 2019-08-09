@@ -10,7 +10,7 @@ use PluginPass\PluginPass;
  *
  * This class defines all code necessary to run during the plugin's activation.
  * @link       https://www.labs64.com
- * @since      1.0.0
+ * @since 1.0.0
  *
  * @author     Labs64 <info@labs64.com>
  */
@@ -26,7 +26,7 @@ class Activator {
 	 *
 	 * Long Description.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 */
 	public static function activate() {
 		// Check PHP Version and deactivate & die if it doesn't meet minimum requirements.

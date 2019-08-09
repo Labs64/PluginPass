@@ -8,18 +8,18 @@
  * that starts the plugin.
  *
  * @link              https://netlicensing.io
- * @since             1.0.0
+ * @since 1.0.0
  * @package           Pluginpass
  *
  * @wordpress-plugin
  * Plugin Name:       PluginPass - PRO Plugin/Theme Licensing
  * Plugin URI:        https://github.com/Labs64/PluginPass
  * Description:       WordPress Plugin/Theme Licensing powered by Labs64 NetLicensing
- * Version:           1.0.0
+ * Version:           0.9.0
  * Author:            Labs64
  * Author URI:        https://netlicensing.io
  * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       pluginpass
  * Domain Path:       /languages
  */
@@ -39,7 +39,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
-define( NS . 'PLUGIN_VERSION', '1.0.0' );
+define( NS . 'PLUGIN_VERSION', '0.9.0' );
 
 define( NS . 'PLUGIN_NAME', 'pluginpass' );
 
@@ -81,7 +81,7 @@ register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deact
  *
  * Maintains a single copy of the plugin app object
  *
- * @since    1.0.0
+ * @since 1.0.0
  */
 class PluginPass {
 	static $init;

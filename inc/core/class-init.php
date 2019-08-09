@@ -28,7 +28,7 @@ class Init {
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   protected
 	 * @var string $plugin_base_name The string used to uniquely identify this plugin.
 	 */
@@ -37,7 +37,7 @@ class Init {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   protected
 	 * @var string $version The current version of the plugin.
 	 */
@@ -46,7 +46,7 @@ class Init {
 	/**
 	 * The text domain of the plugin.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   protected
 	 * @var string $version The current version of the plugin.
 	 */
@@ -162,7 +162,7 @@ class Init {
 	 * Retrieve the version number of the plugin.
 	 *
 	 * @return    string    The version number of the plugin.
-	 * @since     1.0.0
+	 * @since 1.0.0
 	 */
 	public function get_version() {
 		return $this->version;
@@ -172,7 +172,7 @@ class Init {
 	 * Retrieve the text domain of the plugin.
 	 *
 	 * @return    string    The text domain of the plugin.
-	 * @since     1.0.0
+	 * @since 1.0.0
 	 */
 	public function get_plugin_text_domain() {
 		return $this->plugin_text_domain;

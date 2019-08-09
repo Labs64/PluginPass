@@ -23,7 +23,7 @@ class Internationalization_i18n {
 	 * @param string $plugin_name The name of this plugin.
 	 * @param string $version The version of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 */
 	public function __construct( $plugin_text_domain ) {
 		$this->text_domain = $plugin_text_domain;
@@ -33,7 +33,7 @@ class Internationalization_i18n {
 	/**
 	 * Load the plugin text domain for translation.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 */
 	public function load_plugin_textdomain() {
 		load_plugin_textdomain(
