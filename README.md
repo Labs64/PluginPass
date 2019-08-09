@@ -4,10 +4,10 @@
 
 ---
 
-[![WordPress tested](https://img.shields.io/wordpress/v/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![WordPress Plugin version](https://img.shields.io/wordpress/plugin/v/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![WordPress tested](https://img.shields.io/wordpress/v/pluginpass-pro-plugintheme-licensing.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![WordPress Plugin version](https://img.shields.io/wordpress/plugin/v/pluginpass-pro-plugintheme-licensing.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/pluginpass-pro-plugintheme-licensing.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/pluginpass-pro-plugintheme-licensing.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
 [![License](https://img.shields.io/badge/license-GPLv2-red.svg?style=flat-square)](https://opensource.org/licenses/GPL-2.0)
 
 
