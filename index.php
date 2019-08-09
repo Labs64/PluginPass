@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . '/pluginpass.php');
+
 // Traits
 require_once(__DIR__ . '/inc/common/traits/class-pluginpass-plugable.php');
 require_once(__DIR__ . '/inc/common/traits/class-pluginpass-validatable.php');
