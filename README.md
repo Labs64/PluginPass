@@ -58,19 +58,19 @@ if($quard->validate()){
 }
 ```
 
-Detailed integration instructions, product configuration at [ NetLicensing](https://netlicensing.io) tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
+Detailed integration instructions, [ NetLicensing](https://netlicensing.io) product configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
 
 
 ## Contributing
 
 Anyone and everyone is welcome to contribute. Dozens of developers have helped make the PluginPass what it is today.
 
-Check out our Developers Guide [here](https://github.com/Labs64/PluginPass/wiki/Developers-Guide).
+Check out also our [Developers Guide here](https://github.com/Labs64/PluginPass/wiki/Developers-Guide).
 
 
 ## Related Links
 
-* Source: [https://github.com/Labs64/PluginPass](https://github.com/Labs64/PluginPass)
-* WordPress plugin page: [https://wordpress.org/plugins/PluginPass/](https://wordpress.org/plugins/PluginPass/)
+* WordPress plugin page: [https://wordpress.org/plugins/PluginPass/](https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/)
 * NetLicensing page: [https://netlicensing.io](https://netlicensing.io)
 * Author: [Labs64](https://www.labs64.com)
+* Source: [https://github.com/Labs64/PluginPass](https://github.com/Labs64/PluginPass)
