@@ -7,7 +7,7 @@ Tags: API, license, license key, activation, validation, digital-downloads, purc
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 0.9.1
+Stable tag: 0.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,11 +123,13 @@ The applicable data protection provisions of Labs64 NetLicensing may be retrieve
 
 == Changelog ==
 
-= 0.9.1 =
+= 0.9.2 =
 * *TODO*
-* New: new feature added
-* Fix: bug fixed
-* Tweak: improved functionality
+
+= 0.9.1 =
+* Fix: plugin publish script #6
+* Fix: Plugin activation error #1
+* Update: Deleted dependency "selvinortiz/dot" #5
 
 = 0.9.0 =
 * New: PluginPass is born! This release is only available via download at https://github.com/Labs64/PluginPass
