@@ -29,11 +29,11 @@ class Activator {
 	 * @since 1.0.0
 	 */
 	public static function activate() {
-//		// Check PHP Version and deactivate & die if it doesn't meet minimum requirements.
-//		if ( version_compare( PHP_VERSION, constant( __NAMESPACE__ . '//PLUGIN_MIN_PHP_VERSION' ), '<' ) ) {
-//			deactivate_plugins( plugin_basename( __FILE__ ) );
-//			wp_die( 'This plugin requires a minmum PHP Version of ' . constant( __NAMESPACE__ . '//PLUGIN_MIN_PHP_VERSION' ) );
-//		}
+	// Check PHP Version and deactivate & die if it doesn't meet minimum requirements.
+		if ( version_compare( PHP_VERSION, constant( __NAMESPACE__ . '//PLUGIN_MIN_PHP_VERSION' ), '<' ) ) {
+			deactivate_plugins( plugin_basename( __FILE__ ) );
+			wp_die( 'This plugin requires a minmum PHP Version of ' . constant( __NAMESPACE__ . '//PLUGIN_MIN_PHP_VERSION' ) );
+		}
 
 		// create plugin database tables
 		global $wpdb;
