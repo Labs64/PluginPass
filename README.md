@@ -1,14 +1,14 @@
-# PluginPass - WordPress PRO Plugin/Theme Licensing
+# PluginPass - WordPress PRO Plugin/Theme Licensing (Public Alpha)
 
 <p align="center"><img src="https://raw.githubusercontent.com/Labs64/PluginPass/master/assets/banner-772x250.png" alt="PluginPass - WordPress PRO Plugin/Theme Licensing"></p>
 
 ---
 
-[![WordPress tested](http://img.shields.io/wordpress/v/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![WordPress Plugin version](http://img.shields.io/wordpress/plugin/v/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![WordPress Plugin Downloads](http://img.shields.io/wordpress/plugin/dt/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![WordPress Plugin Rating](http://img.shields.io/wordpress/plugin/r/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
-[![License](http://img.shields.io/badge/license-GPLv2-red.svg?style=flat-square)](http://opensource.org/licenses/GPL-2.0)
+[![WordPress tested](https://img.shields.io/wordpress/v/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![WordPress Plugin version](https://img.shields.io/wordpress/plugin/v/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/PluginPass.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
+[![License](https://img.shields.io/badge/license-GPLv2-red.svg?style=flat-square)](https://opensource.org/licenses/GPL-2.0)
 
 
 ---
@@ -49,38 +49,28 @@ Payment gateways supported in the premium version:
 
 ## Quickstart
 
-1. Clone repository
+Add this code-snippet to your plugin:
 ```
-$ git clone https://github.com/Labs64/PluginPass.git
-```
-
-2. Start environment
-```
-$ docker-compose up -d
-```
-
-3. Build project
-```
-$ docker exec --workdir=/var/www/html/wp-content/plugins/pluginpass pluginpass-wordpress ./dockerfiles/bin/prj-build.sh
+$quard = new PluginPass_Guard( $api_key, $plugin_number, $plugin_name );
+if($quard->validate()){
+    // do something
+    $quard->open_store();
+}
 ```
 
-Now you can browse the site at [http://localhost:8000](http://localhost:8000) (user/pass: pluginpass/pluginpass)
+Detailed integration instructions, [ NetLicensing](https://netlicensing.io) product configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
 
----
-
-4. Stop environment
-```
-$ docker-compose down
-```
 
 ## Contributing
 
 Anyone and everyone is welcome to contribute. Dozens of developers have helped make the PluginPass what it is today.
 
+Check out also our [Developers Guide here](https://github.com/Labs64/PluginPass/wiki/Developers-Guide).
+
 
 ## Related Links
 
-* Source: [https://github.com/Labs64/PluginPass](https://github.com/Labs64/PluginPass)
-* WordPress plugin page: [https://wordpress.org/plugins/PluginPass/](https://wordpress.org/plugins/PluginPass/)
+* WordPress plugin page: [https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/](https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/)
 * NetLicensing page: [https://netlicensing.io](https://netlicensing.io)
 * Author: [Labs64](https://www.labs64.com)
+* Source: [https://github.com/Labs64/PluginPass](https://github.com/Labs64/PluginPass)

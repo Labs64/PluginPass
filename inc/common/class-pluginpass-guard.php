@@ -15,6 +15,15 @@ class PluginPass_Guard {
 
 	protected $plugin;
 
+	/**
+	 * Initialize and register plugin.
+	 *
+	 * @since 1.0.0
+	 * @access   public
+	 * @param    string               $api_key             NetLicensing APIKey.
+	 * @param    string               $plugin_number       NetLicensing product number.
+	 * @param    string               $plugin_name         The plugin name.
+	 */
 	public function __construct( $api_key, $plugin_number, $plugin_name ) {
 		$this->plugin = $this->get_plugin( [ 'number' => $plugin_number ] );
 
@@ -40,30 +49,40 @@ class PluginPass_Guard {
 		}
 	}
 
-	public function allow( $ability ) {
+	/**
+	 * Validate plugin feature for the current wordpress instance.
+	 *
+	 * @since 1.0.0
+	 * @access   public
+	 * @param    string               $feature         The plugin feature to be checked.
+	 * @return   boolean                               The status, whether this feature is available.
+	 */
+	public function validate( $feature ) {
 
-		if ( ! Dot::has( $this->plugin->validation, $ability ) ) {
+		if ( ! Dot::has( $this->plugin->validation, $feature ) ) {
 			return false;
 		}
 
-		$product_module = reset( explode( '.', $ability ) );
+		$product_module = reset( explode( '.', $feature ) );
 		$licensingModel = Dot::get( $this->plugin->validation, "$product_module.licensingModel" );
 
 		if ( is_null( $licensingModel ) ) {
 			return false;
 		}
 
-		$ability .= ( $licensingModel === Constants::LICENSING_MODEL_MULTI_FEATURE )
+		$feature .= ( $licensingModel === Constants::LICENSING_MODEL_MULTI_FEATURE )
 			? '.0.valid' : '.valid';
 
-		return Dot::get( $this->plugin->validation, $ability ) === 'true';
+		return Dot::get( $this->plugin->validation, $feature ) === 'true';
 	}
 
-	public function denies( $ability ) {
-		return ! $this->allow( $ability );
-	}
-
-	public function buy( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+	/**
+	 * Redirect user to the Shop URL for license acquisition.
+	 *
+	 * @since 1.0.0
+	 * @access   public
+	 */
+	public function open_shop( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
 
 		$shopUrl = $shopToken->getShopURL();
@@ -71,7 +90,14 @@ class PluginPass_Guard {
 		header( "Location:$shopUrl", true, 307 );
 	}
 
-	public function buy_link( $title, array $attrs = [], $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+	/**
+	 * Generate shop URL for license acquisition.
+	 *
+	 * @since 1.0.0
+	 * @access   public
+	 * @return   string                                Shop URL to acquire plugin licenses.
+	 */
+	public function get_shop_url( $title, array $attrs = [], $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
 
 		$shopUrl = $shopToken->getShopURL();

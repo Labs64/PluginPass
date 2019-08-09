@@ -45,7 +45,7 @@ class Pluginpass_Admin {
 	/**
 	 * WP_List_Table object
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 * @access   private
 	 * @var      pluginpass_table $pluginpass_table
 	 */
@@ -120,7 +120,7 @@ class Pluginpass_Admin {
 	 */
 	public function load_pluginpass_table_screen_options() {
 		$arguments = array(
-			'label'   => __( 'Plugins Per Page', $this->plugin_text_domain ),
+			'label'   => __( 'Number of items per page:', $this->plugin_text_domain ),
 			'default' => 5,
 			'option'  => 'plugins_per_page'
 		);

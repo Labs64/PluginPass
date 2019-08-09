@@ -6,7 +6,7 @@
  * This file is used to markup the public-facing aspects of the plugin.
  *
  * @link       https://www.labs64.com
- * @since      1.0.0
+ * @since 1.0.0
  *
  * @package    PluginPass
  * @subpackage PluginPass/inc/frontend/views

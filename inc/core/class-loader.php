@@ -84,7 +84,7 @@ class Loader {
 	 * @param int $accepted_args The number of arguments that should be passed to the $callback.
 	 *
 	 * @return array The collection of actions and filters registered with WordPress.
-	 * @since  1.0.0
+	 * @since 1.0.0
 	 * @access private
 	 */
 	private function add( $hooks, $hook, $component, $callback, $priority, $accepted_args ) {
