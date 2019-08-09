@@ -11,7 +11,11 @@ class PluginPass_Dot {
 	 *
 	 * @return bool
 	 */
-	public static function has( array $array, $key ) {
+	public static function has( $array, $key ) {
+		if ( ! $array ) {
+			return false;
+		}
+
 		$keys = explode( '.', $key );
 
 		if ( count( $keys ) > 1 ) {
@@ -37,7 +41,11 @@ class PluginPass_Dot {
 	 *
 	 * @return mixed
 	 */
-	public static function get( array $array, $key, $default = null ) {
+	public static function get( $array, $key, $default = null ) {
+		if ( ! $array ) {
+			return $default;
+		}
+
 		$keys = explode( '.', $key );
 
 		if ( count( $keys ) > 1 ) {
