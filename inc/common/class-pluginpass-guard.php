@@ -10,7 +10,9 @@ use PluginPass\Inc\Common\Traits\PluginPass_Plugable;
 use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
 
 class PluginPass_Guard {
-	use PluginPass_Validatable;
+	use PluginPass_Validatable {
+		validate as restValidate;
+	}
 	use PluginPass_Plugable;
 
 	protected $plugin;
@@ -31,7 +33,7 @@ class PluginPass_Guard {
 
 		if ( $this->is_plugin_not_exits_or_validation_expired() ) {
 			/** @var  $result ValidationResults*/
-			$result = self::validate( $api_key, $plugin_number );
+			$result = self::restValidate( $api_key, $plugin_number );
 
 			/** @var  $ttl \DateTime */
 			$ttl        = $result->getTtl();
