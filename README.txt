@@ -11,10 +11,11 @@ Stable tag: 0.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-*Public Alpha*
 PluginPass is a WordPress license manager that makes it easy to monetize your WordPress plugins and themes.
 
 == Description ==
+
+*Public Alpha*
 
 PluginPass is a WordPress License Manager that makes it easy to control the use and monetize your WordPress plugins and themes.
 

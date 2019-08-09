@@ -12,7 +12,7 @@
  * @package           Pluginpass
  *
  * @wordpress-plugin
- * Plugin Name:       PluginPass - PRO Plugin/Theme Licensing
+ * Plugin Name:       PluginPass
  * Plugin URI:        https://github.com/Labs64/PluginPass
  * Description:       WordPress Plugin/Theme Licensing powered by Labs64 NetLicensing
  * Version:           0.9.0
