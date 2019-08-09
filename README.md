@@ -70,7 +70,7 @@ Check out also our [Developers Guide here](https://github.com/Labs64/PluginPass/
 
 ## Related Links
 
-* WordPress plugin page: [https://wordpress.org/plugins/PluginPass/](https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/)
+* WordPress plugin page: [https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/](https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/)
 * NetLicensing page: [https://netlicensing.io](https://netlicensing.io)
 * Author: [Labs64](https://www.labs64.com)
 * Source: [https://github.com/Labs64/PluginPass](https://github.com/Labs64/PluginPass)
