@@ -40,7 +40,7 @@ class Activator {
 
 		$plugins_table   = self::get_plugins_table_name();
 		$charset_collate = $wpdb->get_charset_collate();
-//
+
 		$sql = "CREATE TABLE $plugins_table (
 			ID bigint(20) NOT NULL AUTO_INCREMENT,
 			number varchar(255) NOT NULL,
@@ -52,6 +52,9 @@ class Activator {
 			PRIMARY KEY (ID)
 		) $charset_collate;";
 
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 
 		$indexes                 = $wpdb->get_results( "SHOW INDEX FROM `wp_pluginpass_plugins`" );
 		$number_index_name = 'pluginpass_pl_number';
@@ -68,7 +71,5 @@ class Activator {
 			$wpdb->query("CREATE UNIQUE INDEX $number_index_name ON $plugins_table (number)");
 		}
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
 	}
 }
