@@ -119,7 +119,7 @@ The applicable data protection provisions of Labs64 NetLicensing may be retrieve
 
 == Screenshots ==
 
-1. Adjust PluginPass Settings
+1. PluginPass Settings
 
 == Changelog ==
 
