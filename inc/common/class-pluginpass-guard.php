@@ -23,17 +23,17 @@ class PluginPass_Guard {
 	 * @since 1.0.0
 	 * @access   public
 	 * @param    string               $api_key             NetLicensing APIKey.
-	 * @param    string               $plugin_number       NetLicensing product number.
+	 * @param    string               $product_number      NetLicensing product number.
 	 * @param    string               $plugin_name         The plugin name.
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct( $api_key, $plugin_number, $plugin_name ) {
-		$this->plugin = $this->get_plugin( [ 'number' => $plugin_number ] );
+	public function __construct( $api_key, $product_number, $plugin_name ) {
+		$this->plugin = $this->get_plugin( [ 'number' => $product_number ] );
 
 		if ( $this->is_plugin_not_exits_or_validation_expired() ) {
 			/** @var  $result ValidationResults*/
-			$result = self::restValidate( $api_key, $plugin_number );
+			$result = self::restValidate( $api_key, $product_number );
 
 			/** @var  $ttl \DateTime */
 			$ttl        = $result->getTtl();
@@ -41,7 +41,7 @@ class PluginPass_Guard {
 			$validation = json_encode( $result->getValidations() );
 
 			$data = [
-				'number'     => $plugin_number,
+				'number'     => $product_number,
 				'name'       => $plugin_name,
 				'api_key'    => $api_key,
 				'expires_at' => $expires_at,
@@ -50,7 +50,7 @@ class PluginPass_Guard {
 
 			$this->plugin = ( ! $this->plugin )
 				? $this->create_plugin( $data )
-				: $this->update_plugin( $data, [ 'number' => $plugin_number ] );
+				: $this->update_plugin( $data, [ 'number' => $product_number ] );
 		}
 	}
 

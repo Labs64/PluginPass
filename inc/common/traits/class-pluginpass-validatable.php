@@ -17,11 +17,11 @@ trait PluginPass_Validatable {
 		return $context;
 	}
 
-	protected static function validate( $api_key, $plugin_number ) {
+	protected static function validate( $api_key, $product_number ) {
 		$context = self::get_context( $api_key );
 
 		$validation_parameters = new ValidationParameters();
-		$validation_parameters->setProductNumber( $plugin_number );
+		$validation_parameters->setProductNumber( $product_number );
 		$validation_parameters->setLicenseeName( get_bloginfo( 'name' ) );
 
 		return LicenseeService::validate( $context, self::get_licensee_number(), $validation_parameters );

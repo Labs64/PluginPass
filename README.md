@@ -51,7 +51,7 @@ Payment gateways supported in the premium version:
 
 Add this code-snippet to your plugin:
 ```
-$quard = new PluginPass_Guard( $api_key, $plugin_number, $plugin_name );
+$quard = new PluginPass_Guard( $api_key, $product_number, $plugin_name );
 if($quard->validate()){
     // do something
     $quard->open_store();
