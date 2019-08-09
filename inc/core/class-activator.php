@@ -56,7 +56,7 @@ class Activator {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		$indexes                 = $wpdb->get_results( "SHOW INDEX FROM `wp_pluginpass_plugins`" );
+		$indexes                 = $wpdb->get_results( "SHOW INDEX FROM $plugins_table" );
 		$number_index_name = 'pluginpass_pl_number';
 
 		$is_unique_number_exists = false;
