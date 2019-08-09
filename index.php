@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/pluginpass.php');
+require_once(__DIR__ . '/constants.php');
 
 // Traits
 require_once(__DIR__ . '/inc/common/traits/class-pluginpass-plugable.php');
