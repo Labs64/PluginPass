@@ -13,7 +13,7 @@ echo
 # Can't use the -i flag for read, since that doesn't work for bash 3
 
 default_pluginslug="PluginPass"
-default_pluginslug_lovercase="pluginpass"
+default_pluginslug_lovercase="pluginpass-pro-plugintheme-licensing"
 
 echo "1a) WordPress Repo Plugin Slug."
 read -e -p "Plugin Slug ($default_pluginslug): " input
