@@ -38,14 +38,14 @@ class PluginPass_Guard {
 			/** @var  $ttl \DateTime */
 			$ttl        = $result->getTtl();
 			$expires_at = $ttl->format( \DateTime::ATOM );
-			$validation = json_encode( $result->getValidations() );
+			$validation_result = json_encode( $result->getValidations() );
 
 			$data = [
 				'number'     => $product_number,
 				'name'       => $plugin_name,
 				'api_key'    => $api_key,
 				'expires_at' => $expires_at,
-				'validation' => $validation,
+				'validation' => $validation_result,
 			];
 
 			$this->plugin = ( ! $this->plugin )
@@ -116,7 +116,7 @@ class PluginPass_Guard {
 
 		$attrsString = implode( " ", $attrsMap );
 
-		echo "<a href='$shopUrl' $attrsString>$title</a>";
+		echo "<a href='$shopUrl' $attrsString target='_blank'>$title</a>";
 	}
 
 	protected function get_shop_token( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {

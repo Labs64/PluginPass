@@ -1,4 +1,4 @@
-=== PluginPass - WordPress PRO Plugin/Theme Licensing ===
+=== PluginPass - WordPress PRO Plugin/Theme Licensing (Public Alpha) ===
 Author URI: https://netlicensing.io
 Plugin URI: https://github.com/Labs64/PluginPass
 Contributors: labs64
@@ -14,8 +14,6 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 PluginPass is a WordPress license manager that makes it easy to monetize your WordPress plugins and themes.
 
 == Description ==
-
-*Public Alpha*
 
 PluginPass is a WordPress License Manager that makes it easy to control the use and monetize your WordPress plugins and themes.
 

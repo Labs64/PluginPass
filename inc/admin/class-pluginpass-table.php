@@ -468,7 +468,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				'validation' => $validation
 			], [ 'ID' => $plugin_id ] );
 
-			$this->show_notice( __( 'Plugins have been validated', $this->plugin_text_domain ), 'success', true );
+			$this->show_notice( __( 'Plugin(-s) have been validated', $this->plugin_text_domain ), 'success', true );
 		} catch ( Exception $exception ) {
 			$this->show_notice( $exception->getMessage(), 'error', true );
 		}
