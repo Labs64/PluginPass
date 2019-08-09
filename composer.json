@@ -41,5 +41,10 @@
         "php": ">=5.6",
         "Labs64/NetLicensingClient-php": "^2.4.0"
     },
+    "autoload": {
+        "files": [
+            "index.php"
+        ]
+    },
     "prefer-stable": true
 }
