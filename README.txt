@@ -136,6 +136,7 @@ For more details on Labs64 NetLicensing data protection provisions visit Labs64 
 
 = 0.9.2 =
 * Update: Plugin documentation
+* Fix: PluginPass_Guard PHP reference error #8
 
 = 0.9.1 =
 * Fix: plugin publish script #6

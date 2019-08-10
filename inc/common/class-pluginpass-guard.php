@@ -68,7 +68,8 @@ class PluginPass_Guard {
 			return false;
 		}
 
-		$product_module = reset( explode( '.', $feature ) );
+    $feature_parsed = explode( '.', $feature );
+		$product_module = reset( $feature_parsed);
 		$licensingModel = PluginPass_Dot::get( $this->plugin->validation, "$product_module.licensingModel" );
 
 		if ( is_null( $licensingModel ) ) {
