@@ -44,13 +44,13 @@ Payment gateways supported in the plugin:
 
 Add this code-snippet to your plugin:
 
-```
+`
 $quard = new PluginPass_Guard( $api_key, $product_number, $plugin_name );
 if($quard->validate()){
     // do something
     $quard->open_shop();
 }
-```
+`
 
 Detailed integration instructions, NetLicensing product configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
 
@@ -110,7 +110,7 @@ If you have discovered a bug, we want to know so that we can get it fixed as soo
 
 Yes, you can! Join in on our [GitHub repository](https://github.com/Labs64/PluginPass) :) You can also leave us a nice review on the WordPress site to let others know what you think of the plugin!
 
-== Privacy Policy ==
+== Privacy Policy & GDPR ==
 
 This plugin integrating components of an external service - [Labs64 NetLicensing](https://netlicensing.io "Software License Management") (processor). Labs64 NetLicensing is an online license management service provider. License validation requests are processed using plugin or theme developer (controller) NetLicensing account.
 
@@ -123,6 +123,9 @@ Radlkoferstr. 2
 Labs64 NetLicensing website: [NetLicensing.IO](https://netlicensing.io)
 
 The applicable data protection provisions of Labs64 NetLicensing may be retrieved under Labs64 [Privacy Policy](https://www.labs64.com/legal/privacy-policy/).
+
+We strongly encourage you to comply with WordPress [Plugin Guidelines](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/) and General Data Protection Regulation (GDPR) while developing your plugins and themes and interfacing with [Labs64 NetLicensing Services](https://netlicensing.io).
+
 For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://www.labs64.de/confluence/x/vQEKAQ).
 
 == Screenshots ==
@@ -132,7 +135,7 @@ For more details on Labs64 NetLicensing data protection provisions visit Labs64 
 == Changelog ==
 
 = 0.9.2 =
-* *TODO*
+* Update: Plugin documentation
 
 = 0.9.1 =
 * Fix: plugin publish script #6
