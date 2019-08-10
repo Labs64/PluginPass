@@ -33,19 +33,14 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 
 ### Payment Gateways
 
-Payment gateways supported in the core, free plugin:
+Payment gateways supported in the plugin:
 
 * PayPal Standard
 * Stripe
-
-Payment gateways supported in the premium version:
-
 * Braintree - *PLANNED*
 * Authorize.net - *PLANNED*
 * 2Checkout - *PLANNED*
 * SOFORT Banking - *PLANNED*
-* BitPay - *PLANNED*
-* Coinbase - *PLANNED*
 
 ## Quickstart
 
@@ -54,7 +49,7 @@ Add this code-snippet to your plugin:
 $quard = new PluginPass_Guard( $api_key, $product_number, $plugin_name );
 if($quard->validate()){
     // do something
-    $quard->open_store();
+    $quard->open_shop();
 }
 ```
 

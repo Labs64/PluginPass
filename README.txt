@@ -15,7 +15,7 @@ PluginPass is a WordPress license manager that makes it easy to monetize your Wo
 
 == Description ==
 
-PluginPass is a WordPress License Manager that makes it easy to control the use and monetize your WordPress plugins and themes.
+PluginPass is a *WordPress License Manager* that makes it easy to control the use and monetize your WordPress plugins and themes.
 
 The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin’s & theme’s features activation and validation.
 
@@ -27,23 +27,32 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 * Enable up-selling by offering additional plugin/theme features
 * Use plugin or theme on the given domain only
 * License as many plugins/themes as you want
-* Need more features? - Let us know
+* Need more features? - [Let us know](https://github.com/Labs64/PluginPass/issues)
 
 = Payment gateways =
 
-Payment gateways supported in the core, free plugin:
+Payment gateways supported in the plugin:
 
 * PayPal Standard
 * Stripe
-
-Payment gateways supported in the premium version:
-
 * Braintree - *PLANNED*
 * Authorize.net - *PLANNED*
 * 2Checkout - *PLANNED*
 * SOFORT Banking - *PLANNED*
-* BitPay - *PLANNED*
-* Coinbase - *PLANNED*
+
+= Quickstart =
+
+Add this code-snippet to your plugin:
+
+```
+$quard = new PluginPass_Guard( $api_key, $product_number, $plugin_name );
+if($quard->validate()){
+    // do something
+    $quard->open_shop();
+}
+```
+
+Detailed integration instructions, NetLicensing product configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
 
 == Installation ==
 
@@ -69,7 +78,7 @@ This section describes how to install the plugin and get it working.
 
 == Upgrade Notice ==
 
-_TODO_
+Follow standard Wordpress plugin update process.
 
 == Frequently Asked Questions ==
 
@@ -111,9 +120,10 @@ The European operating company of Labs64 NetLicensing is:
 Labs64 GmbH
 Radlkoferstr. 2
 81373 Munich, Germany
-Labs64 NetLicensing website: [https://netlicensing.io](https://netlicensing.io)
+Labs64 NetLicensing website: [NetLicensing.IO](https://netlicensing.io)
 
-The applicable data protection provisions of Labs64 NetLicensing may be retrieved under [https://www.labs64.com/legal/privacy-policy/](https://www.labs64.com/legal/privacy-policy/).
+The applicable data protection provisions of Labs64 NetLicensing may be retrieved under Labs64 [Privacy Policy](https://www.labs64.com/legal/privacy-policy/).
+For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://www.labs64.de/confluence/x/vQEKAQ).
 
 == Screenshots ==
 
