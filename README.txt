@@ -45,8 +45,8 @@ Payment gateways supported in the plugin:
 Add this code-snippet to your plugin:
 
 `
-$quard = new PluginPass_Guard( $api_key, $product_number, $plugin_name );
-if($quard->validate()){
+$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_name );
+if ($quard->validate( $product_module_number )) {
     // do something
     $quard->open_shop();
 }
