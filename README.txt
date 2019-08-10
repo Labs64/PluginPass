@@ -7,7 +7,7 @@ Tags: API, license, licensing, activation, validation, license key, monetization
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 0.9.2
+Stable tag: 0.9.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,6 +133,9 @@ For more details on Labs64 NetLicensing data protection provisions visit Labs64 
 1. PluginPass Settings
 
 == Changelog ==
+
+= 0.9.3 =
+* TODO
 
 = 0.9.2 =
 * Update: Plugin documentation

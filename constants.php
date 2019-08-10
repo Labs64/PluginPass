@@ -7,7 +7,7 @@ namespace PluginPass;
 
 define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
-define( NS . 'PLUGIN_VERSION', '0.9.2' );
+define( NS . 'PLUGIN_VERSION', '0.9.3' );
 
 define( NS . 'PLUGIN_NAME', 'pluginpass' );
 
