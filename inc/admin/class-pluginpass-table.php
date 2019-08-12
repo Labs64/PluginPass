@@ -417,7 +417,6 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				$this->invalid_nonce_redirect();
 			} else {
 				$this->bulk_validate( $_REQUEST['plugins'] );
-				$this->graceful_exit();
 			}
 		}
 
@@ -448,30 +447,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function validate_plugin( $plugin_id ) {
-		try {
-			// get plugin
-			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
-
-			if ( ! $plugin ) {
-				throw new Exception( __( 'Plugin not found' ) );
-			}
-
-			$result = self::validate( $plugin->api_key, $plugin->number );
-
-			/** @var  $ttl DateTime */
-			$ttl        = $result->getTtl();
-			$expires_at = $ttl->format( DATE_ATOM );
-			$validation = json_encode( $result->getValidations() );
-
-			$this->update_plugin( [
-				'expires_at' => $expires_at,
-				'validation' => $validation
-			], [ 'ID' => $plugin_id ] );
-
-			$this->show_notice( __( 'Plugins have been validated', $this->plugin_text_domain ), 'success', true );
-		} catch ( Exception $exception ) {
-			$this->show_notice( $exception->getMessage(), 'error', true );
-		}
+		$this->bulk_validate( [ $plugin_id ] );
 	}
 
 	/**
@@ -493,7 +469,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 			$validation_details = [];
 
-			foreach ($plugin->validation as $data ) {
+			foreach ( $plugin->validation as $data ) {
 				if ( $data['licensingModel'] === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
 					foreach ( $data as $features ) {
 						if ( is_array( $features ) ) {
@@ -536,7 +512,44 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function bulk_validate( $plugin_ids ) {
-		// TODO: bulk plugin validate
+		$errors = [];
+
+		$count = 0;
+
+		foreach ( $plugin_ids as $plugin_id ) {
+			try {
+				// get plugin
+				$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
+
+				if ( ! $plugin ) {
+					throw new Exception( __( 'Plugin not found' ) );
+				}
+
+				$result = self::validate( $plugin->api_key, $plugin->number );
+
+				/** @var  $ttl DateTime */
+				$ttl        = $result->getTtl();
+				$expires_at = $ttl->format( DATE_ATOM );
+				$validation = json_encode( $result->getValidations() );
+
+				$this->update_plugin( [
+					'expires_at' => $expires_at,
+					'validation' => $validation
+				], [ 'ID' => $plugin_id ] );
+
+				$count++;
+			} catch ( Exception $exception ) {
+				$errors[] = $exception->getMessage();
+			}
+		}
+
+		if ( ! empty( $errors ) ) {
+			foreach ( $errors as $error ) {
+				$this->show_notice( $error, 'error', true );
+			}
+		}
+
+		$this->show_notice( $count. __( ' plugin(s) have been validated', $this->plugin_text_domain ), 'success', true );
 	}
 
 	/**
