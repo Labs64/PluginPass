@@ -27,7 +27,7 @@ services:
        WORDPRESS_DEBUG: 1
      volumes:
        - ".:/var/www/html/wp-content/plugins/pluginpass"
-       - "./data/testplugin:/var/www/html/wp-content/plugins/testplugin"
+       - "./data/pluginpass-demo:/var/www/html/wp-content/plugins/pluginpass-demo"
    phpmyadmin:
      image: phpmyadmin/phpmyadmin
      links:

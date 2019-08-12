@@ -1,13 +1,13 @@
-=== PluginPass - WordPress PRO Plugin/Theme Licensing ===
+=== PluginPass - WordPress PRO Plugin/Theme Licensing (Public Alpha) ===
 Author URI: https://netlicensing.io
 Plugin URI: https://github.com/Labs64/PluginPass
 Contributors: labs64
-Donate link: https://netlicensing.io
-Tags: API, license, license key, activation, validation, digital-downloads, purchase-validator, monetization, licensing, license-management, LaaS, Licensing-as-a-Service, NetLicensing
+Donate link: https://www.paypal.me/labs64
+Tags: API, license, licensing, activation, validation, license key, monetization, license-management, NetLicensing
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 0.9.0
+Stable tag: 0.9.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,9 +15,7 @@ PluginPass is a WordPress license manager that makes it easy to monetize your Wo
 
 == Description ==
 
-*Public Alpha*
-
-PluginPass is a WordPress License Manager that makes it easy to control the use and monetize your WordPress plugins and themes.
+PluginPass is a *WordPress License Manager* that makes it easy to control the use and monetize your WordPress plugins and themes.
 
 The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin’s & theme’s features activation and validation.
 
@@ -29,23 +27,32 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 * Enable up-selling by offering additional plugin/theme features
 * Use plugin or theme on the given domain only
 * License as many plugins/themes as you want
-* Need more features? - Let us know
+* Need more features? - [Let us know](https://github.com/Labs64/PluginPass/issues)
 
 = Payment gateways =
 
-Payment gateways supported in the core, free plugin:
+Payment gateways supported in the plugin:
 
 * PayPal Standard
 * Stripe
-
-Payment gateways supported in the premium version:
-
 * Braintree - *PLANNED*
 * Authorize.net - *PLANNED*
 * 2Checkout - *PLANNED*
 * SOFORT Banking - *PLANNED*
-* BitPay - *PLANNED*
-* Coinbase - *PLANNED*
+
+= Quickstart =
+
+Add this code-snippet to your plugin:
+
+`
+$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_name );
+if ($quard->validate( $product_module_number )) {
+    // do something
+    $quard->open_shop();
+}
+`
+
+Detailed integration instructions, NetLicensing product configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
 
 == Installation ==
 
@@ -71,7 +78,7 @@ This section describes how to install the plugin and get it working.
 
 == Upgrade Notice ==
 
-_TODO_
+Follow standard Wordpress plugin update process.
 
 == Frequently Asked Questions ==
 
@@ -103,7 +110,7 @@ If you have discovered a bug, we want to know so that we can get it fixed as soo
 
 Yes, you can! Join in on our [GitHub repository](https://github.com/Labs64/PluginPass) :) You can also leave us a nice review on the WordPress site to let others know what you think of the plugin!
 
-== Privacy Policy ==
+== Privacy Policy & GDPR ==
 
 This plugin integrating components of an external service - [Labs64 NetLicensing](https://netlicensing.io "Software License Management") (processor). Labs64 NetLicensing is an online license management service provider. License validation requests are processed using plugin or theme developer (controller) NetLicensing account.
 
@@ -113,9 +120,13 @@ The European operating company of Labs64 NetLicensing is:
 Labs64 GmbH
 Radlkoferstr. 2
 81373 Munich, Germany
-Labs64 NetLicensing website: [https://netlicensing.io](https://netlicensing.io)
+Labs64 NetLicensing website: [NetLicensing.IO](https://netlicensing.io)
 
-The applicable data protection provisions of Labs64 NetLicensing may be retrieved under [https://www.labs64.com/legal/privacy-policy/](https://www.labs64.com/legal/privacy-policy/).
+The applicable data protection provisions of Labs64 NetLicensing may be retrieved under Labs64 [Privacy Policy](https://www.labs64.com/legal/privacy-policy/).
+
+We strongly encourage you to comply with WordPress [Plugin Guidelines](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/) and General Data Protection Regulation (GDPR) while developing your plugins and themes and interfacing with [Labs64 NetLicensing Services](https://netlicensing.io).
+
+For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://www.labs64.de/confluence/x/vQEKAQ).
 
 == Screenshots ==
 
@@ -123,11 +134,17 @@ The applicable data protection provisions of Labs64 NetLicensing may be retrieve
 
 == Changelog ==
 
+= 0.9.3 =
+* TODO
+
+= 0.9.2 =
+* Update: Plugin documentation
+* Fix: PluginPass_Guard PHP reference error #8
+
 = 0.9.1 =
-* *TODO*
-* New: new feature added
-* Fix: bug fixed
-* Tweak: improved functionality
+* Fix: plugin publish script #6
+* Fix: Plugin activation error #1
+* Update: Deleted dependency "selvinortiz/dot" #5
 
 = 0.9.0 =
 * New: PluginPass is born! This release is only available via download at https://github.com/Labs64/PluginPass
