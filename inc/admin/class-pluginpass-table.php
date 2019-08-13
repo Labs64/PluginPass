@@ -3,6 +3,8 @@
 namespace PluginPass\Inc\Admin;
 
 use NetLicensing\Constants;
+use NetLicensing\NetLicensingService;
+use NetLicensing\RestException;
 use PluginPass\Inc\Common\Traits\PluginPass_Plugable;
 use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
 use PluginPass\Inc\Core\Activator;
@@ -537,7 +539,17 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 					'validation' => $validation
 				], [ 'ID' => $plugin_id ] );
 
-				$count++;
+				$count ++;
+			} catch ( RestException $rest_exception ) {
+				$plugin_name = ( ! empty( $plugin ) ) ? " '$plugin->name'" : '';
+
+				$request = NetLicensingService::getInstance()->lastCurlInfo();
+
+				if ( $request->httpStatusCode === 401 ) {
+					$errors[] = __( 'Failed to validate the plugin' ) . $plugin_name . __( ', please contact the plugin developer.' );
+				} else {
+					$errors[] = $rest_exception->getMessage();
+				}
 			} catch ( Exception $exception ) {
 				$errors[] = $exception->getMessage();
 			}
@@ -549,7 +561,9 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			}
 		}
 
-		$this->show_notice( $count. __( ' plugin(s) have been validated', $this->plugin_text_domain ), 'success', true );
+		if ( $count > 0 ) {
+			$this->show_notice( $count . __( ' plugin(s) have been validated', $this->plugin_text_domain ), 'success', true );
+		}
 	}
 
 	/**
