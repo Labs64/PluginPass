@@ -20,24 +20,24 @@ class PluginPass_Guard {
 	/**
 	 * Initialize and register plugin.
 	 *
-	 * @since 1.0.0
-	 * @access   public
-	 * @param    string               $api_key             NetLicensing APIKey.
-	 * @param    string               $product_number      NetLicensing product number.
-	 * @param    string               $plugin_name         The plugin name.
+	 * @param string $api_key NetLicensing APIKey.
+	 * @param string $product_number NetLicensing product number.
+	 * @param string $plugin_name The plugin name.
 	 *
 	 * @throws \Exception
+	 * @since 1.0.0
+	 * @access   public
 	 */
 	public function __construct( $api_key, $product_number, $plugin_name ) {
 		$this->plugin = $this->get_plugin( [ 'number' => $product_number ] );
 
 		if ( $this->is_plugin_not_exits_or_validation_expired() ) {
-			/** @var  $result ValidationResults*/
+			/** @var  $result ValidationResults */
 			$result = self::restValidate( $api_key, $product_number );
 
 			/** @var  $ttl \DateTime */
-			$ttl        = $result->getTtl();
-			$expires_at = $ttl->format( \DateTime::ATOM );
+			$ttl               = $result->getTtl();
+			$expires_at        = $ttl->format( \DateTime::ATOM );
 			$validation_result = json_encode( $result->getValidations() );
 
 			$data = [
@@ -57,10 +57,11 @@ class PluginPass_Guard {
 	/**
 	 * Validate plugin feature for the current wordpress instance.
 	 *
+	 * @param string $feature The plugin feature to be checked.
+	 *
+	 * @return   boolean The status, whether this feature is available.
 	 * @since 1.0.0
 	 * @access   public
-	 * @param    string               $feature         The plugin feature to be checked.
-	 * @return   boolean                               The status, whether this feature is available.
 	 */
 	public function validate( $feature ) {
 
@@ -68,8 +69,8 @@ class PluginPass_Guard {
 			return false;
 		}
 
-    $feature_parsed = explode( '.', $feature );
-		$product_module = reset( $feature_parsed);
+		$feature_parsed = explode( '.', $feature );
+		$product_module = reset( $feature_parsed );
 		$licensingModel = PluginPass_Dot::get( $this->plugin->validation, "$product_module.licensingModel" );
 
 		if ( is_null( $licensingModel ) ) {
@@ -83,14 +84,30 @@ class PluginPass_Guard {
 	}
 
 	/**
+	 * Get validation result for feature
+	 *
+	 * @param null $feature
+	 *
+	 * @return mixed
+	 */
+	public function validation_result( $feature = null ) {
+		if ( ! $feature ) {
+			return $this->plugin->validation;
+		}
+
+		return PluginPass_Dot::get( $this->plugin->validation, $feature );
+	}
+
+	/**
 	 * Redirect user to the Shop URL for license acquisition.
 	 *
-	 * @since 1.0.0
-	 * @access   public
 	 * @param string $successUrl
 	 * @param string $successUrlTitle
 	 * @param string $cancelUrl
 	 * @param string $cancelUrlTitle
+	 *
+	 * @since 1.0.0
+	 * @access   public
 	 */
 	public function open_shop( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
