@@ -43,12 +43,12 @@ class Activator {
 
 		$sql = "CREATE TABLE $plugins_table (
 			ID bigint(20) NOT NULL AUTO_INCREMENT,
-			number varchar(255) NOT NULL,
-			name tinytext NOT NULL,
+			product_number varchar(255) NOT NULL,
+			plugin_name tinytext NOT NULL,
 			api_key varchar(255) NOT NULL,
 			validated_at timestamp,
 			expires_at timestamp ,
-			validation json NOT NULL,
+			validation_result json NOT NULL,
 			PRIMARY KEY (ID)
 		) $charset_collate;";
 
@@ -68,7 +68,7 @@ class Activator {
 		}
 
 		if ( ! $is_unique_number_exists ) {
-			$wpdb->query("CREATE UNIQUE INDEX $number_index_name ON $plugins_table (number)");
+			$wpdb->query("CREATE UNIQUE INDEX $number_index_name ON $plugins_table (product_number)");
 		}
 
 	}

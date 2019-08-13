@@ -29,7 +29,7 @@ class PluginPass_Guard {
 	 * @access   public
 	 */
 	public function __construct( $api_key, $product_number, $plugin_name ) {
-		$this->plugin = $this->get_plugin( [ 'number' => $product_number ] );
+		$this->plugin = $this->get_plugin( [ 'product_number' => $product_number ] );
 
 		if ( $this->is_plugin_not_exits_or_validation_expired() ) {
 			/** @var  $result ValidationResults */
@@ -41,16 +41,16 @@ class PluginPass_Guard {
 			$validation_result = json_encode( $result->getValidations() );
 
 			$data = [
-				'number'     => $product_number,
-				'name'       => $plugin_name,
-				'api_key'    => $api_key,
-				'expires_at' => $expires_at,
-				'validation' => $validation_result,
+				'product_number'    => $product_number,
+				'plugin_name'       => $plugin_name,
+				'api_key'           => $api_key,
+				'expires_at'        => $expires_at,
+				'validation_result' => $validation_result,
 			];
 
 			$this->plugin = ( ! $this->plugin )
 				? $this->create_plugin( $data )
-				: $this->update_plugin( $data, [ 'number' => $product_number ] );
+				: $this->update_plugin( $data, [ 'product_number' => $product_number ] );
 		}
 	}
 
@@ -65,13 +65,13 @@ class PluginPass_Guard {
 	 */
 	public function validate( $feature ) {
 
-		if ( ! PluginPass_Dot::has( $this->plugin->validation, $feature ) ) {
+		if ( ! PluginPass_Dot::has( $this->plugin->validation_result, $feature ) ) {
 			return false;
 		}
 
 		$feature_parsed = explode( '.', $feature );
 		$product_module = reset( $feature_parsed );
-		$licensingModel = PluginPass_Dot::get( $this->plugin->validation, "$product_module.licensingModel" );
+		$licensingModel = PluginPass_Dot::get( $this->plugin->validation_result, "$product_module.licensingModel" );
 
 		if ( is_null( $licensingModel ) ) {
 			return false;
@@ -80,7 +80,7 @@ class PluginPass_Guard {
 		$feature .= ( $licensingModel === Constants::LICENSING_MODEL_MULTI_FEATURE )
 			? '.0.valid' : '.valid';
 
-		return PluginPass_Dot::get( $this->plugin->validation, $feature ) === 'true';
+		return PluginPass_Dot::get( $this->plugin->validation_result, $feature ) === 'true';
 	}
 
 	/**
@@ -92,10 +92,10 @@ class PluginPass_Guard {
 	 */
 	public function validation_result( $feature = null ) {
 		if ( ! $feature ) {
-			return $this->plugin->validation;
+			return $this->plugin->validation_result;
 		}
 
-		return PluginPass_Dot::get( $this->plugin->validation, $feature );
+		return PluginPass_Dot::get( $this->plugin->validation_result, $feature );
 	}
 
 	/**
@@ -120,21 +120,17 @@ class PluginPass_Guard {
 	/**
 	 * Generate shop URL for license acquisition.
 	 *
+	 * @param string $successUrl
+	 * @param string $successUrlTitle
+	 * @param string $cancelUrl
+	 * @param string $cancelUrlTitle
+	 *
+	 * @return string
 	 * @since 1.0.0
 	 * @access   public
 	 */
-	public function get_shop_url( $title, array $attrs = [], $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
-		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
-
-		$shopUrl = $shopToken->getShopURL();
-
-		$attrsMap = array_map( function ( $key, $value ) {
-			return "$key=\"$value\"";
-		}, array_keys( $attrs ), $attrs );
-
-		$attrsString = implode( " ", $attrsMap );
-
-		echo "<a href='$shopUrl' $attrsString target='_blank'>$title</a>";
+	public function get_shop_url( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+		return $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle )->getShopURL();
 	}
 
 	protected function get_shop_token( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {

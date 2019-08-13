@@ -22,7 +22,7 @@ trait PluginPass_Plugable {
 		$plugin = $wpdb->get_row( "SELECT * FROM $plugins_table WHERE $queryWhere" );
 
 		if ( $plugin ) {
-			$plugin->validation = json_decode( $plugin->validation, true );
+			$plugin->validation_result = json_decode( $plugin->validation_result, true );
 		}
 
 		return $plugin;

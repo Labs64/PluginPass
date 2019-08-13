@@ -76,7 +76,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		// required for pagination
 		$page     = $this->get_pagenum() - 1;
 		$per_page = $this->get_items_per_page( 'plugins_per_page' );
-		$order_by = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'name';
+		$order_by = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'plugin_name';
 		$order    = ( isset( $_GET['order'] ) ) ? esc_sql( $_GET['order'] ) : 'ASC';
 
 		// fetch table data
@@ -107,7 +107,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	public function get_columns() {
 		$table_columns = array(
 			'cb'           => '<input type="checkbox" />', // to display the checkbox.
-			'name'         => __( 'Plugin Name', $this->plugin_text_domain ),
+			'plugin_name'         => __( 'Plugin Name', $this->plugin_text_domain ),
 			'expires_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
 			'validated_at' => __( 'Last Validated', $this->plugin_text_domain ),
 			'status'       => __( 'Status', $this->plugin_text_domain ),
@@ -137,7 +137,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		 * column name_in_list_table => columnname in the db
 		 */
 		$sortable_columns = array(
-			'name'         => 'name',
+			'plugin_name'         => 'plugin_name',
 			'expires_at'   => 'expires_at',
 			'validated_at' => 'last_validated',
 		);
@@ -164,7 +164,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 * @return	Array
 	 */
 
-	public function fetch_table_data( $page, $per_page, $order_by = 'name', $order = 'ASC', $search_key = null ) {
+	public function fetch_table_data( $page, $per_page, $order_by = 'plugin_name', $order = 'ASC', $search_key = null ) {
 		global $wpdb;
 
 		$plugins_table = Activator::get_plugins_table_name();
@@ -173,8 +173,8 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$countQuery = "SELECT COUNT(ID) as total_items FROM $plugins_table";
 
 		if ( $search_key ) {
-			$query      .= " WHERE name LIKE '$search_key'";
-			$countQuery .= " WHERE name LIKE '$search_key'";
+			$query      .= " WHERE plugin_name LIKE '$search_key'";
+			$countQuery .= " WHERE plugin_name LIKE '$search_key'";
 		}
 
 		$query .= " ORDER BY $order_by $order LIMIT $page, $per_page";
@@ -184,7 +184,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$total_items = $wpdb->get_row( $countQuery )->total_items;
 
 		foreach ( $items as &$item ) {
-			$item['validation'] = json_decode( $item['validation'], true );
+			$item['validation_result'] = json_decode( $item['validation_result'], true );
 		}
 
 		// return result array to prepare_items.
@@ -214,7 +214,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 */
 	protected function column_cb( $item ) {
 		return sprintf(
-			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s' ), $item['name'] ) . '</label>'
+			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s' ), $item['plugin_name'] ) . '</label>'
 			. "<input type='checkbox' name='plugins[]' id='plugins_{$item['ID']}' value='{$item['ID']}' />"
 		);
 	}
@@ -234,7 +234,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 * @return string
 	 */
-	protected function column_name( $item ) {
+	protected function column_plugin_name( $item ) {
 		/*
 		 *  Build table row actions.
 		 *
@@ -275,7 +275,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 //        $actions['deregister_plugin'] = '<a href="' . $deregister_plugin_link . '">' . __('Deregister', $this->plugin_text_domain) . '</a>';
 
 
-		$row_value = '<strong>' . $item['name'] . '</strong>';
+		$row_value = '<strong>' . $item['plugin_name'] . '</strong>';
 
 		return $row_value . $this->row_actions( $actions );
 	}
@@ -296,7 +296,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$valid   = 0;
 		$invalid = 0;
 
-		foreach ( $item['validation'] as $product_module => $results ) {
+		foreach ( $item['validation_result'] as $product_module => $results ) {
 			$licensing_model = $results['licensingModel'];
 
 			if ( $licensing_model === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
@@ -471,7 +471,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 			$validation_details = [];
 
-			foreach ( $plugin->validation as $data ) {
+			foreach ( $plugin->validation_result as $data ) {
 				if ( $data['licensingModel'] === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
 					foreach ( $data as $features ) {
 						if ( is_array( $features ) ) {
@@ -527,7 +527,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 					throw new Exception( __( 'Plugin not found' ) );
 				}
 
-				$result = self::validate( $plugin->api_key, $plugin->number );
+				$result = self::validate( $plugin->api_key, $plugin->product_number );
 
 				/** @var  $ttl DateTime */
 				$ttl        = $result->getTtl();
@@ -536,12 +536,12 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 				$this->update_plugin( [
 					'expires_at' => $expires_at,
-					'validation' => $validation
+					'validation_result' => $validation
 				], [ 'ID' => $plugin_id ] );
 
 				$count ++;
 			} catch ( RestException $rest_exception ) {
-				$plugin_name = ( ! empty( $plugin ) ) ? " '$plugin->name'" : '';
+				$plugin_name = ( ! empty( $plugin ) ) ? " '$plugin->plugin_name'" : '';
 
 				$request = NetLicensingService::getInstance()->lastCurlInfo();
 
