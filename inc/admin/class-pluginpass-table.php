@@ -107,7 +107,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	public function get_columns() {
 		$table_columns = array(
 			'cb'           => '<input type="checkbox" />', // to display the checkbox.
-			'plugin_name'         => __( 'Plugin Name', $this->plugin_text_domain ),
+			'plugin_name'  => __( 'Plugin Name', $this->plugin_text_domain ),
 			'expires_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
 			'validated_at' => __( 'Last Validated', $this->plugin_text_domain ),
 			'status'       => __( 'Status', $this->plugin_text_domain ),
@@ -137,7 +137,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		 * column name_in_list_table => columnname in the db
 		 */
 		$sortable_columns = array(
-			'plugin_name'         => 'plugin_name',
+			'plugin_name'  => 'plugin_name',
 			'expires_at'   => 'expires_at',
 			'validated_at' => 'last_validated',
 		);
@@ -251,8 +251,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			'_wpnonce'  => wp_create_nonce( 'validate_plugin_nonce' ),
 		);
 
+		$class = empty( $item['consented_at'] ) ? 'need-consent-before-validation' : '';
+
 		$validate_plugin_link       = esc_url( add_query_arg( $query_args_validate_plugin, $admin_page_url ) );
-		$actions['validate_plugin'] = '<a href="' . $validate_plugin_link . '">' . __( 'Validate', $this->plugin_text_domain ) . '</a>';
+		$actions['validate_plugin'] = '<a class="' . $class . '" href="' . $validate_plugin_link . '">' . __( 'Validate', $this->plugin_text_domain ) . '</a>';
 
 		// row actions to show validation details
 		$query_args_validation_details = array(
@@ -535,7 +537,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				$validation = json_encode( $result->getValidations() );
 
 				$this->update_plugin( [
-					'expires_at' => $expires_at,
+					'expires_at'        => $expires_at,
 					'validation_result' => $validation
 				], [ 'ID' => $plugin_id ] );
 

@@ -82,6 +82,7 @@ class Pluginpass_Admin {
 	 */
 	public function enqueue_scripts() {
 		$params = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) );
+		wp_enqueue_script( 'sweetalert2', plugin_dir_url( __FILE__ ) . 'js/sweetalert2.all.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( 'pluginpass_ajax_handle', plugin_dir_url( __FILE__ ) . 'js/pluginpass-admin.js', array( 'jquery' ), $this->version, false );
 		wp_localize_script( 'pluginpass_ajax_handle', 'params', $params );
 	}

@@ -41,7 +41,10 @@ trait PluginPass_Plugable {
 
 		$plugins_table = Activator::get_plugins_table_name();
 
-		$result = $wpdb->insert( $plugins_table, array_merge( $data, [ 'validated_at' => date( DATE_ATOM ) ] ) );
+		$result = $wpdb->insert( $plugins_table, array_merge( $data, [
+			'validated_at' => date( DATE_ATOM ),
+			'consented_at' => date( DATE_ATOM )
+		] ) );
 
 		if ( ! $result ) {
 			throw new \Exception( 'Failed to save plugin validation data.' );

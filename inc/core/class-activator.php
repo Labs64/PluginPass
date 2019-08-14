@@ -46,6 +46,7 @@ class Activator {
 			product_number varchar(255) NOT NULL,
 			plugin_name tinytext NOT NULL,
 			api_key varchar(255) NOT NULL,
+			consented_at timestamp,
 			validated_at timestamp,
 			expires_at timestamp ,
 			validation_result json NOT NULL,
