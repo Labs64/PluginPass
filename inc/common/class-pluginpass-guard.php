@@ -37,14 +37,14 @@ class PluginPass_Guard {
 
 			/** @var  $ttl \DateTime */
 			$ttl               = $result->getTtl();
-			$expires_at        = $ttl->format( \DateTime::ATOM );
+			$expires_ttl_at        = $ttl->format( \DateTime::ATOM );
 			$validation_result = json_encode( $result->getValidations() );
 
 			$data = [
 				'product_number'    => $product_number,
 				'plugin_name'       => $plugin_name,
 				'api_key'           => $api_key,
-				'expires_at'        => $expires_at,
+				'expires_ttl_at'        => $expires_ttl_at,
 				'validation_result' => $validation_result,
 			];
 
@@ -160,6 +160,6 @@ class PluginPass_Guard {
 	}
 
 	protected function is_plugin_not_exits_or_validation_expired() {
-		return ( ! $this->plugin || strtotime( $this->plugin->expires_at ) <= time() );
+		return ( ! $this->plugin || strtotime( $this->plugin->expires_ttl_at ) <= time() );
 	}
 }

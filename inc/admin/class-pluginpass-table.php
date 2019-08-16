@@ -108,7 +108,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$table_columns = array(
 			'cb'           => '<input type="checkbox" />', // to display the checkbox.
 			'plugin_name'  => __( 'Plugin Name', $this->plugin_text_domain ),
-			'expires_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
+			'expires_ttl_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
 			'validated_at' => __( 'Last Validated', $this->plugin_text_domain ),
 			'status'       => __( 'Status', $this->plugin_text_domain ),
 		);
@@ -138,7 +138,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		 */
 		$sortable_columns = array(
 			'plugin_name'  => 'plugin_name',
-			'expires_at'   => 'expires_at',
+			'expires_ttl_at'   => 'expires_ttl_at',
 			'validated_at' => 'last_validated',
 		);
 
@@ -533,11 +533,11 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 				/** @var  $ttl DateTime */
 				$ttl        = $result->getTtl();
-				$expires_at = $ttl->format( DATE_ATOM );
+				$expires_ttl_at = $ttl->format( DATE_ATOM );
 				$validation = json_encode( $result->getValidations() );
 
 				$this->update_plugin( [
-					'expires_at'        => $expires_at,
+					'expires_ttl_at'        => $expires_ttl_at,
 					'validation_result' => $validation
 				], [ 'ID' => $plugin_id ] );
 
