@@ -82,11 +82,12 @@ class Pluginpass_Demo_Settings
             // Stop activation redirect and show error
             wp_die('Sorry, but this plugin requires the PluginPass Plugin to be installed and active. <br>');
         }
-        $api_key = '06553fbc-836b-4b8e-92b6-142c2e8426cc';
-        $product_number = 'PPP-DEMO';
-        $plugin_name = 'Test Plugin';
+        $api_key = '588a16b3-d8b8-4a37-8965-b217eb93dc70';
+        $product_number = 'P6N6UW7U4';
+        $plugin_slug = 'pluginpass-demo';
+        $plugin_name = 'PluginPass Demo';
         $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_name);
-        $product_module_number = 'MPP-DEMO';
+        $product_module_number = 'MN5VYRR54';
 
         if ($quard->validate($product_module_number)) {
             echo "<div class=\"notice notice-success\"><p>Valid license for $product_module_number found</p></div>";

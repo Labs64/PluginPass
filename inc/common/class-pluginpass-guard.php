@@ -42,6 +42,7 @@ class PluginPass_Guard {
 
 			$data = [
 				'product_number'    => $product_number,
+				'plugin_slug'       => $plugin_name, // TODO: use plugin slug here
 				'plugin_name'       => $plugin_name,
 				'api_key'           => $api_key,
 				'expires_ttl_at'        => $expires_ttl_at,
