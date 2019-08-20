@@ -46,10 +46,10 @@ class Activator {
 			product_number varchar(255) NOT NULL,
 			plugin_name tinytext NOT NULL,
 			api_key varchar(255) NOT NULL,
-			consented_at timestamp,
-			validated_at timestamp,
-			expires_at timestamp ,
-			validation_result json NOT NULL,
+			consented_at timestamp DEFAULT NULL ,
+			validated_at timestamp DEFAULT NULL,
+			expires_at timestamp DEFAULT NULL,
+			validation_result json DEFAULT NULL,
 			PRIMARY KEY (ID)
 		) $charset_collate;";
 

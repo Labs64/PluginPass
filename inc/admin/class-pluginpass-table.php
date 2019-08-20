@@ -256,15 +256,17 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$validate_plugin_link       = esc_url( add_query_arg( $query_args_validate_plugin, $admin_page_url ) );
 		$actions['validate_plugin'] = '<a class="' . $class . '" href="' . $validate_plugin_link . '">' . __( 'Validate', $this->plugin_text_domain ) . '</a>';
 
-		// row actions to show validation details
-		$query_args_validation_details = array(
-			'page'      => wp_unslash( $_REQUEST['page'] ),
-			'action'    => 'validation_details',
-			'plugin_id' => absint( $item['ID'] ),
-			'_wpnonce'  => wp_create_nonce( 'validation_details_nonce' ),
-		);
-		$validation_details_link       = esc_url( add_query_arg( $query_args_validation_details, $admin_page_url ) );
-		$actions['validation_details'] = '<a href="' . $validation_details_link . '">' . __( 'Details', $this->plugin_text_domain ) . '</a>';
+		if ( ! empty( $item['validated_at'] ) ) {
+			// row actions to show validation details
+			$query_args_validation_details = array(
+				'page'      => wp_unslash( $_REQUEST['page'] ),
+				'action'    => 'validation_details',
+				'plugin_id' => absint( $item['ID'] ),
+				'_wpnonce'  => wp_create_nonce( 'validation_details_nonce' ),
+			);
+			$validation_details_link       = esc_url( add_query_arg( $query_args_validation_details, $admin_page_url ) );
+			$actions['validation_details'] = '<a href="' . $validation_details_link . '">' . __( 'Details', $this->plugin_text_domain ) . '</a>';
+		}
 
 		// row actions to deregister plugin
 //        $query_args_deregister_plugin = array(
@@ -298,28 +300,33 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$valid   = 0;
 		$invalid = 0;
 
-		foreach ( $item['validation_result'] as $product_module => $results ) {
-			$licensing_model = $results['licensingModel'];
+		if ( ! empty( $item['validation_result'] ) ) {
+			foreach ( $item['validation_result'] as $product_module => $results ) {
+				$licensing_model = $results['licensingModel'];
 
-			if ( $licensing_model === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
-				foreach ( $results as $key => $result ) {
-					if ( is_array( $result ) ) {
-						if ( PluginPass_Dot::get( $result, '0.valid' ) === 'true' ) {
-							$valid ++;
-						} else {
-							$invalid ++;
+				if ( $licensing_model === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
+					foreach ( $results as $key => $result ) {
+						if ( is_array( $result ) ) {
+							if ( PluginPass_Dot::get( $result, '0.valid' ) === 'true' ) {
+								$valid ++;
+							} else {
+								$invalid ++;
+							}
 						}
 					}
-				}
-			} else {
-				if ( $results['valid'] === 'true' ) {
-					$valid ++;
 				} else {
-					$invalid ++;
+					if ( $results['valid'] === 'true' ) {
+						$valid ++;
+					} else {
+						$invalid ++;
+					}
 				}
 			}
 		}
 
+		if ( ! $item['validated_at'] ) {
+			return '<span class="label label-danger">' . __( 'run validation first' ) . '</span>';
+		}
 
 		if ( $valid > 0 && $invalid === 0 ) {
 			return '<span class="label label-primary">' . __( 'valid' ) . '</span>';
@@ -473,19 +480,21 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 			$validation_details = [];
 
-			foreach ( $plugin->validation_result as $data ) {
-				if ( $data['licensingModel'] === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
-					foreach ( $data as $features ) {
-						if ( is_array( $features ) ) {
-							$feature                                       = reset( $features );
-							$validation_details[ $feature['featureName'] ] = $feature['valid'] === 'true';
+			if ( ! empty( $plugin->validation_result ) ) {
+				foreach ( $plugin->validation_result as $data ) {
+					if ( $data['licensingModel'] === Constants::LICENSING_MODEL_MULTI_FEATURE ) {
+						foreach ( $data as $features ) {
+							if ( is_array( $features ) ) {
+								$feature                                       = reset( $features );
+								$validation_details[ $feature['featureName'] ] = $feature['valid'] === 'true';
+							}
 						}
+
+						continue;
 					}
 
-					continue;
+					$validation_details[ $data['productModuleName'] ] = $data['valid'] === 'true';
 				}
-
-				$validation_details[ $data['productModuleName'] ] = $data['valid'] === 'true';
 			}
 
 			include_once( 'views/partials-pluginpass-validation-details.php' );
@@ -510,15 +519,17 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	/**
 	 * Bulk validate plugins.
 	 *
-	 * @param array $bulk_plugin_ids
+	 * @param $plugin_ids
 	 *
+	 * @throws \ErrorException
 	 * @since 1.0.0
-	 *
 	 */
 	public function bulk_validate( $plugin_ids ) {
 		$errors = [];
 
 		$count = 0;
+
+		$has_consent = ! empty( $_GET['has_consent'] ) ? true : false;
 
 		foreach ( $plugin_ids as $plugin_id ) {
 			try {
@@ -529,6 +540,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 					throw new Exception( __( 'Plugin not found' ) );
 				}
 
+				if ( empty( $plugin->consented_at ) && ! $has_consent ) {
+					continue;
+				}
+
 				$result = self::validate( $plugin->api_key, $plugin->product_number );
 
 				/** @var  $ttl DateTime */
@@ -536,10 +551,17 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				$expires_at = $ttl->format( DATE_ATOM );
 				$validation = json_encode( $result->getValidations() );
 
-				$this->update_plugin( [
+				$data = [
 					'expires_at'        => $expires_at,
-					'validation_result' => $validation
-				], [ 'ID' => $plugin_id ] );
+					'validated_at'      => date( DATE_ATOM ),
+					'validation_result' => $validation,
+				];
+
+				if ( empty( $plugin->consented_at ) ) {
+					$data['consented_at'] = date( DATE_ATOM );
+				}
+
+				$this->update_plugin( $data, [ 'ID' => $plugin_id ] );
 
 				$count ++;
 			} catch ( RestException $rest_exception ) {

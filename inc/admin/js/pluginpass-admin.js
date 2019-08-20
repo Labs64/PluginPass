@@ -52,8 +52,8 @@
                 confirmButtonText: 'Agree',
                 cancelButtonText: 'Cancel'
             }).then((result) => {
-                if(result.value){
-                    window.location.href = href;
+                if (result.value) {
+                    window.location.href = href + '&has_consent=true';
                 }
             })
         });

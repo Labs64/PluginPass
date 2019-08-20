@@ -17,41 +17,41 @@ class PluginPass_Guard {
 
 	protected $plugin;
 
+	protected $has_consent = false;
+
 	/**
 	 * Initialize and register plugin.
 	 *
 	 * @param string $api_key NetLicensing APIKey.
 	 * @param string $product_number NetLicensing product number.
 	 * @param string $plugin_name The plugin name.
+	 * @param boolean $has_consent Indicate whether the author of the plugin has the user's consent to the use his personal data.
 	 *
 	 * @throws \Exception
 	 * @since 1.0.0
 	 * @access   public
 	 */
-	public function __construct( $api_key, $product_number, $plugin_name ) {
-		$this->plugin = $this->get_plugin( [ 'product_number' => $product_number ] );
+	public function __construct( $api_key, $product_number, $plugin_name, $has_consent = false ) {
+		$this->plugin      = $this->get_plugin( [ 'product_number' => $product_number ] );
+		$this->has_consent = $has_consent;
 
-		if ( $this->is_plugin_not_exits_or_validation_expired() ) {
-			/** @var  $result ValidationResults */
-			$result = self::restValidate( $api_key, $product_number );
+		$data = [
+			'product_number' => $product_number,
+			'plugin_name'    => $plugin_name,
+			'api_key'        => $api_key,
+		];
 
-			/** @var  $ttl \DateTime */
-			$ttl               = $result->getTtl();
-			$expires_at        = $ttl->format( \DateTime::ATOM );
-			$validation_result = json_encode( $result->getValidations() );
+		$this->plugin = ( ! $this->plugin )
+			? $this->create_plugin( $data )
+			: $this->update_plugin( $data, [ 'product_number' => $product_number ] );
+	}
 
-			$data = [
-				'product_number'    => $product_number,
-				'plugin_name'       => $plugin_name,
-				'api_key'           => $api_key,
-				'expires_at'        => $expires_at,
-				'validation_result' => $validation_result,
-			];
-
-			$this->plugin = ( ! $this->plugin )
-				? $this->create_plugin( $data )
-				: $this->update_plugin( $data, [ 'product_number' => $product_number ] );
-		}
+	/**
+	 * Indicate whether the author of the plugin has the user's consent to the use his personal data.
+	 * @return bool
+	 */
+	public function has_consent() {
+		return ( ! empty( $this->plugin->consented_at ) || $this->has_consent );
 	}
 
 	/**
@@ -60,12 +60,35 @@ class PluginPass_Guard {
 	 * @param string $feature The plugin feature to be checked.
 	 *
 	 * @return   boolean The status, whether this feature is available.
+	 * @throws \Exception
 	 * @since 1.0.0
 	 * @access   public
 	 */
 	public function validate( $feature ) {
 
-		if ( ! PluginPass_Dot::has( $this->plugin->validation_result, $feature ) ) {
+		if ( $this->is_validation_expired() && $this->has_consent() ) {
+			/** @var  $result ValidationResults */
+			$result = self::restValidate( $this->plugin->api_key, $this->plugin->product_number );
+
+			/** @var  $ttl \DateTime */
+			$ttl               = $result->getTtl();
+			$expires_at        = $ttl->format( \DateTime::ATOM );
+			$validation_result = json_encode( $result->getValidations() );
+
+			$data = [
+				'expires_at'        => $expires_at,
+				'validated_at'      => date( DATE_ATOM ),
+				'validation_result' => $validation_result,
+			];
+
+			if ( empty( $this->plugin->consented_at ) ) {
+				$data['consented_at'] = date( DATE_ATOM );
+			}
+
+			$this->plugin = $this->update_plugin( $data, [ 'product_number' => $this->plugin->product_number ] );
+		}
+
+		if ( ! $this->plugin->validation_result || ! PluginPass_Dot::has( $this->plugin->validation_result, $feature ) ) {
 			return false;
 		}
 
@@ -159,7 +182,7 @@ class PluginPass_Guard {
 		return $shopToken;
 	}
 
-	protected function is_plugin_not_exits_or_validation_expired() {
-		return ( ! $this->plugin || strtotime( $this->plugin->expires_at ) <= time() );
+	protected function is_validation_expired() {
+		return ( ! $this->plugin->expires_at || strtotime( $this->plugin->expires_at ) <= time() );
 	}
 }
