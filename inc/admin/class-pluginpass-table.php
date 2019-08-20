@@ -76,7 +76,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		// required for pagination
 		$page     = $this->get_pagenum() - 1;
 		$per_page = $this->get_items_per_page( 'plugins_per_page' );
-		$order_by = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'plugin_name';
+		$order_by = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'expires_ttl_at';
 		$order    = ( isset( $_GET['order'] ) ) ? esc_sql( $_GET['order'] ) : 'ASC';
 
 		// fetch table data
@@ -108,7 +108,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$table_columns = array(
 			'cb'           => '<input type="checkbox" />', // to display the checkbox.
 			'plugin_name'  => __( 'Plugin Name', $this->plugin_text_domain ),
-			'expires_ttl_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
+			'expires_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
 			'validated_at' => __( 'Last Validated', $this->plugin_text_domain ),
 			'status'       => __( 'Status', $this->plugin_text_domain ),
 		);
@@ -137,9 +137,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		 * column name_in_list_table => columnname in the db
 		 */
 		$sortable_columns = array(
-			'plugin_name'  => 'plugin_name',
-			'expires_ttl_at'   => 'expires_ttl_at',
-			'validated_at' => 'last_validated',
+			'validated_at'   => 'validated_at',
 		);
 
 		return $sortable_columns;
@@ -180,11 +178,17 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$query .= " ORDER BY $order_by $order LIMIT $page, $per_page";
 
 		// query output_type will be an associative array with ARRAY_A.
-		$items       = $wpdb->get_results( $query, ARRAY_A );
+		$plugins     = $wpdb->get_results( $query, ARRAY_A );
 		$total_items = $wpdb->get_row( $countQuery )->total_items;
 
-		foreach ( $items as &$item ) {
-			$item['validation_result'] = json_decode( $item['validation_result'], true );
+		$items = [];
+
+		foreach ( $plugins as $plugin ) {
+			if ( array_key_exists( $plugin['plugin_folder'], get_plugins() ) ) {
+				$plugin['validation_result'] = json_decode( $plugin['validation_result'], true );
+
+				$items[] = $plugin;
+			}
 		}
 
 		// return result array to prepare_items.
@@ -214,7 +218,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 */
 	protected function column_cb( $item ) {
 		return sprintf(
-			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s' ), $item['plugin_name'] ) . '</label>'
+			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s', $this->plugin_text_domain ), $this->get_plugin_name( $item['plugin_folder'] ) ) . '</label>'
 			. "<input type='checkbox' name='plugins[]' id='plugins_{$item['ID']}' value='{$item['ID']}' />"
 		);
 	}
@@ -277,11 +281,23 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 //        );
 //        $deregister_plugin_link = esc_url(add_query_arg($query_args_deregister_plugin, $admin_page_url));
 //        $actions['deregister_plugin'] = '<a href="' . $deregister_plugin_link . '">' . __('Deregister', $this->plugin_text_domain) . '</a>';
-
-
-		$row_value = '<strong>' . $item['plugin_name'] . '</strong>';
+		$row_value = '<strong>' . $this->get_plugin_name( $item['plugin_folder'] ) . '</strong>';
 
 		return $row_value . $this->row_actions( $actions );
+	}
+
+	protected function column_expires_at( $item ) {
+		$expires_at = '';
+
+		foreach ( $item['validation_result'] as $result ) {
+			if ( ! empty( $result['expires'] ) ) {
+				if ( ! $expires_at || strtotime( $result['expires'] ) < strtotime( $expires_at ) ) {
+					$expires_at = $result['expires'];
+				}
+			}
+		}
+
+		return ( $expires_at ) ? date( 'Y-m-d H:i:s', strtotime( $expires_at ) ) : '';
 	}
 
 	/*
@@ -325,18 +341,18 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		}
 
 		if ( ! $item['validated_at'] ) {
-			return '<span class="label label-danger">' . __( 'run validation first' ) . '</span>';
+			return '<span class="label label-danger">' . __( 'run validation first', $this->plugin_text_domain ) . '</span>';
 		}
 
 		if ( $valid > 0 && $invalid === 0 ) {
-			return '<span class="label label-primary">' . __( 'valid' ) . '</span>';
+			return '<span class="label label-primary">' . __( 'valid', $this->plugin_text_domain ) . '</span>';
 		}
 
 		if ( $invalid > 0 && $valid === 0 ) {
-			return '<span class="label label-danger">' . __( 'invalid' ) . '</span>';
+			return '<span class="label label-danger">' . __( 'invalid', $this->plugin_text_domain ) . '</span>';
 		}
 
-		return '<span class="label label-warning">' . $valid . '/' . $invalid . ' ' . __( 'valid' ) . '</span>';
+		return '<span class="label label-warning">' . sprintf( __( '%s valid', $this->plugin_text_domain ), $valid . '/' . $invalid ) . '</span>';
 	}
 
 
@@ -475,8 +491,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
 
 			if ( ! $plugin ) {
-				throw new Exception( __( 'Plugin not found' ) );
+				throw new Exception( __( 'Plugin not found', $this->plugin_text_domain ) );
 			}
+
+			$plugin_name = $this->get_plugin_name( $plugin->plugin_folder );
 
 			$validation_details = [];
 
@@ -532,12 +550,12 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$has_consent = ! empty( $_GET['has_consent'] ) ? true : false;
 
 		foreach ( $plugin_ids as $plugin_id ) {
-			try {
-				// get plugin
-				$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
+			// get plugin
+			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
 
+			try {
 				if ( ! $plugin ) {
-					throw new Exception( __( 'Plugin not found' ) );
+					throw new Exception( __( 'Plugin not found', $this->plugin_text_domain ) );
 				}
 
 				if ( empty( $plugin->consented_at ) && ! $has_consent ) {
@@ -547,12 +565,12 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				$result = self::validate( $plugin->api_key, $plugin->product_number );
 
 				/** @var  $ttl DateTime */
-				$ttl        = $result->getTtl();
+				$ttl            = $result->getTtl();
 				$expires_ttl_at = $ttl->format( DATE_ATOM );
-				$validation = json_encode( $result->getValidations() );
+				$validation     = json_encode( $result->getValidations() );
 
 				$data = [
-					'expires_ttl_at'        => $expires_ttl_at,
+					'expires_ttl_at'    => $expires_ttl_at,
 					'validated_at'      => date( DATE_ATOM ),
 					'validation_result' => $validation,
 				];
@@ -565,12 +583,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 				$count ++;
 			} catch ( RestException $rest_exception ) {
-				$plugin_name = ( ! empty( $plugin ) ) ? " '$plugin->plugin_name'" : '';
-
 				$request = NetLicensingService::getInstance()->lastCurlInfo();
 
 				if ( $request->httpStatusCode === 401 ) {
-					$errors[] = __( 'Failed to validate the plugin' ) . $plugin_name . __( ', please contact the plugin developer.' );
+					$errors[] = sprintf( __( 'Failed to validate the plugin %s, please contact the plugin developer.', $this->plugin_text_domain ), $this->get_plugin_name( $plugin->plugin_folder ) );
 				} else {
 					$errors[] = $rest_exception->getMessage();
 				}
@@ -637,5 +653,9 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		echo "<div class=\"notice notice-$type $is_dismissible\">
                 <p>$message</p>
              </div>";
+	}
+
+	protected function get_plugin_name( $plugin_folder, $default = '' ) {
+		return isset( get_plugins()[ $plugin_folder ]['Name'] ) ? get_plugins()[ $plugin_folder ]['Name'] : $default;
 	}
 }

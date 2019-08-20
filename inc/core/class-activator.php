@@ -43,8 +43,7 @@ class Activator {
 
 		$sql = "CREATE TABLE $plugins_table (
 			ID bigint(20) NOT NULL AUTO_INCREMENT,
-			plugin_slug tinytext NOT NULL,
-			plugin_name tinytext NOT NULL,
+			plugin_folder varchar(255) NOT NULL,
 			product_number varchar(255) NOT NULL,
 			api_key varchar(255) NOT NULL,
 			consented_at timestamp DEFAULT NULL ,

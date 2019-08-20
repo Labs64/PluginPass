@@ -11,7 +11,7 @@ use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
 
 class PluginPass_Guard {
 	use PluginPass_Validatable {
-		validate as restValidate;
+		validate as protected restValidate;
 	}
 	use PluginPass_Plugable;
 
@@ -24,20 +24,24 @@ class PluginPass_Guard {
 	 *
 	 * @param string $api_key NetLicensing APIKey.
 	 * @param string $product_number NetLicensing product number.
-	 * @param string $plugin_name The plugin name.
+	 * @param string $plugin_folder Relative path to single plugin folder.
 	 * @param boolean $has_consent Indicate whether the author of the plugin has the user's consent to the use his personal data.
 	 *
 	 * @throws \Exception
 	 * @since 1.0.0
 	 * @access   public
 	 */
-	public function __construct( $api_key, $product_number, $plugin_name, $has_consent = false ) {
+	public function __construct( $api_key, $product_number, $plugin_folder, $has_consent = false ) {
+		if ( ! array_key_exists( $plugin_folder, get_plugins() ) ) {
+			throw new \Exception( 'Plugin on path "' . $plugin_folder . '" not found' );
+		}
+
 		$this->plugin      = $this->get_plugin( [ 'product_number' => $product_number ] );
 		$this->has_consent = $has_consent;
 
 		$data = [
 			'product_number' => $product_number,
-			'plugin_name'    => $plugin_name,
+			'plugin_folder'  => $plugin_folder,
 			'api_key'        => $api_key,
 		];
 
@@ -70,7 +74,7 @@ class PluginPass_Guard {
 			return false;
 		}
 
-		if ( $this->is_validation_expired()) {
+		if ( $this->is_validation_expired() ) {
 			/** @var  $result ValidationResults */
 			$result = self::restValidate( $this->plugin->api_key, $this->plugin->product_number );
 

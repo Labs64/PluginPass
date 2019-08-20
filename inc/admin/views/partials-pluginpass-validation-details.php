@@ -6,7 +6,7 @@
 ?>
 
 <div class="wrap">
-    <h2> <?php echo __( 'Plugin validation details for "' . $plugin->plugin_name . '"', $this->plugin_text_domain ); ?> </h2>
+    <h2> <?php echo __( 'Plugin validation details for "' . $plugin_name . '"', $this->plugin_text_domain ); ?> </h2>
 
     <div class="pluginpass-card">
 		<?php if ( ! $plugin->validated_at ): ?>
