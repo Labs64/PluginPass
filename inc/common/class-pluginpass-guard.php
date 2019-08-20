@@ -66,17 +66,21 @@ class PluginPass_Guard {
 	 */
 	public function validate( $feature ) {
 
-		if ( $this->is_validation_expired() && $this->has_consent() ) {
+		if ( ! $this->has_consent() ) {
+			return false;
+		}
+
+		if ( $this->is_validation_expired()) {
 			/** @var  $result ValidationResults */
 			$result = self::restValidate( $this->plugin->api_key, $this->plugin->product_number );
 
 			/** @var  $ttl \DateTime */
 			$ttl               = $result->getTtl();
-			$expires_at        = $ttl->format( \DateTime::ATOM );
+			$expires_ttl_at    = $ttl->format( \DateTime::ATOM );
 			$validation_result = json_encode( $result->getValidations() );
 
 			$data = [
-				'expires_at'        => $expires_at,
+				'expires_ttl_at'    => $expires_ttl_at,
 				'validated_at'      => date( DATE_ATOM ),
 				'validation_result' => $validation_result,
 			];
@@ -183,6 +187,6 @@ class PluginPass_Guard {
 	}
 
 	protected function is_validation_expired() {
-		return ( ! $this->plugin->expires_at || strtotime( $this->plugin->expires_at ) <= time() );
+		return ( ! $this->plugin->expires_ttl_at || strtotime( $this->plugin->expires_ttl_at ) <= time() );
 	}
 }

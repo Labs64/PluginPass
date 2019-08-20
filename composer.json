@@ -22,7 +22,7 @@
         "laas",
         "monetize"
     ],
-    "homepage": "https://wordpress.org/plugins/pluginpass/",
+    "homepage": "https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/",
     "license": "GPL-2.0",
     "authors": [
         {
@@ -35,7 +35,7 @@
         "email": "netlicensing@labs64.com",
         "issues": "https://github.com/Labs64/PluginPass/issues",
         "source": "https://github.com/Labs64/PluginPass",
-        "docs": "https://wordpress.org/plugins/pluginpass/faq/"
+        "docs": "https://github.com/Labs64/PluginPass/wiki"
     },
     "require": {
         "php": ">=5.6",

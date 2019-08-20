@@ -43,12 +43,13 @@ class Activator {
 
 		$sql = "CREATE TABLE $plugins_table (
 			ID bigint(20) NOT NULL AUTO_INCREMENT,
-			product_number varchar(255) NOT NULL,
+			plugin_slug tinytext NOT NULL,
 			plugin_name tinytext NOT NULL,
+			product_number varchar(255) NOT NULL,
 			api_key varchar(255) NOT NULL,
 			consented_at timestamp DEFAULT NULL ,
 			validated_at timestamp DEFAULT NULL,
-			expires_at timestamp DEFAULT NULL,
+			expires_ttl_at timestamp DEFAULT NULL,
 			validation_result json DEFAULT NULL,
 			PRIMARY KEY (ID)
 		) $charset_collate;";
