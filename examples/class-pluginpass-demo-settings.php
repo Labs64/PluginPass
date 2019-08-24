@@ -89,6 +89,7 @@ class Pluginpass_Demo_Settings
 
         $plugin_slug = 'pluginpass-demo';
         $plugin_name = 'PluginPass Demo';
+
         $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_name);
 
         if ($quard->validate($product_module_number)) {
