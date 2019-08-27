@@ -135,7 +135,17 @@ For more details on Labs64 NetLicensing data protection provisions visit Labs64 
 == Changelog ==
 
 = 0.9.3 =
-* TODO
+* New: User consent before validation #13
+* New: Add deregister plugin function #15
+* Fix: Column "Expiration Date" used wrongly #18
+* Update: Verify / implement / fix licensee / license deactivation roundtrip #17
+* Update: How To: Describe plugin usage #4
+* New: Install & activate PluginPass as dependency #2
+* Update: Force validate #3
+* Update: Bulk validate plugins error #11
+* Fix: HTTP 4xx/5xx handling #7
+* Update: Optimize DB table structure #10
+* Update: Validation response output variables #9
 
 = 0.9.2 =
 * Update: Plugin documentation

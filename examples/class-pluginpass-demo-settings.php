@@ -4,12 +4,12 @@
  * The settings of the plugin.
  *
  * How To add options page:
- * 1) Copy this file into /admin folder
+ * 1) Copy this file into <plugin>/admin folder
  *
- * 2) insert below statement into class-pluginpass-demo-admin.php
+ * 2) insert below statement into <plugin>/admin/class-pluginpass-demo-admin.php
  * require_once plugin_dir_path( dirname( __FILE__ ) ) .  'admin/class-pluginpass-demo-settings.php';
  *
- * 3) insert below statements into class-pluginpass-demo.php -> define_admin_hooks()
+ * 3) insert below statements into <plugin>/includes/class-pluginpass-demo.php -> define_admin_hooks()
  * $plugin_settings = new Pluginpass_Demo_Settings( $this->get_plugin_name(), $this->get_version() );
  * $this->loader->add_action( 'admin_menu', $plugin_settings, 'pluginpass_demo_options_menu' );
  * $this->loader->add_action( 'admin_init', $plugin_settings, 'pluginpass_demo_options_page' );
@@ -89,16 +89,17 @@ class Pluginpass_Demo_Settings
 
         $plugin_folder = 'pluginpass-demo/pluginpass-demo.php';
 
-        $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_folder);
+        $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_folder, true /*has_consent*/);
 
         if ($quard->validate($product_module_number)) {
-            echo "<div class=\"notice notice-success\"><p>Valid license for $product_module_number found</p></div>";
+            echo "<div class=\"notice notice-success\"><p>Valid license(-s) for $product_module_number found.</p></div>";
         } else {
-            $go_to_shop = $quard->get_shop_url('Acquire licenses');
-            echo "<div class=\"notice notice-error\"><p>No valid license for $product_module_number found</p><p>Shop here: $go_to_shop</p></div>";
+            $go_to_shop = $quard->get_shop_url();
+            echo "<div class=\"notice notice-error\"><p>No valid license(-s) for $product_module_number found!</p><p>Acquire licenses here: $go_to_shop</p></div>";
         }
 
-        // TODO: output verbose
+        echo '<p>RAW Validation Result:</p><pre>';
         print_r($quard->validation_result());
+        echo  '</pre>';
     }
 }
