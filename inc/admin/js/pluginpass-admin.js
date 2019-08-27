@@ -57,5 +57,25 @@
                 }
             })
         });
+
+        $('.need-deregister-confirmation').on('click', function (e) {
+            e.preventDefault();
+
+            var href = $(e.target).attr('href');
+
+            Swal.fire({
+                title:'Are you sure?',
+                html: 'You won\'t be able to revert this!',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Deregister',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = href;
+                }
+            })
+        });
+
     });
 })(jQuery);

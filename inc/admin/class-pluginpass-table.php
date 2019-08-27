@@ -137,7 +137,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		 * column name_in_list_table => columnname in the db
 		 */
 		$sortable_columns = array(
-			'validated_at'   => 'validated_at',
+			'validated_at' => 'validated_at',
 		);
 
 		return $sortable_columns;
@@ -273,15 +273,15 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		}
 
 		// row actions to deregister plugin
-//        $query_args_deregister_plugin = array(
-//            'page' => wp_unslash($_REQUEST['page']),
-//            'action' => 'deregister_plugin',
-//            'plugin_id' => absint($item['ID']),
-//            '_wpnonce' => wp_create_nonce('deregister_plugin_nonce'),
-//        );
-//        $deregister_plugin_link = esc_url(add_query_arg($query_args_deregister_plugin, $admin_page_url));
-//        $actions['deregister_plugin'] = '<a href="' . $deregister_plugin_link . '">' . __('Deregister', $this->plugin_text_domain) . '</a>';
-		$row_value = '<strong>' . $this->get_plugin_name( $item['plugin_folder'] ) . '</strong>';
+		$query_args_deregister_plugin = array(
+			'page'      => wp_unslash( $_REQUEST['page'] ),
+			'action'    => 'deregister_plugin',
+			'plugin_id' => absint( $item['ID'] ),
+			'_wpnonce'  => wp_create_nonce( 'deregister_plugin_nonce' ),
+		);
+		$deregister_plugin_link       = esc_url( add_query_arg( $query_args_deregister_plugin, $admin_page_url ) );
+		$actions['deregister_plugin'] = '<a class="need-deregister-confirmation" href="' . $deregister_plugin_link . '">' . __( 'Deregister', $this->plugin_text_domain ) . '</a>';
+		$row_value                    = '<strong>' . $this->get_plugin_name( $item['plugin_folder'] ) . '</strong>';
 
 		return $row_value . $this->row_actions( $actions );
 	}
@@ -289,7 +289,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	protected function column_expires_at( $item ) {
 		$expires_at = '';
 
-		if(!empty($item['validation_result'])){
+		if ( ! empty( $item['validation_result'] ) ) {
 			foreach ( $item['validation_result'] as $result ) {
 				if ( ! empty( $result['expires'] ) ) {
 					if ( ! $expires_at || strtotime( $result['expires'] ) < strtotime( $expires_at ) ) {
@@ -375,8 +375,8 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		 *
 		 */
 		$actions = array(
-			'bulk-validate' => 'Validate Plugins',
-//            'bulk-deregister' => 'Deregister Plugins'
+			'bulk-validate'   => 'Validate Plugins',
+			'bulk-deregister' => 'Deregister Plugins'
 		);
 
 		return $actions;
@@ -427,8 +427,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			if ( ! wp_verify_nonce( $nonce, 'deregister_plugin_nonce' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-				$this->deregister_plugin( absint( $_REQUEST['user_id'] ) );
-				$this->graceful_exit();
+				$this->deregister_plugin( absint( $_REQUEST['plugin_id'] ) );
 			}
 		}
 
@@ -462,7 +461,6 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				$this->invalid_nonce_redirect();
 			} else {
 				$this->bulk_deregister( $_REQUEST['plugins'] );
-				$this->graceful_exit();
 			}
 		}
 	}
@@ -533,7 +531,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function deregister_plugin( $plugin_id ) {
-		// TODO: degeregister plugin
+		$this->bulk_deregister( [ $plugin_id ] );
 	}
 
 	/**
@@ -551,13 +549,15 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 		$has_consent = ! empty( $_GET['has_consent'] ) ? true : false;
 
+		$plugins = $this->get_plugins( [ 'ID' => $plugin_ids ] );
+
 		foreach ( $plugin_ids as $plugin_id ) {
 			// get plugin
-			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
+			$plugin = isset( $plugins[ $plugin_id ] ) ? $plugins[ $plugin_id ] : null;
 
 			try {
 				if ( ! $plugin ) {
-					throw new Exception( __( 'Plugin not found', $this->plugin_text_domain ) );
+					throw new Exception( sprintf( __( 'Plugin not found', $this->plugin_text_domain ) ) );
 				}
 
 				if ( empty( $plugin->consented_at ) && ! $has_consent ) {
@@ -611,13 +611,41 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	/**
 	 * Bulk deregister plugins.
 	 *
-	 * @param array $bulk_plugin_ids
-	 *
-	 * @since 1.0.0
-	 *
+	 * @param $plugin_ids
 	 */
 	public function bulk_deregister( $plugin_ids ) {
-		// TODO: bulk deregister plugin
+		$errors = [];
+
+		$count = 0;
+
+		$plugins = $this->get_plugins( [ 'ID' => $plugin_ids ] );
+
+		foreach ( $plugin_ids as $plugin_id ) {
+			// get plugin
+			$plugin = isset( $plugins[ $plugin_id ] ) ? $plugins[ $plugin_id ] : null;
+
+			try {
+				if ( ! $plugin ) {
+					throw new Exception( sprintf( __( 'Plugin not found', $this->plugin_text_domain ) ) );
+				}
+
+				$this->delete_plugin( [ 'ID' => $plugin_id ] );
+
+				$count ++;
+			} catch ( Exception $exception ) {
+				$errors[] = $exception->getMessage();
+			}
+		}
+
+		if ( ! empty( $errors ) ) {
+			foreach ( $errors as $error ) {
+				$this->show_notice( $error, 'error', true );
+			}
+		}
+
+		if ( $count > 0 ) {
+			$this->show_notice( $count . __( ' plugin(s) have been deregistered', $this->plugin_text_domain ), 'success', true );
+		}
 	}
 
 	/**
