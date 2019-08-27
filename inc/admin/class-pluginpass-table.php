@@ -289,10 +289,12 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	protected function column_expires_at( $item ) {
 		$expires_at = '';
 
-		foreach ( $item['validation_result'] as $result ) {
-			if ( ! empty( $result['expires'] ) ) {
-				if ( ! $expires_at || strtotime( $result['expires'] ) < strtotime( $expires_at ) ) {
-					$expires_at = $result['expires'];
+		if(!empty($item['validation_result'])){
+			foreach ( $item['validation_result'] as $result ) {
+				if ( ! empty( $result['expires'] ) ) {
+					if ( ! $expires_at || strtotime( $result['expires'] ) < strtotime( $expires_at ) ) {
+						$expires_at = $result['expires'];
+					}
 				}
 			}
 		}
