@@ -82,18 +82,23 @@ class Pluginpass_Demo_Settings
             // Stop activation redirect and show error
             wp_die('Sorry, but this plugin requires the PluginPass Plugin to be installed and active. <br>');
         }
+
         $api_key = '588a16b3-d8b8-4a37-8965-b217eb93dc70';
         $product_number = 'P6N6UW7U4';
-        $plugin_slug = 'pluginpass-demo';
-        $plugin_name = 'PluginPass Demo';
-        $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_name);
         $product_module_number = 'MN5VYRR54';
+
+        $plugin_folder = 'pluginpass-demo/pluginpass-demo.php';
+
+        $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_folder);
 
         if ($quard->validate($product_module_number)) {
             echo "<div class=\"notice notice-success\"><p>Valid license for $product_module_number found</p></div>";
         } else {
             $go_to_shop = $quard->get_shop_url('Acquire licenses');
-            echo "<div class=\"notice notice-error\"><p>No valid license for $product_module_number found</p><p>$go_to_shop</p></div>";
+            echo "<div class=\"notice notice-error\"><p>No valid license for $product_module_number found</p><p>Shop here: $go_to_shop</p></div>";
         }
+
+        // TODO: output verbose
+        print_r($quard->validation_result());
     }
 }

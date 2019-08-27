@@ -38,9 +38,9 @@
             var href = $(e.target).attr('href');
 
             var text = 'By choosing "Agree" validation request will be sent to the Labs64 NetLicensing ' +
-                'to verify valid use of the plugin or theme.' +
+                'to verify valid use of the plugin or theme.<br/>' +
                 'Personal data transferred with this request such as Unique Identifiers, Plugin and Theme Details, ' +
-                'WordPress Instance Name, Domain Name, System Details of the data subject.' +
+                'WordPress Instance Name, Domain Name, System Details of the data subject.<br/><br/>' +
                 'For more details on Labs64 NetLicensing data protection provisions visit ' +
                 '<a target="_blank" href="https://www.labs64.com/legal/privacy-policy">Privacy Policy</a>' +
                 ' and <a target="_blank" href="https://www.labs64.de/confluence/x/vQEKAQ">Privacy Center</a>';

@@ -46,9 +46,9 @@ class Activator {
 			plugin_folder varchar(255) NOT NULL,
 			product_number varchar(255) NOT NULL,
 			api_key varchar(255) NOT NULL,
-			consented_at timestamp DEFAULT NULL ,
-			validated_at timestamp DEFAULT NULL,
-			expires_ttl_at timestamp DEFAULT NULL,
+			consented_at timestamp NULL DEFAULT NULL,
+			validated_at timestamp NULL DEFAULT NULL,
+			expires_ttl_at timestamp NULL DEFAULT NULL,
 			validation_result json DEFAULT NULL,
 			PRIMARY KEY (ID)
 		) $charset_collate;";
@@ -57,7 +57,7 @@ class Activator {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		$indexes                 = $wpdb->get_results( "SHOW INDEX FROM $plugins_table" );
+		$indexes           = $wpdb->get_results( "SHOW INDEX FROM $plugins_table" );
 		$number_index_name = 'pluginpass_pl_number';
 
 		$is_unique_number_exists = false;
