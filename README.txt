@@ -7,7 +7,7 @@ Tags: API, license, licensing, activation, validation, license key, monetization
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 0.9.3
+Stable tag: 0.9.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,7 +45,7 @@ Payment gateways supported in the plugin:
 Add this code-snippet to your plugin:
 
 `
-$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_name );
+$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_folder );
 if ($quard->validate( $product_module_number )) {
     // do something
     $quard->open_shop();
@@ -133,6 +133,9 @@ For more details on Labs64 NetLicensing data protection provisions visit Labs64 
 1. PluginPass Settings
 
 == Changelog ==
+
+= 0.9.4 =
+* TODO
 
 = 0.9.3 =
 * New: User consent before validation #13
