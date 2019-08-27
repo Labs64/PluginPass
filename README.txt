@@ -128,14 +128,21 @@ We strongly encourage you to comply with WordPress [Plugin Guidelines](https://d
 
 For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://www.labs64.de/confluence/x/vQEKAQ).
 
+= Controller’s Responsibilities =
+
+The controller is the principal party for data collection responsibilities. These responsibilities include collecting individual’s consent, storing of the data, managing consent-revoking, enabling the right to access, etc.
+
+If an individual revokes consent, the controller will be responsible for initiating this request. Therefore, on receipt of this request, it will be responsible to remove the revoked data through NetLicensing vendor account.
+
 == Screenshots ==
 
-1. PluginPass Settings
+1. PluginPass Overview
+2. PluginPass Settings
 
 == Changelog ==
 
 = 0.9.4 =
-* TODO
+* Update: Add legal info and references to the plugin #12
 
 = 0.9.3 =
 * New: User consent before validation #13
