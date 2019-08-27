@@ -87,16 +87,18 @@ class Pluginpass_Demo_Settings
         $product_number = 'P6N6UW7U4';
         $product_module_number = 'MN5VYRR54';
 
-        $plugin_slug = 'pluginpass-demo';
-        $plugin_name = 'PluginPass Demo';
+        $plugin_folder = 'pluginpass-demo/pluginpass-demo.php';
 
-        $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_name);
+        $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_folder);
 
         if ($quard->validate($product_module_number)) {
             echo "<div class=\"notice notice-success\"><p>Valid license for $product_module_number found</p></div>";
         } else {
             $go_to_shop = $quard->get_shop_url('Acquire licenses');
-            echo "<div class=\"notice notice-error\"><p>No valid license for $product_module_number found</p><p>$go_to_shop</p></div>";
+            echo "<div class=\"notice notice-error\"><p>No valid license for $product_module_number found</p><p>Shop here: $go_to_shop</p></div>";
         }
+
+        // TODO: output verbose
+        print_r($quard->validation_result());
     }
 }
