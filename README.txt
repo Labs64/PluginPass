@@ -7,7 +7,7 @@ Tags: API, license, licensing, activation, validation, license key, monetization
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 0.9.4
+Stable tag: 0.9.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,6 +142,9 @@ If an individual revokes consent, the controller will be responsible for initiat
 2. PluginPass Settings
 
 == Changelog ==
+
+= 0.9.5 =
+* TODO
 
 = 0.9.4 =
 * Update: Add legal info and references to the plugin #12
