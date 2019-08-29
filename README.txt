@@ -33,8 +33,10 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 
 Payment gateways supported in the plugin:
 
-* PayPal Standard
+* PayPal
 * Stripe
+* MyCommerce
+* FastSpring
 * Braintree - *PLANNED*
 * Authorize.net - *PLANNED*
 * 2Checkout - *PLANNED*
@@ -143,6 +145,7 @@ If an individual revokes consent, the controller will be responsible for initiat
 
 = 0.9.4 =
 * Update: Add legal info and references to the plugin #12
+* Update: Document MyCommerce, FastSpring as the supported payment gateways
 
 = 0.9.3 =
 * New: User consent before validation #13
