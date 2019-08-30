@@ -25,19 +25,17 @@ class PluginPass_Guard {
 	 * @param string $api_key NetLicensing APIKey.
 	 * @param string $product_number NetLicensing product number.
 	 * @param string $plugin_folder Relative path to single plugin folder.
-	 * @param boolean $has_consent Indicate whether the author of the plugin has the user's consent to the use his personal data.
 	 *
 	 * @throws \Exception
 	 * @since 1.0.0
 	 * @access   public
 	 */
-	public function __construct( $api_key, $product_number, $plugin_folder, $has_consent = false ) {
+	public function __construct( $api_key, $product_number, $plugin_folder ) {
 		if ( ! array_key_exists( $plugin_folder, get_plugins() ) ) {
 			throw new \Exception( 'Plugin on path "' . $plugin_folder . '" not found' );
 		}
 
-		$this->plugin      = $this->get_plugin( [ 'product_number' => $product_number ] );
-		$this->has_consent = $has_consent;
+		$this->plugin = $this->get_plugin( [ 'product_number' => $product_number ] );
 
 		$data = [
 			'product_number' => $product_number,
@@ -48,6 +46,19 @@ class PluginPass_Guard {
 		$this->plugin = ( ! $this->plugin )
 			? $this->create_plugin( $data )
 			: $this->update_plugin( $data, [ 'product_number' => $product_number ] );
+	}
+
+	/**
+	 * Set consent state
+	 *
+	 * @param bool $has_consent
+	 *
+	 * @return $this
+	 */
+	public function set_consent( $has_consent = true ) {
+		$this->has_consent = $has_consent;
+
+		return $this;
 	}
 
 	/**
