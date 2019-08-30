@@ -3,7 +3,7 @@ Author URI: https://netlicensing.io
 Plugin URI: https://github.com/Labs64/PluginPass
 Contributors: labs64
 Donate link: https://www.paypal.me/labs64
-Tags: API, license, licensing, activation, validation, license key, monetization, license-management, NetLicensing
+Tags: license manager, software license, license, activation, validation, license key, monetization, NetLicensing
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
