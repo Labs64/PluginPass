@@ -3,11 +3,11 @@ Author URI: https://netlicensing.io
 Plugin URI: https://github.com/Labs64/PluginPass
 Contributors: labs64
 Donate link: https://www.paypal.me/labs64
-Tags: API, license, licensing, activation, validation, license key, monetization, license-management, NetLicensing
+Tags: license manager, software license, license, activation, validation, license key, monetization, NetLicensing
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 0.9.3
+Stable tag: 0.9.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,8 +33,10 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 
 Payment gateways supported in the plugin:
 
-* PayPal Standard
+* PayPal
 * Stripe
+* MyCommerce
+* FastSpring
 * Braintree - *PLANNED*
 * Authorize.net - *PLANNED*
 * 2Checkout - *PLANNED*
@@ -45,7 +47,7 @@ Payment gateways supported in the plugin:
 Add this code-snippet to your plugin:
 
 `
-$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_name );
+$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_folder );
 if ($quard->validate( $product_module_number )) {
     // do something
     $quard->open_shop();
@@ -128,14 +130,38 @@ We strongly encourage you to comply with WordPress [Plugin Guidelines](https://d
 
 For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://www.labs64.de/confluence/x/vQEKAQ).
 
+= Controller’s Responsibilities =
+
+The controller is the principal party for data collection responsibilities. These responsibilities include collecting individual’s consent, storing of the data, managing consent-revoking, enabling the right to access, etc.
+
+If an individual revokes consent, the controller will be responsible for initiating this request. Therefore, on receipt of this request, it will be responsible to remove the revoked data through NetLicensing vendor account.
+
 == Screenshots ==
 
-1. PluginPass Settings
+1. PluginPass Overview
+2. PluginPass Settings
 
 == Changelog ==
 
-= 0.9.3 =
+= 0.9.5 =
 * TODO
+
+= 0.9.4 =
+* Update: Add legal info and references to the plugin #12
+* Update: Document MyCommerce, FastSpring as the supported payment gateways
+
+= 0.9.3 =
+* New: User consent before validation #13
+* New: Add deregister plugin function #15
+* Fix: Column "Expiration Date" used wrongly #18
+* Update: Verify / implement / fix licensee / license deactivation roundtrip #17
+* Update: How To: Describe plugin usage #4
+* New: Install & activate PluginPass as dependency #2
+* Update: Force validate #3
+* Update: Bulk validate plugins error #11
+* Fix: HTTP 4xx/5xx handling #7
+* Update: Optimize DB table structure #10
+* Update: Validation response output variables #9
 
 = 0.9.2 =
 * Update: Plugin documentation

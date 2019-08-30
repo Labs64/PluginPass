@@ -35,8 +35,10 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 
 Payment gateways supported in the plugin:
 
-* PayPal Standard
+* PayPal
 * Stripe
+* MyCommerce
+* FastSpring
 * Braintree - *PLANNED*
 * Authorize.net - *PLANNED*
 * 2Checkout - *PLANNED*
