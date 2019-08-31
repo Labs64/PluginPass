@@ -44,6 +44,12 @@ Payment gateways supported in the plugin:
 * 2Checkout - *PLANNED*
 * SOFORT Banking - *PLANNED*
 
+## PluginPass Overview
+
+[PluginPass](https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/) is defined as a dependency to your WordPress plugin/theme and handles entire communication in a **secure way** with the [Labs64 NetLicensing](https://netlicensing.io), and allows plugins/themes activation and validation at customer's WordPress instance, as well as new Licenses acquisition or Licenses renewal.
+
+![NetLicensing / WordPress Overview](https://github.com/Labs64/PluginPass/blob/master/docs/pluginpass-overview.png)
+
 ## Quickstart
 
 Add this code-snippet to your plugin:
