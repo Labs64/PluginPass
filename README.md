@@ -48,14 +48,14 @@ Payment gateways supported in the plugin:
 
 Add this code-snippet to your plugin:
 ```
-$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_name );
+$quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_folder );
 if ($quard->validate( $product_module_number )) {
     // do something
     $quard->open_shop();
 }
 ```
 
-Detailed integration instructions, [ NetLicensing](https://netlicensing.io) product configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
+Detailed integration instructions, [ NetLicensing](https://netlicensing.io) products configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
 
 
 ## Contributing

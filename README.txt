@@ -15,7 +15,7 @@ PluginPass is a WordPress license manager that makes it easy to monetize your Wo
 
 == Description ==
 
-PluginPass is a *WordPress License Manager* that makes it easy to control the use and monetize your WordPress plugins and themes.
+PluginPass is a *WordPress License Manager* backed by [Labs64 NetLicensing](https://netlicensing.io "Software License Management") that makes it easy to control the use and monetize your WordPress plugins and themes.
 
 The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin’s & theme’s features activation and validation.
 
@@ -29,9 +29,9 @@ The Plugin is designed to be easy-to-use, which you easily define as a dependenc
 * License as many plugins/themes as you want
 * Need more features? - [Let us know](https://github.com/Labs64/PluginPass/issues)
 
-= Payment gateways =
+= Payment Gateways =
 
-Payment gateways supported in the plugin:
+Payment Gateways supported in the plugin:
 
 * PayPal
 * Stripe
@@ -54,29 +54,18 @@ if ($quard->validate( $product_module_number )) {
 }
 `
 
-Detailed integration instructions, NetLicensing product configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
+Detailed integration instructions, NetLicensing products configuration tips and troubleshooting can be found on plugin's [Wiki page](https://github.com/Labs64/PluginPass/wiki).
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+This plugin provides an interface to the Labs64 NetLicensing license management services and needs to be installed as a dependency to the plugins & themes.
+
+Please refer PluginPass [Wiki page](https://github.com/Labs64/PluginPass/wiki) for the configuration details.
 
 = Minimum Requirements =
 
 * WordPress 4.9.7 or greater
 * PHP version 5.6 or greater
-
-= via Upload (FTP, SCP etc.) =
-
-1. Upload the extracted archive folder 'pluginpass' to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. *(optional)* Go to "Settings > PluginPass" to adjust settings
-
-= via WordPress Admin =
-
-1. Go to "Plugins > Add New"
-2. Search for `PluginPass`
-3. Install the plugin called `PluginPass` and activate it
-4. *(optional)* Go to "Settings > PluginPass" to adjust settings
 
 == Upgrade Notice ==
 
@@ -86,11 +75,7 @@ Follow standard Wordpress plugin update process.
 
 = Are recurring payments supported? =
 
-Yes
-
-= How do I adjust the Plugin Settings? =
-
-Once you have activated the plugin you can tinker with the settings to your heart’s content. If you head to "Settings > PluginPass" and you can adjust all settings from there.
+Yes; see Payment Gateways supported.
 
 = Will PluginPass work with my plugin or theme? =
 
@@ -144,7 +129,7 @@ If an individual revokes consent, the controller will be responsible for initiat
 == Changelog ==
 
 = 0.9.5 =
-* TODO
+* Update: plugin documentation
 
 = 0.9.4 =
 * Update: Add legal info and references to the plugin #12
