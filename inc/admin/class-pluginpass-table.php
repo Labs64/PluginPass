@@ -12,6 +12,7 @@ use PluginPass\Inc\Libraries;
 use PluginPass\Inc\Common\PluginPass_Dot;
 use Exception;
 use DateTime;
+use PluginPass as NS;
 
 /**
  * Display PluginPass registered plugins
@@ -52,6 +53,9 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			'singular' => 'plugin',  // Singular label for an object being listed, e.g. 'post'.
 			'ajax'     => false,        // If true, the parent class will call the _js_vars() method in the footer
 		) );
+
+		NetLicensingService::getInstance()->curl()->setUserAgent( 'NetLicensing/PHP/' . NS\PLUGIN_NAME . ' ' . PHP_VERSION . '/' . NS\PLUGIN_VERSION . ' (https://netlicensing.io)' . '; ' . $_SERVER['HTTP_USER_AGENT'] );
+
 	}
 
 	/**

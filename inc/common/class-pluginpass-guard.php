@@ -3,11 +3,13 @@
 namespace PluginPass\Inc\Common;
 
 use NetLicensing\Constants;
+use NetLicensing\NetLicensingService;
 use NetLicensing\Token;
 use NetLicensing\TokenService;
 use NetLicensing\ValidationResults;
 use PluginPass\Inc\Common\Traits\PluginPass_Plugable;
 use PluginPass\Inc\Common\Traits\PluginPass_Validatable;
+use PluginPass as NS;
 
 class PluginPass_Guard {
 	use PluginPass_Validatable {
@@ -46,6 +48,8 @@ class PluginPass_Guard {
 		$this->plugin = ( ! $this->plugin )
 			? $this->create_plugin( $data )
 			: $this->update_plugin( $data, [ 'product_number' => $product_number ] );
+
+		NetLicensingService::getInstance()->curl()->setUserAgent( 'NetLicensing/PHP/' . NS\PLUGIN_NAME . ' ' . PHP_VERSION . '/' . NS\PLUGIN_VERSION . ' (https://netlicensing.io)' . '; ' . $_SERVER['HTTP_USER_AGENT'] );
 	}
 
 	/**
