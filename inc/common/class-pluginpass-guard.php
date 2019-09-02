@@ -72,14 +72,14 @@ class PluginPass_Guard {
 	/**
 	 * Validate plugin feature for the current wordpress instance.
 	 *
-	 * @param string $feature The plugin feature to be checked.
+	 * @param string $module The plugin module to be checked.
 	 *
 	 * @return   boolean The status, whether this feature is available.
 	 * @throws \Exception
 	 * @since 1.0.0
 	 * @access   public
 	 */
-	public function validate( $feature ) {
+	public function validate( $module ) {
 
 		if ( ! $this->has_consent() ) {
 			return false;
@@ -107,37 +107,37 @@ class PluginPass_Guard {
 			$this->plugin = $this->update_plugin( $data, [ 'product_number' => $this->plugin->product_number ] );
 		}
 
-		if ( ! $this->plugin->validation_result || ! PluginPass_Dot::has( $this->plugin->validation_result, $feature ) ) {
+		if ( ! $this->plugin->validation_result || ! PluginPass_Dot::has( $this->plugin->validation_result, $module ) ) {
 			return false;
 		}
 
-		$feature_parsed = explode( '.', $feature );
-		$product_module = reset( $feature_parsed );
+		$module_parsed = explode( '.', $module );
+		$product_module = reset( $module_parsed );
 		$licensingModel = PluginPass_Dot::get( $this->plugin->validation_result, "$product_module.licensingModel" );
 
 		if ( is_null( $licensingModel ) ) {
 			return false;
 		}
 
-		$feature .= ( $licensingModel === Constants::LICENSING_MODEL_MULTI_FEATURE )
+		$module .= ( $licensingModel === Constants::LICENSING_MODEL_MULTI_FEATURE )
 			? '.0.valid' : '.valid';
 
-		return PluginPass_Dot::get( $this->plugin->validation_result, $feature ) === 'true';
+		return PluginPass_Dot::get( $this->plugin->validation_result, $module ) === 'true';
 	}
 
 	/**
-	 * Get validation result for feature
+	 * Get validation result for module
 	 *
-	 * @param null $feature
+	 * @param null $module
 	 *
 	 * @return mixed
 	 */
-	public function validation_result( $feature = null ) {
-		if ( ! $feature ) {
+	public function validation_result( $module = null ) {
+		if ( ! $module ) {
 			return $this->plugin->validation_result;
 		}
 
-		return PluginPass_Dot::get( $this->plugin->validation_result, $feature );
+		return PluginPass_Dot::get( $this->plugin->validation_result, $module );
 	}
 
 	/**
