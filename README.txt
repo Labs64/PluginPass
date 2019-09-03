@@ -128,8 +128,12 @@ If an individual revokes consent, the controller will be responsible for initiat
 
 == Changelog ==
 
+= 0.9.8 =
+* Fix: New Host/Licensee validation fails with HTTP400 - Licensee does not exist #19
+
 = 0.9.7 =
-* TODO
+* Fix: Adjust User-Agent to reflect plugin name and version #14
+* Update: User consent before validation #13
 
 = 0.9.7 =
 * Fix: Adjust User-Agent to reflect plugin name and version #14
