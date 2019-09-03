@@ -87,7 +87,7 @@ class PluginPass_Guard {
 	public function validate( $module ) {
 
 		if ( ! $this->has_consent() ) {
-			return false;
+			throw new NS\Inc\Exceptions\Consent_Missing_Exception();
 		}
 
 		if ( $this->is_validation_expired() ) {
