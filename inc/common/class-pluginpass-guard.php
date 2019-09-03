@@ -149,10 +149,16 @@ class PluginPass_Guard {
 	 * @param string $cancelUrl
 	 * @param string $cancelUrlTitle
 	 *
+	 * @throws NS\Inc\Exceptions\Consent_Missing_Exception
 	 * @since 1.0.0
 	 * @access   public
+	 *
 	 */
 	public function open_shop( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+		if ( ! $this->has_consent() ) {
+			throw new NS\Inc\Exceptions\Consent_Missing_Exception();
+		}
+
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
 
 		$shopUrl = $shopToken->getShopURL();
@@ -169,10 +175,15 @@ class PluginPass_Guard {
 	 * @param string $cancelUrlTitle
 	 *
 	 * @return string
+	 * @throws NS\Inc\Exceptions\Consent_Missing_Exception
 	 * @since 1.0.0
 	 * @access   public
 	 */
 	public function get_shop_url( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
+		if ( ! $this->has_consent() ) {
+			throw new NS\Inc\Exceptions\Consent_Missing_Exception();
+		}
+
 		return $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle )->getShopURL();
 	}
 
