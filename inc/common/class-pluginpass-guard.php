@@ -19,8 +19,6 @@ class PluginPass_Guard {
 
 	protected $plugin;
 
-	protected $has_consent = false;
-
 	/**
 	 * Initialize and register plugin.
 	 *
@@ -58,9 +56,12 @@ class PluginPass_Guard {
 	 * @param bool $has_consent
 	 *
 	 * @return $this
+	 * @throws \Exception
 	 */
 	public function set_consent( $has_consent = true ) {
-		$this->has_consent = $has_consent;
+		if ( $has_consent && empty( $this->plugin->consented_at ) ) {
+			$this->update_plugin( [ 'consented_at' => date( DATE_ATOM ) ], [ 'ID' => $this->plugin->ID ] );
+		}
 
 		return $this;
 	}
@@ -70,7 +71,7 @@ class PluginPass_Guard {
 	 * @return bool
 	 */
 	public function has_consent() {
-		return ( ! empty( $this->plugin->consented_at ) || $this->has_consent );
+		return ( ! empty( $this->plugin->consented_at ) );
 	}
 
 	/**
@@ -104,10 +105,6 @@ class PluginPass_Guard {
 				'validation_result' => $validation_result,
 			];
 
-			if ( empty( $this->plugin->consented_at ) ) {
-				$data['consented_at'] = date( DATE_ATOM );
-			}
-
 			$this->plugin = $this->update_plugin( $data, [ 'product_number' => $this->plugin->product_number ] );
 		}
 
@@ -115,7 +112,7 @@ class PluginPass_Guard {
 			return false;
 		}
 
-		$module_parsed = explode( '.', $module );
+		$module_parsed  = explode( '.', $module );
 		$product_module = reset( $module_parsed );
 		$licensingModel = PluginPass_Dot::get( $this->plugin->validation_result, "$product_module.licensingModel" );
 
