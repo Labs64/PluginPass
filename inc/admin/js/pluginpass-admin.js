@@ -64,8 +64,8 @@
             var href = $(e.target).attr('href');
 
             Swal.fire({
-                title:'Are you sure?',
-                html: 'You won\'t be able to revert this!',
+                title:'Deregister plugin/theme',
+                html: 'Plugin or theme validation details will be deleted!',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Deregister',
