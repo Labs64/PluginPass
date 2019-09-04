@@ -60,7 +60,7 @@ class PluginPass_Guard {
 	 */
 	public function set_consent( $has_consent = true ) {
 		if ( $has_consent && empty( $this->plugin->consented_at ) ) {
-			$this->update_plugin( [ 'consented_at' => date( DATE_ATOM ) ], [ 'ID' => $this->plugin->ID ] );
+			$this->plugin = $this->update_plugin( [ 'consented_at' => date( DATE_ATOM ) ], [ 'ID' => $this->plugin->ID ] );
 		}
 
 		return $this;
