@@ -24,7 +24,7 @@ class PluginPass_Guard {
 	 *
 	 * @param string $api_key NetLicensing APIKey.
 	 * @param string $product_number NetLicensing product number.
-	 * @param string $plugin_folder Relative path to single plugin folder.
+	 * @param string $plugin_folder Relative path to plugin folder.
 	 *
 	 * @throws \Exception
 	 * @since 1.0.0
@@ -32,7 +32,7 @@ class PluginPass_Guard {
 	 */
 	public function __construct( $api_key, $product_number, $plugin_folder ) {
 		if ( ! array_key_exists( $plugin_folder, get_plugins() ) ) {
-			throw new \Exception( 'Plugin on path "' . $plugin_folder . '" not found' );
+			throw new \Exception( 'Plugin path "' . $plugin_folder . '" not found!' );
 		}
 
 		$this->plugin = $this->get_plugin( [ 'product_number' => $product_number ] );
@@ -51,15 +51,13 @@ class PluginPass_Guard {
 	}
 
 	/**
-	 * Set consent state
-	 *
-	 * @param bool $has_consent
+	 * Store user consent timestamp in the database.
 	 *
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function set_consent( $has_consent = true ) {
-		if ( $has_consent && empty( $this->plugin->consented_at ) ) {
+	public function set_consent( ) {
+		if (empty( $this->plugin->consented_at ) ) {
 			$this->plugin = $this->update_plugin( [ 'consented_at' => date( DATE_ATOM ) ], [ 'ID' => $this->plugin->ID ] );
 		}
 
@@ -67,19 +65,20 @@ class PluginPass_Guard {
 	}
 
 	/**
-	 * Indicate whether the author of the plugin has the user's consent to the use his personal data.
-	 * @return bool
+	 * Verify, whether user consent is available.
+	 *
+	 * @return bool true if user consent is available
 	 */
 	public function has_consent() {
 		return ( ! empty( $this->plugin->consented_at ) );
 	}
 
 	/**
-	 * Validate plugin feature for the current wordpress instance.
+	 * Validate plugin or theme module/feature for the current wordpress instance.
 	 *
 	 * @param string $module The plugin module to be checked.
 	 *
-	 * @return   boolean The status, whether this feature is available.
+	 * @return   boolean The status, whether this module/feature is available.
 	 * @throws \Exception
 	 * @since 1.0.0
 	 * @access   public
@@ -216,4 +215,5 @@ class PluginPass_Guard {
 	protected function is_validation_expired() {
 		return ( ! $this->plugin->expires_ttl_at || strtotime( $this->plugin->expires_ttl_at ) <= time() );
 	}
+
 }

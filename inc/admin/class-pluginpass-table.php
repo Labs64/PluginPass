@@ -347,7 +347,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		}
 
 		if ( ! $item['validated_at'] ) {
-			return '<span class="label label-danger">' . __( 'run validation first', $this->plugin_text_domain ) . '</span>';
+			return '<span class="label label-danger">' . __( 'not validated', $this->plugin_text_domain ) . '</span>';
 		}
 
 		if ( $valid > 0 && $invalid === 0 ) {

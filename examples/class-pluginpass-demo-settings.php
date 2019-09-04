@@ -80,7 +80,7 @@ class Pluginpass_Demo_Settings
     {
         if (!is_plugin_active('pluginpass/pluginpass.php') and current_user_can('activate_plugins')) {
             // Stop activation redirect and show error
-            wp_die('Sorry, but this plugin requires the PluginPass Plugin to be installed and active. <br>');
+            wp_die('This plugin/theme requires PluginPass plugin to be installed and active!');
         }
 
         $api_key = '588a16b3-d8b8-4a37-8965-b217eb93dc70';
@@ -89,7 +89,8 @@ class Pluginpass_Demo_Settings
 
         $plugin_folder = 'pluginpass-demo/pluginpass-demo.php';
 
-        $quard = new \PluginPass\Inc\Common\PluginPass_Guard($api_key, $product_number, $plugin_folder, true /*has_consent*/);
+        $quard = new \PluginPass\Inc\Common\PluginPass_Guard( $api_key, $product_number, $plugin_folder );
+        $quard->set_consent();
 
         if ($quard->validate($product_module_number)) {
             echo "<div class=\"notice notice-success\"><p>Valid license(-s) for $product_module_number found.</p></div>";
@@ -102,4 +103,5 @@ class Pluginpass_Demo_Settings
         print_r($quard->validation_result());
         echo  '</pre>';
     }
+
 }
