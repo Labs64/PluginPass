@@ -39,7 +39,7 @@ class Pluginpass_Demo_Settings {
 			[
 				$this,
 				'render_settings_page_content'
-			]               // The name of the function to call when rendering this menu's page
+			]
 		);
 	}
 
@@ -74,7 +74,7 @@ class Pluginpass_Demo_Settings {
 
 
 	public function install_and_activate_pluginpass_as_dependency() {
-		$pluginpass_slug   = 'pluginpass-pro-plugintheme-licensing';
+    $pluginpass_slug   = 'pluginpass-pro-plugintheme-licensing';
 		$pluginpass_folder = "$pluginpass_slug/pluginpass.php";
 
 		// Require PluginPass plugin
@@ -126,9 +126,9 @@ class Pluginpass_Demo_Settings {
                         <input id='api_key' type='text' name='api_key' value='<?php print $api_key ?>'
                                class='regular-text' required>
                         <p class='description'>
-                            PluginPass uses the NetLicensing service to validation, you need to create your <a
-                                    target='_blank' href='https://ui.netlicensing.io/#/settings'>API Key</a>.
-                            We recommend to create an API key with the \"Licensee\" role.
+                            PluginPass uses the NetLicensing services to validate plugins/themes. You need to create an <a
+                                    target='_blank' href='https://ui.netlicensing.io/#/settings'>API Key</a>;
+                            recommended API Key role is "Licensee" role.
                         </p>
                     </td>
                 </tr>
@@ -141,8 +141,8 @@ class Pluginpass_Demo_Settings {
                                value='<?php print $product_number ?>'
                                class='regular-text' required>
                         <p class='description'>
-                            If you don't know what product number you have to put please read the manual \"Setup
-                            NetLicensing\".
+                            Provide NetLicensing "Product Number". Detailed configuration details can be found <a
+                                    target='_blank' href='https://github.com/Labs64/PluginPass/wiki/Set-up-NetLicensing'>here</a>.
                         </p>
                     </td>
                 </tr>
@@ -154,7 +154,8 @@ class Pluginpass_Demo_Settings {
                         <input id='product_module_number' type='text' name='product_module_number'
                                value='<?php print $product_module_number ?>' class='regular-text' required>
                         <p class='description'>
-                            The number of the module you want to check.
+                          Provide NetLicensing "Module Number" to be verified. Detailed configuration details can be found <a
+                                  target='_blank' href='https://github.com/Labs64/PluginPass/wiki/Set-up-NetLicensing'>here</a>.
                         </p>
                     </td>
                 </tr>
@@ -169,21 +170,25 @@ class Pluginpass_Demo_Settings {
                                 </option>
 							<?php endforeach; ?>
                         </select>
+                        <p class='description'>
+                          Choose Plugin to be validated.
+                        </p>
                     </td>
                 </tr>
 				<?php if ( ! $has_consent ): ?>
                     <tr>
                         <th>
-                            <label for='product_module_number'>Consent:</label>
+                            <label for='product_module_number'>User Consent:</label>
                         </th>
                         <td>
                             <fieldset>
                                 <legend class='screen-reader-text'>
-                                    <span>Consent</span>
+                                    <span>User Consent</span>
                                 </legend>
                                 <label for='users_can_register'>
                                     <input name='has_consent' type='checkbox' value='1'>
-                                    I agree to the use of my personal data for validation
+                                    I agree to have my personal data <a
+                                            target='_blank' href='https://www.labs64.com/legal/privacy-policy'>processed as follows</a>.
                                 </label>
                             </fieldset>
                         </td>
@@ -249,18 +254,18 @@ class Pluginpass_Demo_Settings {
 					$guard->set_consent();
 				}
 
-				if ( ! $guard->validate( $product_module_number ) ) {
+				if ( $guard->validate( $product_module_number ) ) {
 					$this->show_notice( "Module $product_module_number is valid", 'success' );
 				} else {
 					$shop_url = $guard->get_shop_url();
-					$this->show_notice( "Module $product_module_number is invalid. If you want buy it please <a target='_blank' href='$shop_url'>click</a>.", 'warning' );
+					$this->show_notice( "Module $product_module_number is not invalid. Renew or acquire license <a target='_blank' href='$shop_url'>click</a>.", 'warning' );
 				}
 
 				$result = print_r( $guard->validation_result(), true );
 
 				$this->show_notice( "Validation result: $result", 'success' );
 			} catch ( \PluginPass\Inc\Exceptions\Consent_Missing_Exception $consent_missing_exception ) {
-				$this->show_notice( 'Please give us consent to use your personal data', 'error' );
+				$this->show_notice( 'User consent must be available to process personal data!', 'error' );
 			} catch ( Exception $exception ) {
 				$this->show_notice( $exception->getMessage(), 'error' );
 			}
