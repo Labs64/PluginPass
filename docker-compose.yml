@@ -25,8 +25,9 @@ services:
        WORDPRESS_DB_USER: pluginpass
        WORDPRESS_DB_PASSWORD: pluginpass
        WORDPRESS_DEBUG: 1
+       WORDPRESS_DEBUG_LOG: 1
      volumes:
-       - ".:/var/www/html/wp-content/plugins/pluginpass"
+       - ".:/var/www/html/wp-content/plugins/pluginpass-pro-plugintheme-licensing"
        - "./data/pluginpass-demo:/var/www/html/wp-content/plugins/pluginpass-demo"
    phpmyadmin:
      image: phpmyadmin/phpmyadmin
