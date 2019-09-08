@@ -114,6 +114,10 @@ class Init {
 		//Add a top-level admin menu for our plugin
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 
+		// Add an action link pointing to the options page.
+		$plugin_basename = $this->plugin_basename . '/' . $this->plugin_name . '.php';
+		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_plugin_action_links' );
+
 		//when a form is submitted to admin-post.php
 		$this->loader->add_action( 'admin_post_pluginpass_form_response', $plugin_admin, 'the_form_response' );
 

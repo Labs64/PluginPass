@@ -111,6 +111,17 @@ class Pluginpass_Admin {
 		add_action( 'load-' . $page_hook, array( $this, 'load_pluginpass_table_screen_options' ) );
 	}
 
+	/*
+	*  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
+	*/
+	public function add_plugin_action_links( $links ) {
+		$links[] = '<a href="https://github.com/Labs64/PluginPass/wiki" target="_blank">Docs</a>';
+	   $settings_link = array(
+	      '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __( 'Settings', $this->plugin_name ) . '</a>',
+	   );
+	   return array_merge(  $settings_link, $links );
+	}
+
 	/**
 	 * Screen options for the List Table
 	 *

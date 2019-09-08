@@ -15,7 +15,7 @@ define( NS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 
 define( NS . 'PLUGIN_NAME_URL', plugin_dir_url( __FILE__ ) );
 
-define( NS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+define( NS . 'PLUGIN_BASENAME', plugin_basename( __DIR__ ) );
 
 define( NS . 'PLUGIN_TEXT_DOMAIN', 'pluginpass' );
 
