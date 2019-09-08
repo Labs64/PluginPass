@@ -258,7 +258,7 @@ class Pluginpass_Demo_Settings {
 					$this->show_notice( "Module $product_module_number is valid", 'success' );
 				} else {
 					$shop_url = $guard->get_shop_url();
-					$this->show_notice( "Module $product_module_number is not invalid. Renew or acquire license <a target='_blank' href='$shop_url'>click</a>.", 'warning' );
+					$this->show_notice( "Module $product_module_number is not invalid. Renew or acquire license <a target='_blank' href='$shop_url'>here</a>.", 'warning' );
 				}
 
 				$result = print_r( $guard->validation_result(), true );
