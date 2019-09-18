@@ -7,7 +7,7 @@ Tags: license manager, software license, license, activation, validation, licens
 Requires at least: 4.9.7
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 0.9.10
+Stable tag: 0.9.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,6 +128,9 @@ If an individual revokes consent, the controller will be responsible for initiat
 
 == Changelog ==
 
+= 0.9.11 =
+* TODO
+
 = 0.9.10 =
 * Update: Plugin description and banner
 
@@ -142,7 +145,7 @@ If an individual revokes consent, the controller will be responsible for initiat
 * Fix: Adjust User-Agent to reflect plugin name and version #14
 * Update: User consent before validation #13
 
-= 0.9.10 =
+= 0.9.11 =
 * Fix: Adjust User-Agent to reflect plugin name and version #14
 * Update: plugin documentation
 
