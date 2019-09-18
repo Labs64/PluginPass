@@ -14,7 +14,7 @@
  * @wordpress-plugin
  * Plugin Name:       PluginPass
  * Plugin URI:        https://github.com/Labs64/PluginPass
- * Description:       WordPress Plugin/Theme Licensing powered by Labs64 NetLicensing
+ * Description:       Easily control the use and monetize your WordPress plugins and themes using PluginPass - a WordPress License Manager backed by Labs64 NetLicensing.
  * Version:           0.9.10
  * Author:            Labs64
  * Author URI:        https://netlicensing.io

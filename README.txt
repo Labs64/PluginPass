@@ -15,7 +15,7 @@ PluginPass is a WordPress license manager that makes it easy to monetize your Wo
 
 == Description ==
 
-PluginPass is a *WordPress License Manager* backed by [Labs64 NetLicensing](https://netlicensing.io "Software License Management") that makes it easy to control the use and monetize your WordPress plugins and themes.
+Easily control the use and monetize your WordPress plugins and themes using PluginPass - a *WordPress License Manager* backed by [Labs64 NetLicensing](https://netlicensing.io "Software License Management").
 
 The Plugin is designed to be easy-to-use, which you easily define as a dependency to your plugin or theme, so this takes care of the plugin’s & theme’s features activation and validation.
 
