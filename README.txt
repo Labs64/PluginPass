@@ -129,7 +129,7 @@ If an individual revokes consent, the controller will be responsible for initiat
 == Changelog ==
 
 = 0.9.10 =
-* TODO
+* Update: Plugin description and banner
 
 = 0.9.9 =
 * Add plugins meta info
