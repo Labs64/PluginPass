@@ -113,7 +113,7 @@ The applicable data protection provisions of Labs64 NetLicensing may be retrieve
 
 We strongly encourage you to comply with WordPress [Plugin Guidelines](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/) and General Data Protection Regulation (GDPR) while developing your plugins and themes and interfacing with [Labs64 NetLicensing Services](https://netlicensing.io).
 
-For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://www.labs64.de/confluence/x/vQEKAQ).
+For more details on Labs64 NetLicensing data protection provisions visit Labs64 [Privacy Center](https://netlicensing.io/wiki/privacy-center).
 
 = Controller’s Responsibilities =
 
