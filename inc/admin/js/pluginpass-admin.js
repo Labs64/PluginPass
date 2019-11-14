@@ -43,7 +43,7 @@
                 'WordPress Instance Name, Domain Name, System Details of the data subject.<br/><br/>' +
                 'For more details on Labs64 NetLicensing data protection provisions visit ' +
                 '<a target="_blank" href="https://www.labs64.com/legal/privacy-policy">Privacy Policy</a>' +
-                ' and <a target="_blank" href="https://www.labs64.de/confluence/x/vQEKAQ">Privacy Center</a>';
+                ' and <a target="_blank" href="https://netlicensing.io/wiki/privacy-center">Privacy Center</a>';
 
             Swal.fire({
                 html: text,
