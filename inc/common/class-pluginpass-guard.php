@@ -47,7 +47,8 @@ class PluginPass_Guard {
 			? $this->create_plugin( $data )
 			: $this->update_plugin( $data, [ 'product_number' => $product_number ] );
 
-		NetLicensingService::getInstance()->curl()->setUserAgent( 'NetLicensing/PHP/' . NS\PLUGIN_NAME . ' ' . PHP_VERSION . '/' . NS\PLUGIN_VERSION . ' (https://netlicensing.io)' . '; ' . $_SERVER['HTTP_USER_AGENT'] );
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+		NetLicensingService::getInstance()->curl()->setUserAgent( 'NetLicensing/PHP/' . NS\PLUGIN_NAME . ' ' . PHP_VERSION . '/' . NS\PLUGIN_VERSION . ' (https://netlicensing.io)' . '; ' . $user_agent );
 	}
 
 	/**
@@ -158,11 +159,21 @@ class PluginPass_Guard {
 			throw new NS\Inc\Exceptions\Consent_Missing_Exception();
 		}
 
+		// Validate and sanitize URLs to prevent open redirect and SSRF
+		$successUrl = $this->validate_redirect_url( $successUrl );
+		$cancelUrl = $this->validate_redirect_url( $cancelUrl );
+
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
 
 		$shopUrl = $shopToken->getShopURL();
 
-		header( "Location:$shopUrl", true, 307 );
+		// Validate the shop URL before redirecting
+		if ( ! $this->is_safe_redirect_url( $shopUrl ) ) {
+			wp_die( esc_html__( 'Invalid redirect URL', 'pluginpass' ), esc_html__( 'Security Error', 'pluginpass' ), array( 'response' => 403 ) );
+		}
+
+		wp_safe_redirect( $shopUrl, 307 );
+		exit;
 	}
 
 	/**
@@ -182,6 +193,10 @@ class PluginPass_Guard {
 		if ( ! $this->has_consent() ) {
 			throw new NS\Inc\Exceptions\Consent_Missing_Exception();
 		}
+
+		// Validate and sanitize URLs to prevent open redirect and SSRF
+		$successUrl = $this->validate_redirect_url( $successUrl );
+		$cancelUrl = $this->validate_redirect_url( $cancelUrl );
 
 		return $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle )->getShopURL();
 	}
@@ -210,6 +225,79 @@ class PluginPass_Guard {
 		$shopToken = TokenService::create( self::get_context( $this->plugin->api_key ), $shopToken );
 
 		return $shopToken;
+	}
+
+	/**
+	 * Validate and sanitize redirect URLs to prevent open redirect and SSRF attacks
+	 *
+	 * @param string $url The URL to validate
+	 * @return string Sanitized URL or empty string if invalid
+	 */
+	protected function validate_redirect_url( $url ) {
+		if ( empty( $url ) ) {
+			return '';
+		}
+
+		// Sanitize the URL
+		$url = esc_url_raw( $url );
+
+		// Only allow HTTP and HTTPS protocols
+		$parsed_url = wp_parse_url( $url );
+		if ( ! $parsed_url || ! isset( $parsed_url['scheme'] ) ) {
+			return '';
+		}
+
+		if ( ! in_array( $parsed_url['scheme'], array( 'http', 'https' ), true ) ) {
+			return '';
+		}
+
+		// Optionally, validate against allowed domains (whitelist approach)
+		// For now, we allow any valid HTTP(S) URL since this is for callbacks
+		// Plugin developers can override this method for stricter validation
+
+		return $url;
+	}
+
+	/**
+	 * Check if a URL is safe for redirect (from trusted NetLicensing service)
+	 *
+	 * @param string $url The URL to check
+	 * @return bool True if safe, false otherwise
+	 */
+	protected function is_safe_redirect_url( $url ) {
+		if ( empty( $url ) ) {
+			return false;
+		}
+
+		// Sanitize and parse the URL
+		$url = esc_url_raw( $url );
+		$parsed_url = wp_parse_url( $url );
+
+		if ( ! $parsed_url || ! isset( $parsed_url['scheme'] ) || ! isset( $parsed_url['host'] ) ) {
+			return false;
+		}
+
+		// Only allow HTTPS for shop URLs (more secure)
+		if ( $parsed_url['scheme'] !== 'https' ) {
+			return false;
+		}
+
+		// Whitelist trusted NetLicensing domains
+		$trusted_domains = array(
+			'netlicensing.io',
+			'www.netlicensing.io',
+			'go.netlicensing.io',
+		);
+
+		// Check if the host matches trusted domains
+		$host = strtolower( $parsed_url['host'] );
+		foreach ( $trusted_domains as $trusted_domain ) {
+			if ( $host === $trusted_domain || substr( $host, -( strlen( $trusted_domain ) + 1 ) ) === '.' . $trusted_domain ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected function is_validation_expired() {

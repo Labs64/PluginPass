@@ -82,23 +82,33 @@ trait PluginPass_Plugable {
 
 		$plugins_table = Activator::get_plugins_table_name();
 
-		$query = "SELECT * FROM $plugins_table";
-
-		if ( ! empty( $where ) ) {
-			$queryWhere = implode( ' AND ', array_map( function ( $key, $value ) {
+		if ( empty( $where ) ) {
+			$query = "SELECT * FROM $plugins_table";
+			$results = $wpdb->get_results( $query );
+		} else {
+			// Build safe WHERE clause using wpdb->prepare()
+			$where_clauses = [];
+			$where_values = [];
+			
+			foreach ( $where as $key => $value ) {
+				// Sanitize column name to prevent SQL injection
+				$safe_key = preg_replace( '/[^a-zA-Z0-9_]/', '', $key );
+				
 				if ( is_array( $value ) ) {
-					$in = implode( '\',', $value );
-
-					return "$key IN ('$in')";
+					// Use IN clause for arrays
+					$placeholders = implode( ', ', array_fill( 0, count( $value ), is_numeric( reset( $value ) ) ? '%d' : '%s' ) );
+					$where_clauses[] = "$safe_key IN ($placeholders)";
+					$where_values = array_merge( $where_values, array_values( $value ) );
+				} else {
+					// Use equality for single values
+					$where_clauses[] = is_numeric( $value ) ? "$safe_key = %d" : "$safe_key = %s";
+					$where_values[] = $value;
 				}
-
-				return "$key='$value'";
-			}, array_keys( $where ), $where ) );
-
-			$query .= " WHERE $queryWhere";
+			}
+			
+			$query = "SELECT * FROM $plugins_table WHERE " . implode( ' AND ', $where_clauses );
+			$results = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
 		}
-
-		$results = $wpdb->get_results( $query );
 
 		$plugins = [];
 

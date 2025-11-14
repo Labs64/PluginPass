@@ -4,10 +4,10 @@ Plugin URI: https://github.com/Labs64/PluginPass
 Contributors: labs64
 Donate link: https://www.paypal.me/labs64
 Tags: license manager, software license, license, activation, validation, license key, monetization, NetLicensing
-Requires at least: 4.9.7
-Tested up to: 5.2.2
-Requires PHP: 5.6
-Stable tag: 0.9.11
+Requires at least: 6.0
+Tested up to: 6.8
+Requires PHP: 8.2
+Stable tag: 0.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,12 +64,13 @@ Please refer PluginPass [Wiki page](https://github.com/Labs64/PluginPass/wiki) f
 
 = Minimum Requirements =
 
-* WordPress 4.9.7 or greater
-* PHP version 5.6 or greater
+* WordPress 6.0 or greater
+* PHP version 8.2 or greater (PHP 8.3+ recommended)
 
 == Upgrade Notice ==
 
-Follow standard Wordpress plugin update process.
+= 0.10.0 =
+CRITICAL SECURITY UPDATE: This version fixes multiple security vulnerabilities including SQL injection and XSS. Please update immediately. See SECURITY.md for details.
 
 == Frequently Asked Questions ==
 
@@ -128,8 +129,21 @@ If an individual revokes consent, the controller will be responsible for initiat
 
 == Changelog ==
 
-= 0.9.11 =
-* TODO
+= 0.10.0 =
+* SECURITY: Fixed critical SQL injection vulnerability in database queries
+* SECURITY: Fixed Open Redirect and SSRF vulnerability in shop URL handling
+* SECURITY: Fixed multiple XSS vulnerabilities in admin interface
+* SECURITY: Added proper authorization checks for admin operations
+* SECURITY: Sanitized HTTP headers to prevent injection attacks
+* Fix: Enhanced input validation and output escaping throughout
+* Fix: Replaced raw header() redirects with wp_safe_redirect()
+* Fix: Added URL whitelist validation for external redirects
+* Update: Lowered PHP requirement from 8.3 to 7.4 for better compatibility
+* Update: Tested and certified compatibility with WordPress 6.7
+* Update: Updated NetLicensing client library to 2.5.0
+* Added: SECURITY.md with security policy
+* Added: UPGRADE.md with detailed upgrade instructions
+* Added: CHANGELOG.md for better version tracking
 
 = 0.9.10 =
 * Update: Plugin description and banner

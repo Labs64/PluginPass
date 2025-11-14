@@ -54,7 +54,8 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			'ajax'     => false,        // If true, the parent class will call the _js_vars() method in the footer
 		) );
 
-		NetLicensingService::getInstance()->curl()->setUserAgent( 'NetLicensing/PHP/' . NS\PLUGIN_NAME . ' ' . PHP_VERSION . '/' . NS\PLUGIN_VERSION . ' (https://netlicensing.io)' . '; ' . $_SERVER['HTTP_USER_AGENT'] );
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+		NetLicensingService::getInstance()->curl()->setUserAgent( 'NetLicensing/PHP/' . NS\PLUGIN_NAME . ' ' . PHP_VERSION . '/' . NS\PLUGIN_VERSION . ' (https://netlicensing.io)' . '; ' . $user_agent );
 
 	}
 
@@ -400,6 +401,11 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		 * action2 - is set if checkbox the bottom-most select-all checkbox is set, otherwise returns -1
 		 */
 
+		// Check user capabilities
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		// check for individual row actions
 		$the_table_action = $this->current_action();
 
@@ -448,7 +454,8 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			if ( ! wp_verify_nonce( $nonce, 'bulk-plugins' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-				$this->bulk_validate( $_REQUEST['plugins'] );
+				$plugin_ids = isset( $_REQUEST['plugins'] ) ? array_map( 'absint', $_REQUEST['plugins'] ) : array();
+				$this->bulk_validate( $plugin_ids );
 			}
 		}
 
@@ -464,7 +471,8 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			if ( ! wp_verify_nonce( $nonce, 'bulk-plugins' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-				$this->bulk_deregister( $_REQUEST['plugins'] );
+				$plugin_ids = isset( $_REQUEST['plugins'] ) ? array_map( 'absint', $_REQUEST['plugins'] ) : array();
+				$this->bulk_deregister( $plugin_ids );
 			}
 		}
 	}

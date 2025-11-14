@@ -1,0 +1,266 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "41b8a40952afffb93a4441c1f58edae2",
+    "packages": [
+        {
+            "name": "fr3d/xmldsig",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Maks3w/xmldsig.git",
+                "reference": "e42980d022cede00f7ff34285e85db23cd89882a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Maks3w/xmldsig/zipball/e42980d022cede00f7ff34285e85db23cd89882a",
+                "reference": "e42980d022cede00f7ff34285e85db23cd89882a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-soap": "*",
+                "php": ">= 7.0",
+                "robrichards/xmlseclibs": "^3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "^6.0",
+                "sensiolabs/security-checker": "^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FR3D\\XmlDSig\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "Tool for easy management of XML Signatures (http://www.w3.org/TR/xmldsig-core/)",
+            "homepage": "https://github.com/Maks3w/xmldsig/",
+            "keywords": [
+                "security",
+                "signature",
+                "soap",
+                "xml",
+                "xmldsig"
+            ],
+            "support": {
+                "issues": "https://github.com/Maks3w/xmldsig/issues",
+                "source": "https://github.com/Maks3w/xmldsig/tree/master"
+            },
+            "time": "2018-10-09T19:54:34+00:00"
+        },
+        {
+            "name": "labs64/netlicensingclient-php",
+            "version": "2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Labs64/NetLicensingClient-php.git",
+                "reference": "329cb76720d18695299c20e11453cc5c0f62a5e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Labs64/NetLicensingClient-php/zipball/329cb76720d18695299c20e11453cc5c0f62a5e7",
+                "reference": "329cb76720d18695299c20e11453cc5c0f62a5e7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "fr3d/xmldsig": "^3.0",
+                "php": ">=8.2",
+                "php-curl-class/php-curl-class": "^11.0.0 || ^12.0.0"
+            },
+            "require-dev": {
+                "fakerphp/faker": "^1.23",
+                "phpunit/phpunit": "^10.5",
+                "wp-cli/php-cli-tools": "^0.12"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "netlicensing.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Labs64 NetLicensing",
+                    "email": "netlicensing@labs64.com",
+                    "homepage": "https://netlicensing.io"
+                }
+            ],
+            "description": "PHP wrapper for Labs64 NetLicensing RESTful API",
+            "homepage": "https://netlicensing.io",
+            "keywords": [
+                "NetLicensing",
+                "api",
+                "client",
+                "floating",
+                "license",
+                "license management",
+                "license types",
+                "licensing",
+                "licensing as a service",
+                "licensing model",
+                "pay-per-use",
+                "rest",
+                "restful",
+                "software activation",
+                "software license",
+                "subscription"
+            ],
+            "support": {
+                "docs": "https://netlicensing.io/wiki/",
+                "email": "netlicensing@labs64.com",
+                "issues": "https://github.com/Labs64/NetLicensingClient-php/issues",
+                "source": "https://github.com/Labs64/NetLicensingClient-php",
+                "wiki": "https://netlicensing.io/wiki/"
+            },
+            "time": "2025-11-15T09:25:16+00:00"
+        },
+        {
+            "name": "php-curl-class/php-curl-class",
+            "version": "12.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-curl-class/php-curl-class.git",
+                "reference": "6484fdde6b1f64ffe77ac6a4c088c7e08e18a7f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/6484fdde6b1f64ffe77ac6a4c088c7e08e18a7f8",
+                "reference": "6484fdde6b1f64ffe77ac6a4c088c7e08e18a7f8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "*",
+                "ext-gd": "*",
+                "friendsofphp/php-cs-fixer": "*",
+                "phpcompatibility/php-compatibility": "dev-develop",
+                "phpcsstandards/phpcsutils": "@alpha",
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "*",
+                "squizlabs/php_codesniffer": "*"
+            },
+            "suggest": {
+                "ext-mbstring": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Curl\\": "src/Curl/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "authors": [
+                {
+                    "name": "Zach Borboa"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/php-curl-class/php-curl-class/graphs/contributors"
+                }
+            ],
+            "description": "PHP Curl Class makes it easy to send HTTP requests and integrate with web APIs.",
+            "homepage": "https://github.com/php-curl-class/php-curl-class",
+            "keywords": [
+                "API-Client",
+                "api",
+                "class",
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http-client",
+                "http-proxy",
+                "json",
+                "php",
+                "php-curl",
+                "php-curl-library",
+                "proxy",
+                "requests",
+                "restful",
+                "web-scraper",
+                "web-scraping ",
+                "web-service",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/php-curl-class/php-curl-class/issues",
+                "source": "https://github.com/php-curl-class/php-curl-class/tree/12.0.1"
+            },
+            "time": "2025-11-03T18:05:05+00:00"
+        },
+        {
+            "name": "robrichards/xmlseclibs",
+            "version": "3.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robrichards/xmlseclibs.git",
+                "reference": "2bdfd742624d739dfadbd415f00181b4a77aaf07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/2bdfd742624d739dfadbd415f00181b4a77aaf07",
+                "reference": "2bdfd742624d739dfadbd415f00181b4a77aaf07",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": ">= 5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RobRichards\\XMLSecLibs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "A PHP library for XML Security",
+            "homepage": "https://github.com/robrichards/xmlseclibs",
+            "keywords": [
+                "security",
+                "signature",
+                "xml",
+                "xmldsig"
+            ],
+            "support": {
+                "issues": "https://github.com/robrichards/xmlseclibs/issues",
+                "source": "https://github.com/robrichards/xmlseclibs/tree/3.1.3"
+            },
+            "time": "2024-11-20T21:13:56+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {},
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=8.2"
+    },
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
+}

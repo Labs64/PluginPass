@@ -218,23 +218,23 @@ class Pluginpass_Demo_Settings {
 		$this->install_and_activate_pluginpass_as_dependency();
 
 		$api_key = ! empty( $_GET['api_key'] )
-			? $_GET['api_key']
+			? sanitize_text_field( wp_unslash( $_GET['api_key'] ) )
 			: get_option( 'pluginpass_api_key', '' );
 
 		$product_number = ! empty( $_GET['product_number'] )
-			? $_GET['product_number']
+			? sanitize_text_field( wp_unslash( $_GET['product_number'] ) )
 			: get_option( 'pluginpass_product_number', '' );
 
 		$product_module_number = ! empty( $_GET['product_module_number'] )
-			? $_GET['product_module_number']
+			? sanitize_text_field( wp_unslash( $_GET['product_module_number'] ) )
 			: get_option( 'pluginpass_product_module_number', '' );
 
 		$plugin_folder = ! empty( $_GET['plugin_folder'] )
-			? $_GET['plugin_folder']
+			? sanitize_text_field( wp_unslash( $_GET['plugin_folder'] ) )
 			: get_option( 'pluginpass_plugin_folder', '' );
 
 		$has_consent = ! empty( $_GET['has_consent'] )
-			? $_GET['has_consent']
+			? (bool) sanitize_text_field( wp_unslash( $_GET['has_consent'] ) )
 			: false;
 
 		if ( ! empty( $_GET['submit'] ) ) {
@@ -254,14 +254,12 @@ class Pluginpass_Demo_Settings {
 					$guard->set_consent();
 				}
 
-				if ( $guard->validate( $product_module_number ) ) {
-					$this->show_notice( "Module $product_module_number is valid", 'success' );
-				} else {
-					$shop_url = $guard->get_shop_url();
-					$this->show_notice( "Module $product_module_number is not invalid. Renew or acquire license <a target='_blank' href='$shop_url'>here</a>.", 'warning' );
-				}
-
-				$result = print_r( $guard->validation_result(), true );
+			if ( $guard->validate( $product_module_number ) ) {
+				$this->show_notice( "Module $product_module_number is valid", 'success' );
+			} else {
+				$shop_url = $guard->get_shop_url();
+				$this->show_notice( 'Module ' . esc_html( $product_module_number ) . ' is not valid. Renew or acquire license <a target="_blank" href="' . esc_url( $shop_url ) . '">here</a>.', 'warning' );
+			}				$result = print_r( $guard->validation_result(), true );
 
 				$this->show_notice( "Validation result: $result", 'success' );
 			} catch ( \PluginPass\Inc\Exceptions\Consent_Missing_Exception $consent_missing_exception ) {

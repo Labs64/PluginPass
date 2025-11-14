@@ -11,7 +11,7 @@
     <div id="pluginpass">
         <div id="pluginpass-post-body">
             <form id="pluginpass-plugin-list-form" method="get">
-                <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>"/>
+                <input type="hidden" name="page" value="<?php echo esc_attr( wp_unslash( $_REQUEST['page'] ) ); ?>"/>
 				<?php
 				$this->pluginpass_table->search_box( __( 'Find', $this->plugin_text_domain ), 'pluginpass-plugin-find' );
 				$this->pluginpass_table->display();

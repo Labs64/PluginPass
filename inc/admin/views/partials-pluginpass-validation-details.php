@@ -16,7 +16,7 @@
                 <ul class="list-group clear-list">
 					<?php foreach ( $validation_details as $name => $valid ): ?>
                         <li class="list-group-item">
-                            <span><?php echo $name; ?></span>
+                            <span><?php echo esc_html( $name ); ?></span>
 
                             <span class="float-right">
 

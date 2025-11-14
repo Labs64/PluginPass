@@ -1,8 +1,6 @@
-version: '3.3'
-
 services:
    db:
-     image: mysql:5.7
+     image: mysql:8.0
      container_name: pluginpass-db
      volumes:
        - "./data/db:/var/lib/mysql"
@@ -12,9 +10,16 @@ services:
        MYSQL_DATABASE: wordpress
        MYSQL_USER: pluginpass
        MYSQL_PASSWORD: pluginpass
+     command: '--default-authentication-plugin=mysql_native_password'
+     healthcheck:
+       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+       timeout: 5s
+       retries: 10
+
    wordpress:
      depends_on:
-       - db
+       db:
+         condition: service_healthy
      build: ./dockerfiles
      container_name: pluginpass-wordpress
      ports:
@@ -26,12 +31,24 @@ services:
        WORDPRESS_DB_PASSWORD: pluginpass
        WORDPRESS_DEBUG: 1
        WORDPRESS_DEBUG_LOG: 1
+       WORDPRESS_DEBUG_DISPLAY: 0
+       WORDPRESS_CONFIG_EXTRA: |
+         define('WP_ENVIRONMENT_TYPE', 'local');
+         define('SCRIPT_DEBUG', true);
+         ini_set('display_errors', '1');
+         ini_set('display_startup_errors', '1');
      volumes:
        - ".:/var/www/html/wp-content/plugins/pluginpass-pro-plugintheme-licensing"
        - "./data/pluginpass-demo:/var/www/html/wp-content/plugins/pluginpass-demo"
+     healthcheck:
+       test: ["CMD", "curl", "-f", "http://localhost"]
+       interval: 30s
+       timeout: 10s
+       retries: 3
+
    phpmyadmin:
      image: phpmyadmin/phpmyadmin
-     links:
+     depends_on:
        - db
      ports:
        - '8080:80'
@@ -39,5 +56,8 @@ services:
      environment:
        PMA_HOST: db
        PMA_PORT: 3306
+       PMA_USER: pluginpass
+       PMA_PASSWORD: pluginpass
+
 volumes:
     db_data:

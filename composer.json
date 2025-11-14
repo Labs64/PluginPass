@@ -38,8 +38,8 @@
         "docs": "https://github.com/Labs64/PluginPass/wiki"
     },
     "require": {
-        "php": ">=5.6",
-        "Labs64/NetLicensingClient-php": "^2.4.0"
+        "php": ">=8.2",
+        "labs64/netlicensingclient-php": "^2.6.0"
     },
     "autoload": {
         "files": [

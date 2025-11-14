@@ -30,6 +30,15 @@ class Init {
 	 *
 	 * @since 1.0.0
 	 * @access   protected
+	 * @var string $plugin_name The string used to uniquely identify this plugin.
+	 */
+	protected $plugin_name;
+
+	/**
+	 * The unique identifier of this plugin.
+	 *
+	 * @since 1.0.0
+	 * @access   protected
 	 * @var string $plugin_base_name The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_basename;
@@ -48,7 +57,7 @@ class Init {
 	 *
 	 * @since 1.0.0
 	 * @access   protected
-	 * @var string $version The current version of the plugin.
+	 * @var string $plugin_text_domain The text domain of the plugin.
 	 */
 	protected $plugin_text_domain;
 
