@@ -133,6 +133,7 @@ If an individual revokes consent, the controller will be responsible for initiat
 
 = 0.9.10 =
 * Update: Plugin description and banner
+* Update: Add Plugin Docu to the META
 
 = 0.9.9 =
 * Add plugins meta info
