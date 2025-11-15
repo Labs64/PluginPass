@@ -6,11 +6,11 @@
 ?>
 
 <div class="wrap">
-    <h2> <?php echo __( 'Plugin validation details for "' . $plugin_name . '"', $this->plugin_text_domain ); ?> </h2>
+    <h2> <?php echo sprintf( __( 'Plugin validation details for "%s"', 'pluginpass-pro-plugintheme-licensing' ), esc_html( $plugin_name ) ); ?> </h2>
 
     <div class="pluginpass-card">
 		<?php if ( ! $plugin->validated_at ): ?>
-			<?php _e( 'Please go back and run validation first', $this->plugin_text_domain ) ?>
+			<?php _e( 'Please go back and run validation first', 'pluginpass-pro-plugintheme-licensing' ) ?>
 		<?php else: ?>
 			<?php if ( ! empty( $validation_details ) ): ?>
                 <ul class="list-group clear-list">
@@ -30,12 +30,12 @@
 					<?php endforeach; ?>
                 </ul>
 			<?php else: ?>
-				<?php _e( 'No results', $this->plugin_text_domain ) ?>
+				<?php _e( 'No results', 'pluginpass-pro-plugintheme-licensing' ) ?>
 			<?php endif; ?>
 		<?php endif; ?>
     </div>
 
     <a href="<?php echo esc_url( add_query_arg( array( 'page' => wp_unslash( $_REQUEST['page'] ) ), admin_url( 'options-general.php' ) ) ); ?>">
-		<?php _e( 'Back', $this->plugin_text_domain ) ?>
+		<?php _e( 'Back', 'pluginpass-pro-plugintheme-licensing' ) ?>
     </a
 </div>

@@ -17,6 +17,6 @@ define( NS . 'PLUGIN_NAME_URL', plugin_dir_url( __FILE__ ) );
 
 define( NS . 'PLUGIN_BASENAME', plugin_basename( __DIR__ ) );
 
-define( NS . 'PLUGIN_TEXT_DOMAIN', 'pluginpass' );
+define( NS . 'PLUGIN_TEXT_DOMAIN', 'pluginpass-pro-plugintheme-licensing' );
 
 define( NS . 'PLUGIN_MIN_PHP_VERSION', '8.2' );

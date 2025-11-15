@@ -112,10 +112,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	public function get_columns() {
 		$table_columns = array(
 			'cb'           => '<input type="checkbox" />', // to display the checkbox.
-			'plugin_name'  => __( 'Plugin Name', $this->plugin_text_domain ),
-			'expires_at'   => _x( 'Expiration Date', 'column name', $this->plugin_text_domain ),
-			'validated_at' => __( 'Last Validated', $this->plugin_text_domain ),
-			'status'       => __( 'Status', $this->plugin_text_domain ),
+			'plugin_name'  => __( 'Plugin Name', 'pluginpass-pro-plugintheme-licensing' ),
+			'expires_at'   => _x( 'Expiration Date', 'column name', 'pluginpass-pro-plugintheme-licensing' ),
+			'validated_at' => __( 'Last Validated', 'pluginpass-pro-plugintheme-licensing' ),
+			'status'       => __( 'Status', 'pluginpass-pro-plugintheme-licensing' ),
 		);
 
 		return $table_columns;
@@ -156,7 +156,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function no_items() {
-		_e( 'No plugins registered', $this->plugin_text_domain );
+		_e( 'No plugins registered', 'pluginpass-pro-plugintheme-licensing' );
 	}
 
 	/*
@@ -223,7 +223,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 */
 	protected function column_cb( $item ) {
 		return sprintf(
-			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s', $this->plugin_text_domain ), $this->get_plugin_name( $item['plugin_folder'] ) ) . '</label>'
+			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s', 'pluginpass-pro-plugintheme-licensing' ), $this->get_plugin_name( $item['plugin_folder'] ) ) . '</label>'
 			. "<input type='checkbox' name='plugins[]' id='plugins_{$item['ID']}' value='{$item['ID']}' />"
 		);
 	}
@@ -263,7 +263,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$class = empty( $item['consented_at'] ) ? 'need-consent-before-validation' : '';
 
 		$validate_plugin_link       = esc_url( add_query_arg( $query_args_validate_plugin, $admin_page_url ) );
-		$actions['validate_plugin'] = '<a class="' . $class . '" href="' . $validate_plugin_link . '">' . __( 'Validate', $this->plugin_text_domain ) . '</a>';
+		$actions['validate_plugin'] = '<a class="' . $class . '" href="' . $validate_plugin_link . '">' . __( 'Validate', 'pluginpass-pro-plugintheme-licensing' ) . '</a>';
 
 		if ( ! empty( $item['validated_at'] ) ) {
 			// row actions to show validation details
@@ -274,7 +274,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				'_wpnonce'  => wp_create_nonce( 'validation_details_nonce' ),
 			);
 			$validation_details_link       = esc_url( add_query_arg( $query_args_validation_details, $admin_page_url ) );
-			$actions['validation_details'] = '<a href="' . $validation_details_link . '">' . __( 'Details', $this->plugin_text_domain ) . '</a>';
+			$actions['validation_details'] = '<a href="' . $validation_details_link . '">' . __( 'Details', 'pluginpass-pro-plugintheme-licensing' ) . '</a>';
 		}
 
 		// row actions to deregister plugin
@@ -285,7 +285,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			'_wpnonce'  => wp_create_nonce( 'deregister_plugin_nonce' ),
 		);
 		$deregister_plugin_link       = esc_url( add_query_arg( $query_args_deregister_plugin, $admin_page_url ) );
-		$actions['deregister_plugin'] = '<a class="need-deregister-confirmation" href="' . $deregister_plugin_link . '">' . __( 'Deregister', $this->plugin_text_domain ) . '</a>';
+		$actions['deregister_plugin'] = '<a class="need-deregister-confirmation" href="' . $deregister_plugin_link . '">' . __( 'Deregister', 'pluginpass-pro-plugintheme-licensing' ) . '</a>';
 		$row_value                    = '<strong>' . $this->get_plugin_name( $item['plugin_folder'] ) . '</strong>';
 
 		return $row_value . $this->row_actions( $actions );
@@ -348,18 +348,18 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		}
 
 		if ( ! $item['validated_at'] ) {
-			return '<span class="label label-danger">' . __( 'not validated', $this->plugin_text_domain ) . '</span>';
+			return '<span class="label label-danger">' . __( 'not validated', 'pluginpass-pro-plugintheme-licensing' ) . '</span>';
 		}
 
 		if ( $valid > 0 && $invalid === 0 ) {
-			return '<span class="label label-primary">' . __( 'valid', $this->plugin_text_domain ) . '</span>';
+			return '<span class="label label-primary">' . __( 'valid', 'pluginpass-pro-plugintheme-licensing' ) . '</span>';
 		}
 
 		if ( $invalid > 0 && $valid === 0 ) {
-			return '<span class="label label-danger">' . __( 'invalid', $this->plugin_text_domain ) . '</span>';
+			return '<span class="label label-danger">' . __( 'invalid', 'pluginpass-pro-plugintheme-licensing' ) . '</span>';
 		}
 
-		return '<span class="label label-warning">' . sprintf( __( '%s valid', $this->plugin_text_domain ), $valid . '/' . $invalid ) . '</span>';
+		return '<span class="label label-warning">' . sprintf( __( '%s valid', 'pluginpass-pro-plugintheme-licensing' ), $valid . '/' . $invalid ) . '</span>';
 	}
 
 
@@ -503,7 +503,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			$plugin = $this->get_plugin( [ 'ID' => $plugin_id ] );
 
 			if ( ! $plugin ) {
-				throw new Exception( __( 'Plugin not found', $this->plugin_text_domain ) );
+				throw new Exception( __( 'Plugin not found', 'pluginpass-pro-plugintheme-licensing' ) );
 			}
 
 			$plugin_name = $this->get_plugin_name( $plugin->plugin_folder );
@@ -569,7 +569,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 			try {
 				if ( ! $plugin ) {
-					throw new Exception( sprintf( __( 'Plugin not found', $this->plugin_text_domain ) ) );
+						throw new Exception( sprintf( __( 'Plugin not found', 'pluginpass' ) ) );
 				}
 
 				if ( empty( $plugin->consented_at ) && ! $has_consent ) {
@@ -600,7 +600,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				$request = NetLicensingService::getInstance()->lastCurlInfo();
 
 				if ( $request->httpStatusCode === 401 ) {
-					$errors[] = sprintf( __( 'Failed to validate the plugin %s, please contact the plugin developer.', $this->plugin_text_domain ), $this->get_plugin_name( $plugin->plugin_folder ) );
+					$errors[] = sprintf( __( 'Failed to validate the plugin %s, please contact the plugin developer.', 'pluginpass-pro-plugintheme-licensing' ), $this->get_plugin_name( $plugin->plugin_folder ) );
 				} else {
 					$errors[] = $rest_exception->getMessage();
 				}
@@ -616,7 +616,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		}
 
 		if ( $count > 0 ) {
-			$this->show_notice( $count . __( ' plugin(s) have been validated', $this->plugin_text_domain ), 'success', true );
+			$this->show_notice( $count . __( ' plugin(s) have been validated', 'pluginpass-pro-plugintheme-licensing' ), 'success', true );
 		}
 	}
 
@@ -638,7 +638,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 			try {
 				if ( ! $plugin ) {
-					throw new Exception( sprintf( __( 'Plugin not found', $this->plugin_text_domain ) ) );
+					throw new Exception( sprintf( __( 'Plugin not found', 'pluginpass-pro-plugintheme-licensing' ) ) );
 				}
 
 				$this->delete_plugin( [ 'ID' => $plugin_id ] );
@@ -656,7 +656,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		}
 
 		if ( $count > 0 ) {
-			$this->show_notice( $count . __( ' plugin(s) have been deregistered', $this->plugin_text_domain ), 'success', true );
+			$this->show_notice( $count . __( ' plugin(s) have been deregistered', 'pluginpass-pro-plugintheme-licensing' ), 'success', true );
 		}
 	}
 
@@ -679,8 +679,8 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function invalid_nonce_redirect() {
-		wp_die( __( 'Invalid Nonce', $this->plugin_text_domain ),
-			__( 'Error', $this->plugin_text_domain ),
+		wp_die( __( 'Invalid Nonce', 'pluginpass-pro-plugintheme-licensing' ),
+			__( 'Error', 'pluginpass-pro-plugintheme-licensing' ),
 			array(
 				'response'  => 403,
 				'back_link' => esc_url( add_query_arg( array( 'page' => wp_unslash( $_REQUEST['page'] ) ), admin_url( 'options-general.php' ) ) ),

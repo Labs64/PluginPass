@@ -57,12 +57,6 @@ Payment gateways supported in the plugin:
 
 * PayPal
 * Stripe
-* MyCommerce
-* FastSpring
-* Braintree - *PLANNED*
-* Authorize.net - *PLANNED*
-* 2Checkout - *PLANNED*
-* SOFORT Banking - *PLANNED*
 
 ## PluginPass Overview
 

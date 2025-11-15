@@ -94,8 +94,8 @@ class Pluginpass_Admin {
 	 */
 	public function add_plugin_admin_menu() {
 		$page_hook = add_options_page(
-			__( 'PluginPass', $this->plugin_text_domain ), //page title
-			__( 'PluginPass', $this->plugin_text_domain ), //menu title
+			__( 'PluginPass', 'pluginpass-pro-plugintheme-licensing' ), //page title
+			__( 'PluginPass', 'pluginpass-pro-plugintheme-licensing' ), //menu title
 			'manage_options', //capability
 			$this->plugin_name, //menu_slug,
 			array( $this, 'load_pluginpass_table' )
@@ -117,7 +117,7 @@ class Pluginpass_Admin {
 	public function add_plugin_action_links( $links ) {
 		$links[] = '<a href="https://github.com/Labs64/PluginPass/wiki" target="_blank">Docs</a>';
 	   $settings_link = array(
-	      '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __( 'Settings', $this->plugin_name ) . '</a>',
+	      '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __( 'Settings', 'pluginpass-pro-plugintheme-licensing' ) . '</a>',
 	   );
 	   return array_merge(  $settings_link, $links );
 	}
@@ -132,7 +132,7 @@ class Pluginpass_Admin {
 	 */
 	public function load_pluginpass_table_screen_options() {
 		$arguments = array(
-			'label'   => __( 'Number of items per page:', $this->plugin_text_domain ),
+			'label'   => __( 'Number of items per page:', 'pluginpass-pro-plugintheme-licensing' ),
 			'default' => 5,
 			'option'  => 'plugins_per_page'
 		);

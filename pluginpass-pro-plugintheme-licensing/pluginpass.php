@@ -20,7 +20,7 @@
  * Author URI:        https://netlicensing.io
  * License:           GPL-2.0+
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       pluginpass
+ * Text Domain:       pluginpass-pro-plugintheme-licensing
  * Domain Path:       /languages
  * Requires at least: 6.0
  * Tested up to:      6.8
