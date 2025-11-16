@@ -68,23 +68,24 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 */
 	public function prepare_items() {
 		$this->_column_headers = $this->get_column_info();
-		// check and process any actions such as bulk actions.
-		$this->handle_table_actions();
+	// check and process any actions such as bulk actions.
+	$this->handle_table_actions();
 
-		// check if a search was performed.
-		$search_key = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : null;
+	// check if a search was performed.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Search filter in list table
+	$search_key = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : null;
 
-		if ( $search_key ) {
-			$search_key = "%$search_key%";
-		}
+	if ( $search_key ) {
+		$search_key = "%$search_key%";
+	}
 
-		// required for pagination
-		$page     = $this->get_pagenum() - 1;
-		$per_page = $this->get_items_per_page( 'plugins_per_page' );
-		$order_by = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'expires_ttl_at';
-		$order    = ( isset( $_GET['order'] ) ) ? esc_sql( $_GET['order'] ) : 'ASC';
-
-		// fetch table data
+	// required for pagination
+	$page     = $this->get_pagenum() - 1;
+	$per_page = $this->get_items_per_page( 'plugins_per_page' );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Sorting parameters in list table
+	$order_by = ( isset( $_GET['orderby'] ) ) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : 'expires_ttl_at';
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Sorting parameters in list table
+	$order    = ( isset( $_GET['order'] ) ) ? sanitize_key( wp_unslash( $_GET['order'] ) ) : 'ASC';		// fetch table data
 		$data = $this->fetch_table_data( $page, $per_page, $order_by, $order, $search_key );
 
 		// provide the ordered data to the List Table.
@@ -156,7 +157,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function no_items() {
-		_e( 'No plugins registered', 'pluginpass-pro-plugintheme-licensing' );
+		esc_html_e( 'No plugins registered', 'pluginpass-pro-plugintheme-licensing' );
 	}
 
 	/*
@@ -172,18 +173,36 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 		$plugins_table = Activator::get_plugins_table_name();
 
-		$query      = "SELECT * FROM $plugins_table";
+		// Sanitize order_by to prevent SQL injection
+		$allowed_order_by = array( 'plugin_name', 'product_number', 'validated_at', 'expires_ttl_at', 'consented_at', 'ID' );
+		$order_by = in_array( $order_by, $allowed_order_by, true ) ? $order_by : 'plugin_name';
+		$order = strtoupper( $order ) === 'DESC' ? 'DESC' : 'ASC';
+
+	if ( $search_key ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $plugins_table from get_plugins_table_name() (safe table name), $order_by and $order sanitized above via whitelist to prevent SQL injection
+		$query = $wpdb->prepare(
+			"SELECT * FROM $plugins_table WHERE plugin_name LIKE %s ORDER BY $order_by $order LIMIT %d, %d",
+			'%' . $wpdb->esc_like( $search_key ) . '%',
+			$page,
+			$per_page
+		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $plugins_table from get_plugins_table_name() returns safe, prefixed table name
+		$countQuery = $wpdb->prepare(
+			"SELECT COUNT(ID) as total_items FROM $plugins_table WHERE plugin_name LIKE %s",
+			'%' . $wpdb->esc_like( $search_key ) . '%'
+		);
+	} else {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $plugins_table from get_plugins_table_name() (safe table name), $order_by and $order sanitized above via whitelist to prevent SQL injection
+		$query = $wpdb->prepare(
+			"SELECT * FROM $plugins_table ORDER BY $order_by $order LIMIT %d, %d",
+			$page,
+			$per_page
+		);
 		$countQuery = "SELECT COUNT(ID) as total_items FROM $plugins_table";
-
-		if ( $search_key ) {
-			$query      .= " WHERE plugin_name LIKE '$search_key'";
-			$countQuery .= " WHERE plugin_name LIKE '$search_key'";
-		}
-
-		$query .= " ORDER BY $order_by $order LIMIT $page, $per_page";
-
-		// query output_type will be an associative array with ARRAY_A.
+	}		// query output_type will be an associative array with ARRAY_A.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from get_plugins_table_name(), query prepared above
 		$plugins     = $wpdb->get_results( $query, ARRAY_A );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from get_plugins_table_name(), countQuery prepared above
 		$total_items = $wpdb->get_row( $countQuery )->total_items;
 
 		$items = [];
@@ -223,6 +242,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 */
 	protected function column_cb( $item ) {
 		return sprintf(
+			/* translators: %s: Plugin name */
 			'<label class="screen-reader-text" for="plugins_' . $item['ID'] . '">' . sprintf( __( 'Select %s', 'pluginpass-pro-plugintheme-licensing' ), $this->get_plugin_name( $item['plugin_folder'] ) ) . '</label>'
 			. "<input type='checkbox' name='plugins[]' id='plugins_{$item['ID']}' value='{$item['ID']}' />"
 		);
@@ -253,8 +273,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$admin_page_url = admin_url( 'options-general.php' );
 
 		// row actions to validate plugin
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Building action links, nonce created below
+		$current_page = isset( $_REQUEST['page'] ) ? sanitize_key( wp_unslash( $_REQUEST['page'] ) ) : '';
 		$query_args_validate_plugin = array(
-			'page'      => wp_unslash( $_REQUEST['page'] ),
+			'page'      => $current_page,
 			'action'    => 'validate_plugin',
 			'plugin_id' => absint( $item['ID'] ),
 			'_wpnonce'  => wp_create_nonce( 'validate_plugin_nonce' ),
@@ -268,7 +290,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		if ( ! empty( $item['validated_at'] ) ) {
 			// row actions to show validation details
 			$query_args_validation_details = array(
-				'page'      => wp_unslash( $_REQUEST['page'] ),
+				'page'      => $current_page,
 				'action'    => 'validation_details',
 				'plugin_id' => absint( $item['ID'] ),
 				'_wpnonce'  => wp_create_nonce( 'validation_details_nonce' ),
@@ -279,7 +301,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 		// row actions to deregister plugin
 		$query_args_deregister_plugin = array(
-			'page'      => wp_unslash( $_REQUEST['page'] ),
+			'page'      => $current_page,
 			'action'    => 'deregister_plugin',
 			'plugin_id' => absint( $item['ID'] ),
 			'_wpnonce'  => wp_create_nonce( 'deregister_plugin_nonce' ),
@@ -299,15 +321,13 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 				if ( ! empty( $result['expires'] ) ) {
 					if ( ! $expires_at || strtotime( $result['expires'] ) < strtotime( $expires_at ) ) {
 						$expires_at = $result['expires'];
-					}
 				}
 			}
 		}
-
-		return ( $expires_at ) ? date( 'Y-m-d H:i:s', strtotime( $expires_at ) ) : '';
 	}
 
-	/*
+	return ( $expires_at ) ? gmdate( 'Y-m-d H:i:s', strtotime( $expires_at ) ) : '';
+}	/*
 	 * Method for rendering the status column.
 	 *
 	 * @param object $item A singular item (one full row's worth of data).
@@ -350,7 +370,8 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		if ( ! $item['validated_at'] ) {
 			return '<span class="label label-danger">' . __( 'not validated', 'pluginpass-pro-plugintheme-licensing' ) . '</span>';
 		}
-
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $plugins_table from get_plugins_table_name() returns safe, prefixed table name
+			$countQuery = $wpdb->prepare("SELECT COUNT(ID) as total_items FROM $plugins_table");
 		if ( $valid > 0 && $invalid === 0 ) {
 			return '<span class="label label-primary">' . __( 'valid', 'pluginpass-pro-plugintheme-licensing' ) . '</span>';
 		}
@@ -359,6 +380,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			return '<span class="label label-danger">' . __( 'invalid', 'pluginpass-pro-plugintheme-licensing' ) . '</span>';
 		}
 
+		/* translators: %s: Validation count (e.g., 2/3) */
 		return '<span class="label label-warning">' . sprintf( __( '%s valid', 'pluginpass-pro-plugintheme-licensing' ), $valid . '/' . $invalid ) . '</span>';
 	}
 
@@ -410,41 +432,44 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 		$the_table_action = $this->current_action();
 
 		if ( 'validate_plugin' === $the_table_action ) {
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
+			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			// verify the nonce.
 			if ( ! wp_verify_nonce( $nonce, 'validate_plugin_nonce' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-				$this->validate_plugin( absint( $_REQUEST['plugin_id'] ) );
+				$plugin_id = isset( $_REQUEST['plugin_id'] ) ? absint( $_REQUEST['plugin_id'] ) : 0;
+				$this->validate_plugin( $plugin_id );
 //				$this->graceful_exit();
 			}
 		}
 
 		if ( 'validation_details' === $the_table_action ) {
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
+			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			// verify the nonce.
 			if ( ! wp_verify_nonce( $nonce, 'validation_details_nonce' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-				$this->show_validation_details( absint( $_REQUEST['plugin_id'] ) );
+				$plugin_id = isset( $_REQUEST['plugin_id'] ) ? absint( $_REQUEST['plugin_id'] ) : 0;
+				$this->show_validation_details( $plugin_id );
 //				$this->graceful_exit();
 			}
 		}
 
 		if ( 'deregister_plugin' === $the_table_action ) {
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
+			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			// verify the nonce.
 			if ( ! wp_verify_nonce( $nonce, 'deregister_plugin_nonce' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-				$this->deregister_plugin( absint( $_REQUEST['plugin_id'] ) );
+				$plugin_id = isset( $_REQUEST['plugin_id'] ) ? absint( $_REQUEST['plugin_id'] ) : 0;
+				$this->deregister_plugin( $plugin_id );
 			}
 		}
 
 		// check for table bulk actions
 		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'bulk-validate' ) || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] === 'bulk-validate' ) ) {
 
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
+			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			// verify the nonce.
 			/*
 			 * Note: the nonce field is set by the parent class
@@ -461,7 +486,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'bulk-deregister' ) || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] === 'bulk-deregister' ) ) {
 
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
+			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			// verify the nonce.
 			/*
 			 * Note: the nonce field is set by the parent class
@@ -559,6 +584,7 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 		$count = 0;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Consent checkbox in bulk action
 		$has_consent = ! empty( $_GET['has_consent'] ) ? true : false;
 
 		$plugins = $this->get_plugins( [ 'ID' => $plugin_ids ] );
@@ -567,12 +593,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			// get plugin
 			$plugin = isset( $plugins[ $plugin_id ] ) ? $plugins[ $plugin_id ] : null;
 
-			try {
-				if ( ! $plugin ) {
-						throw new Exception( sprintf( __( 'Plugin not found', 'pluginpass' ) ) );
-				}
-
-				if ( empty( $plugin->consented_at ) && ! $has_consent ) {
+		try {
+			if ( ! $plugin ) {
+					throw new Exception( sprintf( __( 'Plugin not found', 'pluginpass-pro-plugintheme-licensing' ) ) );
+			}				if ( empty( $plugin->consented_at ) && ! $has_consent ) {
 					continue;
 				}
 
@@ -585,12 +609,12 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 				$data = [
 					'expires_ttl_at'    => $expires_ttl_at,
-					'validated_at'      => date( DATE_ATOM ),
+					'validated_at'      => gmdate( DATE_ATOM ),
 					'validation_result' => $validation,
 				];
 
 				if ( empty( $plugin->consented_at ) ) {
-					$data['consented_at'] = date( DATE_ATOM );
+					$data['consented_at'] = gmdate( DATE_ATOM );
 				}
 
 				$this->update_plugin( $data, [ 'ID' => $plugin_id ] );
@@ -599,9 +623,10 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 			} catch ( RestException $rest_exception ) {
 				$request = NetLicensingService::getInstance()->lastCurlInfo();
 
-				if ( $request->httpStatusCode === 401 ) {
-					$errors[] = sprintf( __( 'Failed to validate the plugin %s, please contact the plugin developer.', 'pluginpass-pro-plugintheme-licensing' ), $this->get_plugin_name( $plugin->plugin_folder ) );
-				} else {
+			if ( $request->httpStatusCode === 401 ) {
+				/* translators: %s: Plugin name */
+				$errors[] = sprintf( __( 'Failed to validate the plugin %s, please contact the plugin developer.', 'pluginpass-pro-plugintheme-licensing' ), $this->get_plugin_name( $plugin->plugin_folder ) );
+			} else {
 					$errors[] = $rest_exception->getMessage();
 				}
 			} catch ( Exception $exception ) {
@@ -679,11 +704,13 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 	 *
 	 */
 	public function invalid_nonce_redirect() {
-		wp_die( __( 'Invalid Nonce', 'pluginpass-pro-plugintheme-licensing' ),
-			__( 'Error', 'pluginpass-pro-plugintheme-licensing' ),
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Function called after nonce verification fails
+		$page = isset( $_REQUEST['page'] ) ? sanitize_key( wp_unslash( $_REQUEST['page'] ) ) : '';
+		wp_die( esc_html__( 'Invalid Nonce', 'pluginpass-pro-plugintheme-licensing' ),
+			esc_html__( 'Error', 'pluginpass-pro-plugintheme-licensing' ),
 			array(
 				'response'  => 403,
-				'back_link' => esc_url( add_query_arg( array( 'page' => wp_unslash( $_REQUEST['page'] ) ), admin_url( 'options-general.php' ) ) ),
+				'back_link' => esc_url( add_query_arg( array( 'page' => $page ), admin_url( 'options-general.php' ) ) ),
 			)
 		);
 	}
@@ -691,10 +718,12 @@ class PluginPass_Table extends Libraries\WP_List_Table {
 
 	protected function show_notice( $message, $type = 'success', $dismiss = true ) {
 		$is_dismissible = $dismiss ? 'is-dismissible' : '';
+		$allowed_types  = array( 'success', 'error', 'warning', 'info' );
+		$type           = in_array( $type, $allowed_types, true ) ? $type : 'success';
 
-		echo "<div class=\"notice notice-$type $is_dismissible\">
-                <p>$message</p>
-             </div>";
+		echo '<div class="notice notice-' . esc_attr( $type ) . ' ' . esc_attr( $is_dismissible ) . '">';
+		echo '<p>' . wp_kses_post( $message ) . '</p>';
+		echo '</div>';
 	}
 
 	protected function get_plugin_name( $plugin_folder, $default = '' ) {

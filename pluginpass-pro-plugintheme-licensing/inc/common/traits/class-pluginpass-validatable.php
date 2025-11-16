@@ -29,6 +29,6 @@ trait PluginPass_Validatable {
 
 
 	protected static function get_licensee_number() {
-		return $host = parse_url( get_home_url() )['host'];
+		return $host = wp_parse_url( get_home_url() )['host'];
 	}
 }

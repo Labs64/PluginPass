@@ -32,7 +32,7 @@ class PluginPass_Guard {
 	 */
 	public function __construct( $api_key, $product_number, $plugin_folder ) {
 		if ( ! array_key_exists( $plugin_folder, get_plugins() ) ) {
-			throw new \Exception( 'Plugin path "' . $plugin_folder . '" not found!' );
+			throw new \Exception( 'Plugin path "' . esc_html( $plugin_folder ) . '" not found!' );
 		}
 
 		$this->plugin = $this->get_plugin( [ 'product_number' => $product_number ] );
@@ -59,7 +59,7 @@ class PluginPass_Guard {
 	 */
 	public function set_consent( ) {
 		if (empty( $this->plugin->consented_at ) ) {
-			$this->plugin = $this->update_plugin( [ 'consented_at' => date( DATE_ATOM ) ], [ 'ID' => $this->plugin->ID ] );
+			$this->plugin = $this->update_plugin( [ 'consented_at' => gmdate( DATE_ATOM ) ], [ 'ID' => $this->plugin->ID ] );
 		}
 
 		return $this;
@@ -101,7 +101,7 @@ class PluginPass_Guard {
 
 			$data = [
 				'expires_ttl_at'    => $expires_ttl_at,
-				'validated_at'      => date( DATE_ATOM ),
+				'validated_at'      => gmdate( DATE_ATOM ),
 				'validation_result' => $validation_result,
 			];
 
@@ -169,7 +169,7 @@ class PluginPass_Guard {
 
 		// Validate the shop URL before redirecting
 		if ( ! $this->is_safe_redirect_url( $shopUrl ) ) {
-			wp_die( esc_html__( 'Invalid redirect URL', 'pluginpass' ), esc_html__( 'Security Error', 'pluginpass' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Invalid redirect URL', 'pluginpass-pro-plugintheme-licensing' ), esc_html__( 'Security Error', 'pluginpass-pro-plugintheme-licensing' ), array( 'response' => 403 ) );
 		}
 
 		wp_safe_redirect( $shopUrl, 307 );

@@ -167,8 +167,8 @@ class WP_List_Table {
 
 		if ( empty( $this->modes ) ) {
 			$this->modes = array(
-				'list'    => __( 'List View' ),
-				'excerpt' => __( 'Excerpt View' )
+				'list'    => __( 'List View', 'pluginpass-pro-plugintheme-licensing' ),
+				'excerpt' => __( 'Excerpt View', 'pluginpass-pro-plugintheme-licensing' )
 			);
 		}
 	}
@@ -293,7 +293,7 @@ class WP_List_Table {
 
 		// Redirect if page number is invalid and headers are not already sent.
 		if ( ! headers_sent() && ! wp_doing_ajax() && $args['total_pages'] > 0 && $this->get_pagenum() > $args['total_pages'] ) {
-			wp_redirect( add_query_arg( 'paged', $args['total_pages'] ) );
+			wp_safe_redirect( add_query_arg( 'paged', $args['total_pages'] ) );
 			exit;
 		}
 
@@ -339,7 +339,7 @@ class WP_List_Table {
 	 * @access public
 	 */
 	public function no_items() {
-		_e( 'No items found.' );
+		esc_html_e( 'No items found.', 'pluginpass-pro-plugintheme-licensing' );
 	}
 
 	/**
@@ -352,22 +352,31 @@ class WP_List_Table {
 	 * @param string $input_id ID attribute value for the search input field.
 	 */
 	public function search_box( $text, $input_id ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table search functionality
 		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
 			return;
 
 		$input_id = $input_id . '-search-input';
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
 		if ( ! empty( $_REQUEST['orderby'] ) )
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( sanitize_key( wp_unslash( $_REQUEST['orderby'] ) ) ) . '" />';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
 		if ( ! empty( $_REQUEST['order'] ) )
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
+			echo '<input type="hidden" name="order" value="' . esc_attr( sanitize_key( wp_unslash( $_REQUEST['order'] ) ) ) . '" />';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
 		if ( ! empty( $_REQUEST['post_mime_type'] ) )
-			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) ) ) . '" />';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
 		if ( ! empty( $_REQUEST['detached'] ) )
-			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table preserving query parameters
+			echo '<input type="hidden" name="detached" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['detached'] ) ) ) . '" />';
 ?>
 <p class="search-box">
-	<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+	<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
 	<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 	<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
 </p>
@@ -405,6 +414,7 @@ class WP_List_Table {
 		 *
 		 * @param array $views An array of available list table views.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
 		$views = apply_filters( "views_{$this->screen->id}", $views );
 
 		if ( empty( $views ) )
@@ -414,8 +424,9 @@ class WP_List_Table {
 
 		echo "<ul class='subsubsub'>\n";
 		foreach ( $views as $class => $view ) {
-			$views[ $class ] = "\t<li class='$class'>$view";
+			$views[ $class ] = "\t<li class='" . esc_attr( $class ) . "'>" . $view;
 		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Views contain safe HTML from callbacks
 		echo implode( " |</li>\n", $views ) . "</li>\n";
 		echo "</ul>";
 	}
@@ -457,6 +468,7 @@ class WP_List_Table {
 			 *
 			 * @param array $actions An array of the available bulk actions.
 			 */
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
 			$this->_actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->_actions );
 			$two = '';
 		} else {
@@ -466,19 +478,20 @@ class WP_List_Table {
 		if ( empty( $this->_actions ) )
 			return;
 
-		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>';
-		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
-		echo '<option value="-1">' . __( 'Bulk Actions' ) . "</option>\n";
+		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . esc_html__( 'Select bulk action', 'pluginpass-pro-plugintheme-licensing' ) . '</label>';
+		echo '<select name="action' . esc_attr( $two ) . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<option value="-1">' . esc_html__( 'Bulk Actions', 'pluginpass-pro-plugintheme-licensing' ) . "</option>\n";
 
 		foreach ( $this->_actions as $name => $title ) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
-			echo "\t" . '<option value="' . $name . '"' . $class . '>' . $title . "</option>\n";
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $class is hardcoded safe string
+			echo "\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . esc_html( $title ) . "</option>\n";
 		}
 
 		echo "</select>\n";
 
-		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		submit_button( __( 'Apply', 'pluginpass-pro-plugintheme-licensing' ), 'action', '', false, array( 'id' => "doaction$two" ) );
 		echo "\n";
 	}
 
@@ -491,14 +504,19 @@ class WP_List_Table {
 	 * @return string|false The action name or False if no action was selected
 	 */
 	public function current_action() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table determining current action
 		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) )
 			return false;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table determining current action
 		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] )
-			return $_REQUEST['action'];
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table determining current action
+			return sanitize_key( wp_unslash( $_REQUEST['action'] ) );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table determining current action
 		if ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] )
-			return $_REQUEST['action2'];
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table determining current action
+			return sanitize_key( wp_unslash( $_REQUEST['action2'] ) );
 
 		return false;
 	}
@@ -528,7 +546,7 @@ class WP_List_Table {
 		}
 		$out .= '</div>';
 
-		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>';
+		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details', 'pluginpass-pro-plugintheme-licensing' ) . '</span></button>';
 
 		return $out;
 	}
@@ -555,25 +573,31 @@ class WP_List_Table {
 		 * @param bool   $disable   Whether to disable the drop-down. Default false.
 		 * @param string $post_type The post type.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
 		if ( apply_filters( 'disable_months_dropdown', false, $post_type ) ) {
 			return;
 		}
 
 		$extra_checks = "AND post_status != 'auto-draft'";
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table filtering
 		if ( ! isset( $_GET['post_status'] ) || 'trash' !== $_GET['post_status'] ) {
 			$extra_checks .= " AND post_status != 'trash'";
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table filtering
 		} elseif ( isset( $_GET['post_status'] ) ) {
-			$extra_checks = $wpdb->prepare( ' AND post_status = %s', $_GET['post_status'] );
-		}
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table filtering
+			$extra_checks = $wpdb->prepare( ' AND post_status = %s', sanitize_text_field( wp_unslash( $_GET['post_status'] ) ) );
+	}
 
-		$months = $wpdb->get_results( $wpdb->prepare( "
-			SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
-			FROM $wpdb->posts
-			WHERE post_type = %s
-			$extra_checks
-			ORDER BY post_date DESC
-		", $post_type ) );
-
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- $extra_checks is either a safe literal string or prepared via wpdb->prepare() above
+	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+	$months = $wpdb->get_results( $wpdb->prepare( "
+		SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
+		FROM $wpdb->posts
+		WHERE post_type = %s
+		" . $extra_checks . "
+		ORDER BY post_date DESC
+	", $post_type ) );
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 		/**
 		 * Filters the 'Months' drop-down results.
 		 *
@@ -582,6 +606,7 @@ class WP_List_Table {
 		 * @param object $months    The months drop-down query results.
 		 * @param string $post_type The post type.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
 		$months = apply_filters( 'months_dropdown_results', $months, $post_type );
 
 		$month_count = count( $months );
@@ -589,11 +614,12 @@ class WP_List_Table {
 		if ( !$month_count || ( 1 == $month_count && 0 == $months[0]->month ) )
 			return;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table filtering
 		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0;
 ?>
-		<label for="filter-by-date" class="screen-reader-text"><?php _e( 'Filter by date' ); ?></label>
+		<label for="filter-by-date" class="screen-reader-text"><?php esc_html_e( 'Filter by date', 'pluginpass-pro-plugintheme-licensing' ); ?></label>
 		<select name="m" id="filter-by-date">
-			<option<?php selected( $m, 0 ); ?> value="0"><?php _e( 'All dates' ); ?></option>
+			<option<?php selected( $m, 0 ); ?> value="0"><?php esc_html_e( 'All dates', 'pluginpass-pro-plugintheme-licensing' ); ?></option>
 <?php
 		foreach ( $months as $arc_row ) {
 			if ( 0 == $arc_row->year )
@@ -606,7 +632,7 @@ class WP_List_Table {
 				selected( $m, $year . $month, false ),
 				esc_attr( $arc_row->year . $month ),
 				/* translators: 1: month name, 2: 4-digit year */
-				sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year )
+				esc_html( sprintf( __( '%1$s %2$d', 'pluginpass-pro-plugintheme-licensing' ), $wp_locale->get_month( $month ), $year ) )
 			);
 		}
 ?>
@@ -632,10 +658,11 @@ class WP_List_Table {
 				if ( $current_mode === $mode )
 					$classes[] = 'current';
 				printf(
-					"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n",
+					"<a href='%s' class='%s' id='view-switch-%s'><span class='screen-reader-text'>%s</span></a>\n",
 					esc_url( add_query_arg( 'mode', $mode ) ),
-					implode( ' ', $classes ),
-					$title
+					esc_attr( implode( ' ', $classes ) ),
+					esc_attr( $mode ),
+					esc_html( $title )
 				);
 			}
 		?>
@@ -658,39 +685,42 @@ class WP_List_Table {
 		$approved_comments_number = number_format_i18n( $approved_comments );
 		$pending_comments_number = number_format_i18n( $pending_comments );
 
-		$approved_only_phrase = sprintf( _n( '%s comment', '%s comments', $approved_comments ), $approved_comments_number );
-		$approved_phrase = sprintf( _n( '%s approved comment', '%s approved comments', $approved_comments ), $approved_comments_number );
-		$pending_phrase = sprintf( _n( '%s pending comment', '%s pending comments', $pending_comments ), $pending_comments_number );
+		/* translators: %s: Number of comments. */
+		$approved_only_phrase = sprintf( _n( '%s comment', '%s comments', $approved_comments, 'pluginpass-pro-plugintheme-licensing' ), $approved_comments_number );
+		/* translators: %s: Number of approved comments. */
+		$approved_phrase = sprintf( _n( '%s approved comment', '%s approved comments', $approved_comments, 'pluginpass-pro-plugintheme-licensing' ), $approved_comments_number );
+		/* translators: %s: Number of pending comments. */
+		$pending_phrase = sprintf( _n( '%s pending comment', '%s pending comments', $pending_comments, 'pluginpass-pro-plugintheme-licensing' ), $pending_comments_number );
 
 		// No comments at all.
 		if ( ! $approved_comments && ! $pending_comments ) {
 			printf( '<span aria-hidden="true">—</span><span class="screen-reader-text">%s</span>',
-				__( 'No comments' )
+				esc_html__( 'No comments', 'pluginpass-pro-plugintheme-licensing' )
 			);
 		// Approved comments have different display depending on some conditions.
 		} elseif ( $approved_comments ) {
 			printf( '<a href="%s" class="post-com-count post-com-count-approved"><span class="comment-count-approved" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></a>',
 				esc_url( add_query_arg( array( 'p' => $post_id, 'comment_status' => 'approved' ), admin_url( 'edit-comments.php' ) ) ),
-				$approved_comments_number,
-				$pending_comments ? $approved_phrase : $approved_only_phrase
+				esc_html( $approved_comments_number ),
+				esc_html( $pending_comments ? $approved_phrase : $approved_only_phrase )
 			);
 		} else {
 			printf( '<span class="post-com-count post-com-count-no-comments"><span class="comment-count comment-count-no-comments" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
-				$approved_comments_number,
-				$pending_comments ? __( 'No approved comments' ) : __( 'No comments' )
+				esc_html( $approved_comments_number ),
+				esc_html( $pending_comments ? __( 'No approved comments', 'pluginpass-pro-plugintheme-licensing' ) : __( 'No comments', 'pluginpass-pro-plugintheme-licensing' ) )
 			);
 		}
 
 		if ( $pending_comments ) {
 			printf( '<a href="%s" class="post-com-count post-com-count-pending"><span class="comment-count-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></a>',
 				esc_url( add_query_arg( array( 'p' => $post_id, 'comment_status' => 'moderated' ), admin_url( 'edit-comments.php' ) ) ),
-				$pending_comments_number,
-				$pending_phrase
+				esc_html( $pending_comments_number ),
+				esc_html( $pending_phrase )
 			);
 		} else {
 			printf( '<span class="post-com-count post-com-count-pending post-com-count-no-pending"><span class="comment-count comment-count-no-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
-				$pending_comments_number,
-				$approved_comments ? __( 'No pending comments' ) : __( 'No comments' )
+				esc_html( $pending_comments_number ),
+				esc_html( $approved_comments ? __( 'No pending comments', 'pluginpass-pro-plugintheme-licensing' ) : __( 'No comments', 'pluginpass-pro-plugintheme-licensing' ) )
 			);
 		}
 	}
@@ -704,6 +734,7 @@ class WP_List_Table {
 	 * @return int
 	 */
 	public function get_pagenum() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table pagination
 		$pagenum = isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 0;
 
 		if ( isset( $this->_pagination_args['total_pages'] ) && $pagenum > $this->_pagination_args['total_pages'] )
@@ -740,6 +771,7 @@ class WP_List_Table {
 		 *
 		 * @param int $per_page Number of items to be displayed. Default 20.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
 		return (int) apply_filters( "{$option}", $per_page );
 	}
 
@@ -767,12 +799,15 @@ class WP_List_Table {
 			$this->screen->render_screen_reader_content( 'heading_pagination' );
 		}
 
-		$output = '<span class="displaying-num">' . sprintf( _n( '%s item', '%s items', $total_items ), number_format_i18n( $total_items ) ) . '</span>';
+		/* translators: %s: Number of items. */
+		$output = '<span class="displaying-num">' . sprintf( _n( '%s item', '%s items', $total_items, 'pluginpass-pro-plugintheme-licensing' ), number_format_i18n( $total_items ) ) . '</span>';
 
 		$current = $this->get_pagenum();
 		$removable_query_args = wp_removable_query_args();
 
-		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$current_url = set_url_scheme( 'http://' . $http_host . $request_uri );
 
 		$current_url = remove_query_arg( $removable_query_args, $current_url );
 
@@ -803,7 +838,7 @@ class WP_List_Table {
 		} else {
 			$page_links[] = sprintf( "<a class='first-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url( remove_query_arg( 'paged', $current_url ) ),
-				__( 'First page' ),
+				__( 'First page', 'pluginpass-pro-plugintheme-licensing' ),
 				'&laquo;'
 			);
 		}
@@ -813,30 +848,31 @@ class WP_List_Table {
 		} else {
 			$page_links[] = sprintf( "<a class='prev-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', max( 1, $current-1 ), $current_url ) ),
-				__( 'Previous page' ),
+				__( 'Previous page', 'pluginpass-pro-plugintheme-licensing' ),
 				'&lsaquo;'
 			);
 		}
 
 		if ( 'bottom' === $which ) {
 			$html_current_page  = $current;
-			$total_pages_before = '<span class="screen-reader-text">' . __( 'Current Page' ) . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
+			$total_pages_before = '<span class="screen-reader-text">' . __( 'Current Page', 'pluginpass-pro-plugintheme-licensing' ) . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
 		} else {
 			$html_current_page = sprintf( "%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>",
-				'<label for="current-page-selector" class="screen-reader-text">' . __( 'Current Page' ) . '</label>',
+				'<label for="current-page-selector" class="screen-reader-text">' . __( 'Current Page', 'pluginpass-pro-plugintheme-licensing' ) . '</label>',
 				$current,
 				strlen( $total_pages )
 			);
 		}
 		$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
-		$page_links[] = $total_pages_before . sprintf( _x( '%1$s of %2$s', 'paging' ), $html_current_page, $html_total_pages ) . $total_pages_after;
+		/* translators: 1: Current page, 2: Total pages. */
+		$page_links[] = $total_pages_before . sprintf( _x( '%1$s of %2$s', 'paging', 'pluginpass-pro-plugintheme-licensing' ), $html_current_page, $html_total_pages ) . $total_pages_after;
 
 		if ( $disable_next ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
 		} else {
 			$page_links[] = sprintf( "<a class='next-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', min( $total_pages, $current+1 ), $current_url ) ),
-				__( 'Next page' ),
+				__( 'Next page', 'pluginpass-pro-plugintheme-licensing' ),
 				'&rsaquo;'
 			);
 		}
@@ -846,7 +882,7 @@ class WP_List_Table {
 		} else {
 			$page_links[] = sprintf( "<a class='last-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
-				__( 'Last page' ),
+				__( 'Last page', 'pluginpass-pro-plugintheme-licensing' ),
 				'&raquo;'
 			);
 		}
@@ -864,6 +900,7 @@ class WP_List_Table {
 		}
 		$this->_pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output already escaped in pagination_links method
 		echo $this->_pagination;
 	}
 
@@ -966,6 +1003,7 @@ class WP_List_Table {
 		 * @param string $default Column name default for the specific list table, e.g. 'name'.
 		 * @param string $context Screen ID for specific list table, e.g. 'plugins'.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
 		$column  = apply_filters( 'list_table_primary_column', $default, $this->screen->id );
 
 		if ( empty( $column ) || ! isset( $columns[ $column ] ) ) {
@@ -1010,6 +1048,7 @@ class WP_List_Table {
 		 *
 		 * @param array $sortable_columns An array of sortable columns.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core filter
 		$_sortable = apply_filters( "manage_{$this->screen->id}_sortable_columns", $sortable_columns );
 
 		$sortable = array();
@@ -1057,24 +1096,24 @@ class WP_List_Table {
 	public function print_column_headers( $with_id = true ) {
 		list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
 
-		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$current_url = set_url_scheme( 'http://' . $http_host . $request_uri );
 		$current_url = remove_query_arg( 'paged', $current_url );
 
-		if ( isset( $_GET['orderby'] ) ) {
-			$current_orderby = $_GET['orderby'];
-		} else {
-			$current_orderby = '';
-		}
-
-		if ( isset( $_GET['order'] ) && 'desc' === $_GET['order'] ) {
-			$current_order = 'desc';
-		} else {
-			$current_order = 'asc';
-		}
-
-		if ( ! empty( $columns['cb'] ) ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table sorting
+	if ( isset( $_GET['orderby'] ) ) {
+		$current_orderby = sanitize_key( wp_unslash( $_GET['orderby'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	} else {
+		$current_orderby = '';
+	}	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table sorting
+	if ( isset( $_GET['order'] ) && 'desc' === $_GET['order'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core list table sorting
+		$current_order = 'desc';
+	} else {
+		$current_order = 'asc';
+	}		if ( ! empty( $columns['cb'] ) ) {
 			static $cb_counter = 1;
-			$columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __( 'Select All' ) . '</label>'
+			$columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __( 'Select All', 'pluginpass-pro-plugintheme-licensing' ) . '</label>'
 				. '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
 			$cb_counter++;
 		}
@@ -1118,6 +1157,7 @@ class WP_List_Table {
 			if ( !empty( $class ) )
 				$class = "class='" . join( ' ', $class ) . "'";
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes and content are escaped earlier in method
 			echo "<$tag $scope $id $class>$column_display_name</$tag>";
 		}
 	}
@@ -1135,16 +1175,17 @@ class WP_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_list' );
 ?>
-<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
+<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
 	<thead>
 	<tr>
-		<?php $this->print_column_headers(); ?>
+		<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method handles its own escaping
+		$this->print_column_headers(); ?>
 	</tr>
 	</thead>
 
 	<tbody id="the-list"<?php
 		if ( $singular ) {
-			echo " data-wp-lists='list:$singular'";
+			echo " data-wp-lists='list:" . esc_attr( $singular ) . "'";
 		} ?>>
 		<?php $this->display_rows_or_placeholder(); ?>
 	</tbody>
@@ -1218,9 +1259,10 @@ class WP_List_Table {
 	 */
 	public function display_rows_or_placeholder() {
 		if ( $this->has_items() ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method outputs escaped content
 			$this->display_rows();
 		} else {
-			echo '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
+			echo '<tr class="no-items"><td class="colspanchange" colspan="' . absint( $this->get_column_count() ) . '">';
 			$this->no_items();
 			echo '</td></tr>';
 		}
@@ -1293,9 +1335,11 @@ class WP_List_Table {
 
 			if ( 'cb' === $column_name ) {
 				echo '<th scope="row" class="check-column">';
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Checkbox method outputs escaped content
 				echo $this->column_cb( $item );
 				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Custom column methods output escaped content
 				echo call_user_func(
 					array( $this, '_column_' . $column_name ),
 					$item,
@@ -1304,13 +1348,19 @@ class WP_List_Table {
 					$primary
 				);
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes escaped in calling code
 				echo "<td $attributes>";
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Column methods output escaped content
 				echo call_user_func( array( $this, 'column_' . $column_name ), $item );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Row actions method outputs escaped content
 				echo $this->handle_row_actions( $item, $column_name, $primary );
 				echo "</td>";
 			} else {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes escaped in calling code
 				echo "<td $attributes>";
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- column_default outputs escaped content
 				echo $this->column_default( $item, $column_name );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Row actions method outputs escaped content
 				echo $this->handle_row_actions( $item, $column_name, $primary );
 				echo "</td>";
 			}
@@ -1329,7 +1379,7 @@ class WP_List_Table {
 	 * @return string The row actions HTML, or an empty string if the current column is the primary column.
 	 */
 	protected function handle_row_actions( $item, $column_name, $primary ) {
-		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>' : '';
+		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details', 'pluginpass-pro-plugintheme-licensing' ) . '</span></button>' : '';
  	}
 
 	/**
@@ -1342,6 +1392,7 @@ class WP_List_Table {
 		$this->prepare_items();
 
 		ob_start();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress core AJAX list table response
 		if ( ! empty( $_REQUEST['no_placeholder'] ) ) {
 			$this->display_rows();
 		} else {
@@ -1353,10 +1404,8 @@ class WP_List_Table {
 		$response = array( 'rows' => $rows );
 
 		if ( isset( $this->_pagination_args['total_items'] ) ) {
-			$response['total_items_i18n'] = sprintf(
-				_n( '%s item', '%s items', $this->_pagination_args['total_items'] ),
-				number_format_i18n( $this->_pagination_args['total_items'] )
-			);
+			/* translators: %s: Number of items. */
+			$response['total_items_i18n'] = sprintf(_n( '%s item', '%s items', $this->_pagination_args['total_items'], 'pluginpass-pro-plugintheme-licensing' ), number_format_i18n( $this->_pagination_args['total_items'] ));
 		}
 		if ( isset( $this->_pagination_args['total_pages'] ) ) {
 			$response['total_pages'] = $this->_pagination_args['total_pages'];

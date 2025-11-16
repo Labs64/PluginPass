@@ -27,7 +27,7 @@ See [SECURITY.md](SECURITY.md) for details and [UPGRADE.md](UPGRADE.md) for upgr
 
 ## Requirements
 
-- WordPress 6.0 or newer
+- WordPress 6.8 or newer
 - PHP 8.2+ (8.3 recommended)
 - Composer 2.6+ (for local development)
 

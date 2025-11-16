@@ -29,6 +29,7 @@ trait PluginPass_Plugable {
 
 		$plugins_table = Activator::get_plugins_table_name();
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table insert operation
 		$result = $wpdb->insert( $plugins_table, $data );
 
 		if ( $result === false ) {
@@ -52,6 +53,7 @@ trait PluginPass_Plugable {
 
 		$plugins_table = Activator::get_plugins_table_name();
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table update operation
 		$result = $wpdb->update( $plugins_table, $data, $where );
 
 		if ( $result === false ) {
@@ -73,6 +75,7 @@ trait PluginPass_Plugable {
 
 		$plugins_table = Activator::get_plugins_table_name();
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table delete operation
 		return $wpdb->delete( $plugins_table, $where );
 	}
 
@@ -84,6 +87,8 @@ trait PluginPass_Plugable {
 
 		if ( empty( $where ) ) {
 			$query = "SELECT * FROM $plugins_table";
+			// Table name is sanitized via get_plugins_table_name() using $wpdb->prefix
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$results = $wpdb->get_results( $query );
 		} else {
 			// Build safe WHERE clause using wpdb->prepare()
@@ -103,14 +108,14 @@ trait PluginPass_Plugable {
 					// Use equality for single values
 					$where_clauses[] = is_numeric( $value ) ? "$safe_key = %d" : "$safe_key = %s";
 					$where_values[] = $value;
-				}
 			}
-			
-			$query = "SELECT * FROM $plugins_table WHERE " . implode( ' AND ', $where_clauses );
-			$results = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
 		}
-
-		$plugins = [];
+		
+		$query = "SELECT * FROM $plugins_table WHERE " . implode( ' AND ', $where_clauses );
+		// Table name sanitized via get_plugins_table_name(), WHERE clause uses wpdb->prepare() below
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$results = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
+	}		$plugins = [];
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as &$plugin ) {

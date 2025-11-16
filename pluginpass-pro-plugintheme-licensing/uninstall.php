@@ -34,7 +34,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 global $wpdb;
 
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local variable, not global
 $plugin_table = \PluginPass\Inc\Core\Activator::get_plugins_table_name();
-
-$wpdb->query( "DROP TABLE $plugin_table; " );
+// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Uninstall cleanup, table name from get_plugins_table_name()
+$wpdb->query( "DROP TABLE IF EXISTS $plugin_table" );
 

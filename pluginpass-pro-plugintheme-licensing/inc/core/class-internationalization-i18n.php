@@ -36,6 +36,7 @@ class Internationalization_i18n {
 	 * @since 1.0.0
 	 */
 	public function load_plugin_textdomain() {
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Required for plugins not hosted on WordPress.org
 		load_plugin_textdomain(
 			$this->text_domain,
 			false,

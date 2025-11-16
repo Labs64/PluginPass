@@ -1,10 +1,10 @@
-=== PluginPass - WordPress PRO Plugin/Theme Licensing (Public Alpha) ===
+=== PluginPass - WordPress PRO Plugin/Theme Licensing ===
 Author URI: https://netlicensing.io
 Plugin URI: https://github.com/Labs64/PluginPass
 Contributors: labs64
 Donate link: https://www.paypal.me/labs64
-Tags: license manager, software license, license, activation, validation, license key, monetization, NetLicensing
-Requires at least: 6.0
+Tags: plugin licensing, license manager, activation, monetization, subscription
+Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.2
 Stable tag: 0.10.0
@@ -37,10 +37,6 @@ Payment Gateways supported in the plugin:
 * Stripe
 * MyCommerce
 * FastSpring
-* Braintree - *PLANNED*
-* Authorize.net - *PLANNED*
-* 2Checkout - *PLANNED*
-* SOFORT Banking - *PLANNED*
 
 = Quickstart =
 
@@ -64,7 +60,7 @@ Please refer PluginPass [Wiki page](https://github.com/Labs64/PluginPass/wiki) f
 
 = Minimum Requirements =
 
-* WordPress 6.0 or greater
+* WordPress 6.8 or greater
 * PHP version 8.2 or greater (PHP 8.3+ recommended)
 
 == Upgrade Notice ==

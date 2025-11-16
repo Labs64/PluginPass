@@ -8,12 +8,12 @@
  * that starts the plugin.
  *
  * @link              https://netlicensing.io
- * @since 1.0.0
+ * @since             1.0.0
  * @package           Pluginpass
  *
  * @wordpress-plugin
- * Plugin Name:       PluginPass
- * Plugin URI:        https://github.com/Labs64/PluginPass
+ * Plugin Name:       PluginPass - WordPress PRO Plugin/Theme Licensing
+ * Plugin URI:        https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/
  * Description:       Easily control the use and monetize your WordPress plugins and themes using PluginPass - a WordPress License Manager backed by Labs64 NetLicensing.
  * Version:           0.10.0
  * Author:            Labs64
@@ -22,7 +22,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       pluginpass-pro-plugintheme-licensing
  * Domain Path:       /languages
- * Requires at least: 6.0
+ * Requires at least: 6.8
  * Tested up to:      6.8
  * Requires PHP:      8.2
  */

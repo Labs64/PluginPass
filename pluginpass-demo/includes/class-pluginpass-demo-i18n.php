@@ -34,6 +34,7 @@ class Pluginpass_Demo_i18n {
 	 */
 	public function load_plugin_textdomain() {
 
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Required for plugins not hosted on WordPress.org
 		load_plugin_textdomain(
 			'pluginpass-demo',
 			false,

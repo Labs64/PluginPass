@@ -32,7 +32,7 @@ class Activator {
 
 		if ( version_compare( PHP_VERSION, NS\PLUGIN_MIN_PHP_VERSION, '<' ) ) {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
-			wp_die( 'This plugin requires a minmum PHP Version of ' . NS\PLUGIN_MIN_PHP_VERSION );
+			wp_die( 'This plugin requires a minmum PHP Version of ' . esc_html( NS\PLUGIN_MIN_PHP_VERSION ) );
 		}
 
 		// create plugin database tables
@@ -57,6 +57,8 @@ class Activator {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
+		// Check if unique index exists - SHOW INDEX cannot use prepare() for table names
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$indexes           = $wpdb->get_results( "SHOW INDEX FROM $plugins_table" );
 		$number_index_name = 'pluginpass_pl_number';
 
@@ -69,6 +71,8 @@ class Activator {
 		}
 
 		if ( ! $is_unique_number_exists ) {
+			// CREATE INDEX cannot use prepare() for table/index names - sanitized via get_plugins_table_name()
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$wpdb->query("CREATE UNIQUE INDEX $number_index_name ON $plugins_table (product_number)");
 		}
 

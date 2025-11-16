@@ -48,7 +48,7 @@ class Pluginpass_Demo_Settings {
 	public function pluginpass_demo_options_page() {
 		add_settings_section(
 			'general_settings_section',                        // ID used to identify this section and with which to register options
-			__( 'Plugin Options', 'pluginpass-demo-plugin' ),                // Title to be displayed on the administration page
+			__( 'Plugin Options', 'pluginpass-demo' ),                // Title to be displayed on the administration page
 			[ $this, 'general_options_callback' ],        // Callback used to render the description of the section
 			'pluginpass_demo_display_options'                        // Page on which to add this section of options
 		);
@@ -62,7 +62,7 @@ class Pluginpass_Demo_Settings {
         <!-- Create a header in the default WordPress 'wrap' container -->
         <div class="wrap">
 
-            <h2><?php _e( 'PluginPass Demo Options', 'pluginpass-demo-plugin' ); ?></h2>
+            <h2><?php esc_html_e( 'PluginPass Demo Options', 'pluginpass-demo' ); ?></h2>
 			<?php settings_errors(); ?>
 
 			<?php
@@ -123,7 +123,7 @@ class Pluginpass_Demo_Settings {
                         <label for='api_key'>API Key:</label>
                     </th>
                     <td>
-                        <input id='api_key' type='text' name='api_key' value='<?php print $api_key ?>'
+                        <input id='api_key' type='text' name='api_key' value='<?php echo esc_attr( $api_key ); ?>'
                                class='regular-text' required>
                         <p class='description'>
                             PluginPass uses the NetLicensing services to validate plugins/themes. You need to create an <a
@@ -138,7 +138,7 @@ class Pluginpass_Demo_Settings {
                     </th>
                     <td>
                         <input id='product_number' type='text' name='product_number'
-                               value='<?php print $product_number ?>'
+                               value='<?php echo esc_attr( $product_number ); ?>'
                                class='regular-text' required>
                         <p class='description'>
                             Provide NetLicensing "Product Number". Detailed configuration details can be found <a
@@ -152,7 +152,7 @@ class Pluginpass_Demo_Settings {
                     </th>
                     <td>
                         <input id='product_module_number' type='text' name='product_module_number'
-                               value='<?php print $product_module_number ?>' class='regular-text' required>
+                               value='<?php echo esc_attr( $product_module_number ); ?>' class='regular-text' required>
                         <p class='description'>
                           Provide NetLicensing "Module Number" to be verified. Detailed configuration details can be found <a
                                   target='_blank' href='https://github.com/Labs64/PluginPass/wiki/Set-up-NetLicensing'>here</a>.
@@ -164,9 +164,9 @@ class Pluginpass_Demo_Settings {
                     <td>
                         <select id="plugin_folder" name="plugin_folder">
 							<?php foreach ( $plugins as $key => $plugin ): ?>
-                                <option <?php if ( $key === $plugin_folder ): ?> selected <?php endif; ?>
-                                        value="<?php print $key; ?>">
-									<?php print $plugin['Name']; ?>
+                                <option <?php if ( $key === $plugin_folder ): ?> selected <?php endif; ?>>
+                                        value="<?php echo esc_attr( $key ); ?>">
+									<?php echo esc_html( $plugin['Name'] ); ?>
                                 </option>
 							<?php endforeach; ?>
                         </select>
@@ -205,10 +205,18 @@ class Pluginpass_Demo_Settings {
 
 	protected function show_notice( $message, $type = 'success', $dismiss = true ) {
 		$is_dismissible = $dismiss ? 'is-dismissible' : '';
+		$allowed_html = array(
+			'a' => array(
+				'href' => array(),
+				'target' => array(),
+				'class' => array(),
+			),
+			'br' => array(),
+		);
 
-		echo "<div class=\"notice notice-$type $is_dismissible\">
-                <p>$message</p>
-             </div>";
+		echo '<div class="notice notice-' . esc_attr( $type ) . ' ' . esc_attr( $is_dismissible ) . '">' . "\n";
+		echo '<p>' . wp_kses( $message, $allowed_html ) . '</p>' . "\n";
+		echo '</div>';
 	}
 
 
@@ -217,26 +225,27 @@ class Pluginpass_Demo_Settings {
 		// check if pluginpass is installed and active
 		$this->install_and_activate_pluginpass_as_dependency();
 
-		$api_key = ! empty( $_GET['api_key'] )
-			? $_GET['api_key']
+		$api_key = ! empty( $_GET['api_key'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Demo settings page without nonce for GET parameters
+			? sanitize_text_field( wp_unslash( $_GET['api_key'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			: get_option( 'pluginpass_api_key', '' );
 
-		$product_number = ! empty( $_GET['product_number'] )
-			? $_GET['product_number']
+		$product_number = ! empty( $_GET['product_number'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Demo settings page without nonce for GET parameters
+			? sanitize_text_field( wp_unslash( $_GET['product_number'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			: get_option( 'pluginpass_product_number', '' );
 
-		$product_module_number = ! empty( $_GET['product_module_number'] )
-			? $_GET['product_module_number']
+		$product_module_number = ! empty( $_GET['product_module_number'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Demo settings page without nonce for GET parameters
+			? sanitize_text_field( wp_unslash( $_GET['product_module_number'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			: get_option( 'pluginpass_product_module_number', '' );
 
-		$plugin_folder = ! empty( $_GET['plugin_folder'] )
-			? $_GET['plugin_folder']
+		$plugin_folder = ! empty( $_GET['plugin_folder'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Demo settings page without nonce for GET parameters
+			? sanitize_text_field( wp_unslash( $_GET['plugin_folder'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			: get_option( 'pluginpass_plugin_folder', '' );
 
-		$has_consent = ! empty( $_GET['has_consent'] )
-			? $_GET['has_consent']
+		$has_consent = ! empty( $_GET['has_consent'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Demo settings page without nonce for GET parameters
+			? (bool) sanitize_text_field( wp_unslash( $_GET['has_consent'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			: false;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Demo settings page without nonce for GET parameters
 		if ( ! empty( $_GET['submit'] ) ) {
 			add_option( 'pluginpass_api_key', $api_key );
 			add_option( 'pluginpass_product_number', $product_number );
@@ -258,12 +267,13 @@ class Pluginpass_Demo_Settings {
 					$this->show_notice( "Module $product_module_number is valid", 'success' );
 				} else {
 					$shop_url = $guard->get_shop_url();
-					$this->show_notice( "Module $product_module_number is not invalid. Renew or acquire license <a target='_blank' href='$shop_url'>here</a>.", 'warning' );
-				}
+				$this->show_notice( "Module $product_module_number is not invalid. Renew or acquire license <a target='_blank' href='$shop_url'>here</a>.", 'warning' );
+			}
 
-				$result = print_r( $guard->validation_result(), true );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Debug output for demo purposes
+			$result = print_r( $guard->validation_result(), true );
 
-				$this->show_notice( "Validation result: $result", 'success' );
+			$this->show_notice( "Validation result: $result", 'success' );
 			} catch ( \PluginPass\Inc\Exceptions\Consent_Missing_Exception $consent_missing_exception ) {
 				$this->show_notice( 'User consent must be available to process personal data!', 'error' );
 			} catch ( Exception $exception ) {
