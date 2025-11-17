@@ -1,0 +1,13 @@
+version: 2
+
+updates:
+  - package-ecosystem: "composer"
+    directory: "/pluginpass-pro-plugintheme-licensing"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
