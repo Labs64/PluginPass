@@ -70,22 +70,24 @@ register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deact
  *
  * @since 1.0.0
  */
-class PluginPass {
-	static $init;
+if ( ! class_exists( __NAMESPACE__ . '\\PluginPass' ) ) {
+	class PluginPass {
+		static $init;
 
-	/**
-	 * Loads the plugin
-	 *
-	 * @access    public
-	 */
-	public static function init() {
+		/**
+		 * Loads the plugin
+		 *
+		 * @access    public
+		 */
+		public static function init() {
 
-		if ( null == self::$init ) {
-			self::$init = new Init();
-			self::$init->run();
+			if ( null == self::$init ) {
+				self::$init = new Init();
+				self::$init->run();
+			}
+
+			return self::$init;
 		}
-
-		return self::$init;
 	}
 }
 
@@ -100,8 +102,10 @@ class PluginPass {
  * can interact with the plugin's hooks contained within.
  *
  */
-function pluginpass_init() {
-	return PluginPass::init();
+if ( ! function_exists( __NAMESPACE__ . '\\pluginpass_init' ) ) {
+	function pluginpass_init() {
+		return PluginPass::init();
+	}
 }
 
 // Check the minimum required PHP version and run the plugin.

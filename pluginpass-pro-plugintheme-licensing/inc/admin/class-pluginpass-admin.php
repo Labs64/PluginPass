@@ -94,10 +94,10 @@ class Pluginpass_Admin {
 	 */
 	public function add_plugin_admin_menu() {
 		$page_hook = add_options_page(
-			__( 'PluginPass', 'pluginpass-pro-plugintheme-licensing' ), //page title
-			__( 'PluginPass', 'pluginpass-pro-plugintheme-licensing' ), //menu title
-			'manage_options', //capability
-			$this->plugin_name, //menu_slug,
+			__( 'PluginPass', 'pluginpass-pro-plugintheme-licensing' ), // page title
+			__( 'PluginPass', 'pluginpass-pro-plugintheme-licensing' ), // menu title
+			'manage_options', // capability
+			$this->plugin_name, // menu_slug,
 			array( $this, 'load_pluginpass_table' )
 		);
 
@@ -115,11 +115,11 @@ class Pluginpass_Admin {
 	*  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
 	*/
 	public function add_plugin_action_links( $links ) {
-		$links[] = '<a href="https://github.com/Labs64/PluginPass/wiki" target="_blank">Docs</a>';
-	   $settings_link = array(
-	      '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __( 'Settings', 'pluginpass-pro-plugintheme-licensing' ) . '</a>',
-	   );
-	   return array_merge(  $settings_link, $links );
+		$links[]       = '<a href="https://github.com/Labs64/PluginPass/wiki" target="_blank">Docs</a>';
+		$settings_link = array(
+			'<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __( 'Settings', 'pluginpass-pro-plugintheme-licensing' ) . '</a>',
+		);
+		return array_merge( $settings_link, $links );
 	}
 
 	/**
@@ -134,13 +134,13 @@ class Pluginpass_Admin {
 		$arguments = array(
 			'label'   => __( 'Number of items per page:', 'pluginpass-pro-plugintheme-licensing' ),
 			'default' => 5,
-			'option'  => 'plugins_per_page'
+			'option'  => 'plugins_per_page',
 		);
 
 		add_screen_option( 'per_page', $arguments );
 
 		// instantiate the Plugins List Table
-		$this->pluginpass_table = new Pluginpass_Table( $this->plugin_text_domain );
+		$this->pluginpass_table = new PluginPass_Table( $this->plugin_text_domain );
 	}
 
 	/*
@@ -155,6 +155,6 @@ class Pluginpass_Admin {
 		$this->pluginpass_table->prepare_items();
 
 		// render the List Table
-		include_once( 'views/partials-pluginpass-display.php' );
+		include_once 'views/partials-pluginpass-display.php';
 	}
 }

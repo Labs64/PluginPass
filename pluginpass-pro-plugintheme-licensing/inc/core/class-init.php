@@ -3,8 +3,8 @@
 namespace PluginPass\Inc\Core;
 
 use PluginPass as NS;
-use PluginPass\Inc\Admin as Admin;
-use PluginPass\Inc\Frontend as Frontend;
+use PluginPass\Inc\Admin;
+use PluginPass\Inc\Frontend;
 
 /**
  * The core plugin class.
@@ -120,17 +120,17 @@ class Init {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		//Add a top-level admin menu for our plugin
+		// Add a top-level admin menu for our plugin
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 
 		// Add an action link pointing to the options page.
 		$plugin_basename = $this->plugin_basename . '/' . $this->plugin_name . '.php';
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_plugin_action_links' );
 
-		//when a form is submitted to admin-post.php
+		// when a form is submitted to admin-post.php
 		$this->loader->add_action( 'admin_post_pluginpass_form_response', $plugin_admin, 'the_form_response' );
 
-		//when a form is submitted to admin-ajax.php
+		// when a form is submitted to admin-ajax.php
 		$this->loader->add_action( 'wp_ajax_pluginpass_form_response', $plugin_admin, 'the_form_response' );
 	}
 

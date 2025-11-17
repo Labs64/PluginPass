@@ -35,17 +35,17 @@ class PluginPass_Guard {
 			throw new \Exception( 'Plugin path "' . esc_html( $plugin_folder ) . '" not found!' );
 		}
 
-		$this->plugin = $this->get_plugin( [ 'product_number' => $product_number ] );
+		$this->plugin = $this->get_plugin( array( 'product_number' => $product_number ) );
 
-		$data = [
+		$data = array(
 			'product_number' => $product_number,
 			'plugin_folder'  => $plugin_folder,
 			'api_key'        => $api_key,
-		];
+		);
 
 		$this->plugin = ( ! $this->plugin )
 			? $this->create_plugin( $data )
-			: $this->update_plugin( $data, [ 'product_number' => $product_number ] );
+			: $this->update_plugin( $data, array( 'product_number' => $product_number ) );
 
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 		NetLicensingService::getInstance()->curl()->setUserAgent( 'NetLicensing/PHP/' . NS\PLUGIN_NAME . ' ' . PHP_VERSION . '/' . NS\PLUGIN_VERSION . ' (https://netlicensing.io)' . '; ' . $user_agent );
@@ -57,9 +57,9 @@ class PluginPass_Guard {
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function set_consent( ) {
-		if (empty( $this->plugin->consented_at ) ) {
-			$this->plugin = $this->update_plugin( [ 'consented_at' => gmdate( DATE_ATOM ) ], [ 'ID' => $this->plugin->ID ] );
+	public function set_consent() {
+		if ( empty( $this->plugin->consented_at ) ) {
+			$this->plugin = $this->update_plugin( array( 'consented_at' => gmdate( DATE_ATOM ) ), array( 'ID' => $this->plugin->ID ) );
 		}
 
 		return $this;
@@ -75,7 +75,7 @@ class PluginPass_Guard {
 	}
 
 	/**
-	 * Validate plugin or theme module/feature for the current wordpress instance.
+	 * Validate plugin or theme module/feature for the current WordPress instance.
 	 *
 	 * @param string $module The plugin module to be checked.
 	 *
@@ -91,21 +91,21 @@ class PluginPass_Guard {
 		}
 
 		if ( $this->is_validation_expired() ) {
-			/** @var  $result ValidationResults */
+			/** @var \NetLicensing\ValidationResults $result */
 			$result = self::restValidate( $this->plugin->api_key, $this->plugin->product_number );
 
-			/** @var  $ttl \DateTime */
+			/** @var \DateTime $ttl */
 			$ttl               = $result->getTtl();
 			$expires_ttl_at    = $ttl->format( \DateTime::ATOM );
 			$validation_result = json_encode( $result->getValidations() );
 
-			$data = [
+			$data = array(
 				'expires_ttl_at'    => $expires_ttl_at,
 				'validated_at'      => gmdate( DATE_ATOM ),
 				'validation_result' => $validation_result,
-			];
+			);
 
-			$this->plugin = $this->update_plugin( $data, [ 'product_number' => $this->plugin->product_number ] );
+			$this->plugin = $this->update_plugin( $data, array( 'product_number' => $this->plugin->product_number ) );
 		}
 
 		if ( ! $this->plugin->validation_result || ! PluginPass_Dot::has( $this->plugin->validation_result, $module ) ) {
@@ -152,7 +152,6 @@ class PluginPass_Guard {
 	 * @throws NS\Inc\Exceptions\Consent_Missing_Exception
 	 * @since 1.0.0
 	 * @access   public
-	 *
 	 */
 	public function open_shop( $successUrl = '', $successUrlTitle = '', $cancelUrl = '', $cancelUrlTitle = '' ) {
 		if ( ! $this->has_consent() ) {
@@ -161,7 +160,7 @@ class PluginPass_Guard {
 
 		// Validate and sanitize URLs to prevent open redirect and SSRF
 		$successUrl = $this->validate_redirect_url( $successUrl );
-		$cancelUrl = $this->validate_redirect_url( $cancelUrl );
+		$cancelUrl  = $this->validate_redirect_url( $cancelUrl );
 
 		$shopToken = $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle );
 
@@ -196,7 +195,7 @@ class PluginPass_Guard {
 
 		// Validate and sanitize URLs to prevent open redirect and SSRF
 		$successUrl = $this->validate_redirect_url( $successUrl );
-		$cancelUrl = $this->validate_redirect_url( $cancelUrl );
+		$cancelUrl  = $this->validate_redirect_url( $cancelUrl );
 
 		return $this->get_shop_token( $successUrl, $successUrlTitle, $cancelUrl, $cancelUrlTitle )->getShopURL();
 	}
@@ -270,7 +269,7 @@ class PluginPass_Guard {
 		}
 
 		// Sanitize and parse the URL
-		$url = esc_url_raw( $url );
+		$url        = esc_url_raw( $url );
 		$parsed_url = wp_parse_url( $url );
 
 		if ( ! $parsed_url || ! isset( $parsed_url['scheme'] ) || ! isset( $parsed_url['host'] ) ) {
@@ -303,5 +302,4 @@ class PluginPass_Guard {
 	protected function is_validation_expired() {
 		return ( ! $this->plugin->expires_ttl_at || strtotime( $this->plugin->expires_ttl_at ) <= time() );
 	}
-
 }

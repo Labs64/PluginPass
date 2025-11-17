@@ -8,6 +8,7 @@ use PluginPass as NS;
  * Fired during plugin activation
  *
  * This class defines all code necessary to run during the plugin's activation.
+ *
  * @link       https://www.labs64.com
  * @since 1.0.0
  *
@@ -28,7 +29,7 @@ class Activator {
 	 * @since 1.0.0
 	 */
 	public static function activate() {
-	// Check PHP Version and deactivate & die if it doesn't meet minimum requirements.
+		// Check PHP Version and deactivate & die if it doesn't meet minimum requirements.
 
 		if ( version_compare( PHP_VERSION, NS\PLUGIN_MIN_PHP_VERSION, '<' ) ) {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
@@ -53,8 +54,7 @@ class Activator {
 			PRIMARY KEY (ID)
 		) $charset_collate;";
 
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
 		// Check if unique index exists - SHOW INDEX cannot use prepare() for table names
@@ -73,8 +73,7 @@ class Activator {
 		if ( ! $is_unique_number_exists ) {
 			// CREATE INDEX cannot use prepare() for table/index names - sanitized via get_plugins_table_name()
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter
-			$wpdb->query("CREATE UNIQUE INDEX $number_index_name ON $plugins_table (product_number)");
+			$wpdb->query( "CREATE UNIQUE INDEX $number_index_name ON $plugins_table (product_number)" );
 		}
-
 	}
 }

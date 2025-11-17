@@ -36,7 +36,7 @@ trait PluginPass_Plugable {
 			throw new \Exception( 'Failed to save plugin validation data.' );
 		}
 
-		return $this->get_plugin( [ 'ID' => $wpdb->insert_id ] );
+		return $this->get_plugin( array( 'ID' => $wpdb->insert_id ) );
 	}
 
 	/**
@@ -80,7 +80,7 @@ trait PluginPass_Plugable {
 	}
 
 
-	protected function get_plugins( array $where = [] ) {
+	protected function get_plugins( array $where = array() ) {
 		global $wpdb;
 
 		$plugins_table = Activator::get_plugins_table_name();
@@ -92,30 +92,30 @@ trait PluginPass_Plugable {
 			$results = $wpdb->get_results( $query );
 		} else {
 			// Build safe WHERE clause using wpdb->prepare()
-			$where_clauses = [];
-			$where_values = [];
-			
+			$where_clauses = array();
+			$where_values  = array();
+
 			foreach ( $where as $key => $value ) {
 				// Sanitize column name to prevent SQL injection
 				$safe_key = preg_replace( '/[^a-zA-Z0-9_]/', '', $key );
-				
+
 				if ( is_array( $value ) ) {
 					// Use IN clause for arrays
-					$placeholders = implode( ', ', array_fill( 0, count( $value ), is_numeric( reset( $value ) ) ? '%d' : '%s' ) );
+					$placeholders    = implode( ', ', array_fill( 0, count( $value ), is_numeric( reset( $value ) ) ? '%d' : '%s' ) );
 					$where_clauses[] = "$safe_key IN ($placeholders)";
-					$where_values = array_merge( $where_values, array_values( $value ) );
+					$where_values    = array_merge( $where_values, array_values( $value ) );
 				} else {
 					// Use equality for single values
 					$where_clauses[] = is_numeric( $value ) ? "$safe_key = %d" : "$safe_key = %s";
-					$where_values[] = $value;
+					$where_values[]  = $value;
+				}
 			}
-		}
-		
-		$query = "SELECT * FROM $plugins_table WHERE " . implode( ' AND ', $where_clauses );
-		// Table name sanitized via get_plugins_table_name(), WHERE clause uses wpdb->prepare() below
+
+			$query = "SELECT * FROM $plugins_table WHERE " . implode( ' AND ', $where_clauses );
+			// Table name sanitized via get_plugins_table_name(), WHERE clause uses wpdb->prepare() below
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
-		$results = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
-	}		$plugins = [];
+			$results = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
+		}       $plugins = array();
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as &$plugin ) {

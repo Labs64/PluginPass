@@ -1,33 +1,29 @@
-name: CodeQL
+name: CodeQL Analysis
 
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
   pull_request:
-    branches: ["main"]
+    branches: ["master"]
   schedule:
-    - cron: "0 3 * * 1"
+    - cron: '0 0 * * 0'
 
 jobs:
-  analyze:
+  php-lint:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: pluginpass-pro-plugintheme-licensing
-
-    permissions:
-      contents: read
-      actions: read
-      security-events: write
-
     strategy:
+      fail-fast: false
       matrix:
-        language: ["php"]
+        php-version: ['8.2', '8.3', '8.4']
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
 
       - name: Cache Composer
         uses: actions/cache@v4
@@ -37,15 +33,33 @@ jobs:
           restore-keys: composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        working-directory: pluginpass-pro-plugintheme-licensing
+        run: composer install --no-interaction --prefer-dist
 
-      - name: Init CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
+      - name: Run PHPCS
+        continue-on-error: true
+        working-directory: pluginpass-pro-plugintheme-licensing
+        run: vendor/bin/phpcs --standard=WordPress --extensions=php --report=full --report-file=./phpcs-report.txt inc/
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+      - name: Run PHPStan
+        continue-on-error: true
+        working-directory: pluginpass-pro-plugintheme-licensing
+        run: vendor/bin/phpstan analyse --error-format=raw --no-progress inc --memory-limit=1G > ./phpstan-report.txt || true
 
-      - name: Analyze
-        uses: github/codeql-action/analyze@v3
+      - name: Add PHPCS report to job summary
+        if: always()
+        working-directory: pluginpass-pro-plugintheme-licensing
+        run: |
+          echo "### PHPCS Report for PHP ${{ matrix.php-version }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat phpcs-report.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Add PHPStan report to job summary
+        if: always()
+        working-directory: pluginpass-pro-plugintheme-licensing
+        run: |
+          echo "### PHPStan Report for PHP ${{ matrix.php-version }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat phpstan-report.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

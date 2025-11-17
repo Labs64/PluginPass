@@ -6,7 +6,7 @@ class PluginPass_Dot {
 	/**
 	 * Returns whether or not the $key exists within $arr
 	 *
-	 * @param array $array
+	 * @param array  $array
 	 * @param string $key
 	 *
 	 * @return bool
@@ -35,8 +35,8 @@ class PluginPass_Dot {
 	/**
 	 * Returns he value of $key if found in $arr or $default
 	 *
-	 * @param array $array
-	 * @param string $key
+	 * @param array      $array
+	 * @param string     $key
 	 * @param null|mixed $default
 	 *
 	 * @return mixed

@@ -19,10 +19,16 @@
  * https://code.tutsplus.com/tutorials/using-namespaces-and-autoloading-in-wordpress-plugins-4--cms-27342
  */
 
-spl_autoload_register( function( $class_name ) {
+spl_autoload_register(
+	function ( $class_name ) {
 
 		// If the specified $class_name does not include our namespace, duck out.
 		if ( false === strpos( $class_name, 'PluginPass' ) ) {
+				return;
+		}
+
+		// Skip the main PluginPass class as it's defined in the main plugin file.
+		if ( 'PluginPass\\PluginPass' === $class_name ) {
 			return;
 		}
 
@@ -41,18 +47,18 @@ spl_autoload_register( function( $class_name ) {
 			if ( count( $file_parts ) - 1 === $i ) {
 
 				/*
-				 If 'interface' is contained in the parts of the file name, then
-				 * define the $file_name differently so that it's properly loaded.
-				 * Otherwise, just set the $file_name equal to that of the class
-				 * filename structure.
-				 */
+					If 'interface' is contained in the parts of the file name, then
+					* define the $file_name differently so that it's properly loaded.
+					* Otherwise, just set the $file_name equal to that of the class
+					* filename structure.
+					*/
 				if ( strpos( strtolower( $file_parts[ count( $file_parts ) - 1 ] ), 'interface' ) ) {
 
-					// Grab the name of the interface from its qualified name.
-					$interface_name = explode( '_', $file_parts[ count( $file_parts ) - 1 ] );
-					$interface_name = $interface_name[0];
+						// Grab the name of the interface from its qualified name.
+						$interface_name = explode( '_', $file_parts[ count( $file_parts ) - 1 ] );
+						$interface_name = $interface_name[0];
 
-					$file_name = "interface-$interface_name.php";
+						$file_name = "interface-$interface_name.php";
 
 				} else {
 					$file_name = "class-$current.php";
@@ -68,7 +74,7 @@ spl_autoload_register( function( $class_name ) {
 
 		// If the file exists in the specified path, then include it.
 		if ( file_exists( $filepath ) ) {
-			include_once( $filepath );
+				include_once $filepath;
 		} else {
 			wp_die(
 				esc_html( 'The file attempting to be loaded at ' . $filepath . ' does not exist.' )
