@@ -1,6 +1,6 @@
 # PluginPass - WordPress PRO Plugin/Theme Licensing
 
-<p align="center"><img src="https://raw.githubusercontent.com/Labs64/PluginPass/master/assets/banner-1544x500.png" alt="PluginPass - WordPress PRO Plugin/Theme Licensing"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/Labs64/PluginPass/refs/heads/master/pluginpass-pro-plugintheme-licensing/assets/banner-1544x500.png" alt="PluginPass - WordPress PRO Plugin/Theme Licensing"></p>
 
 ---
 
