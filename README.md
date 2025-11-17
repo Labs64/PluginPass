@@ -12,19 +12,6 @@
 
 ---
 
-## 🔒 Security Update (November 2025)
-
-**Version 0.10.0** includes critical security fixes. If you're using an older version, please update immediately.
-
-- Fixed critical SQL injection vulnerability
-- Fixed multiple XSS vulnerabilities  
-- Enhanced authorization checks
-- Improved input validation and output escaping
-
-See [SECURITY.md](SECURITY.md) for details and [UPGRADE.md](UPGRADE.md) for upgrade instructions.
-
----
-
 ## Requirements
 
 - WordPress 6.8 or newer

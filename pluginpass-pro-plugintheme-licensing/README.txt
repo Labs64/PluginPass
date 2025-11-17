@@ -7,7 +7,7 @@ Tags: plugin licensing, license manager, activation, monetization, subscription
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.2
-Stable tag: 0.10.0
+Stable tag: 0.10.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,11 +62,6 @@ Please refer PluginPass [Wiki page](https://github.com/Labs64/PluginPass/wiki) f
 
 * WordPress 6.8 or greater
 * PHP version 8.2 or greater (PHP 8.3+ recommended)
-
-== Upgrade Notice ==
-
-= 0.10.0 =
-CRITICAL SECURITY UPDATE: This version fixes multiple security vulnerabilities including SQL injection and XSS. Please update immediately. See SECURITY.md for details.
 
 == Frequently Asked Questions ==
 
@@ -125,21 +120,22 @@ If an individual revokes consent, the controller will be responsible for initiat
 
 == Changelog ==
 
-= 0.10.0 =
-* SECURITY: Fixed critical SQL injection vulnerability in database queries
-* SECURITY: Fixed Open Redirect and SSRF vulnerability in shop URL handling
-* SECURITY: Fixed multiple XSS vulnerabilities in admin interface
-* SECURITY: Added proper authorization checks for admin operations
-* SECURITY: Sanitized HTTP headers to prevent injection attacks
-* Fix: Enhanced input validation and output escaping throughout
-* Fix: Replaced raw header() redirects with wp_safe_redirect()
-* Fix: Added URL whitelist validation for external redirects
-* Update: Lowered PHP requirement from 8.3 to 7.4 for better compatibility
-* Update: Tested and certified compatibility with WordPress 6.7
-* Update: Updated NetLicensing client library to 2.5.0
-* Added: SECURITY.md with security policy
-* Added: UPGRADE.md with detailed upgrade instructions
-* Added: CHANGELOG.md for better version tracking
+= 0.10.1 =
+* This release reactivates the PluginPass plugin with major security updates and modernization. The update addresses critical security vulnerabilities and ensures compatibility with modern WordPress and PHP versions.
+* Fixed critical vulnerabilities including SQL injection, XSS, and open redirect/SSRF
+* Proper escaping, input sanitization, nonce verification, and SQL safety implemented
+* PHP requirement updated from 5.6 → 8.2, WordPress from 4.9.7 → 6.x
+* Text domain changed from 'pluginpass' to 'pluginpass-pro-plugintheme-licensing' for correct internationalization
+* Resolved 433+ PHPCS issues and reduced PHPStan errors from 292 → 25
+* Enhanced output escaping using esc_html(), esc_attr(), esc_url(), wp_kses_post()
+* Improved input sanitization with sanitize_text_field(), sanitize_key(), wp_unslash()
+* Replaced date() with gmdate() for timezone safety
+* Fixed plugin activation errors with existence checks
+* Updated demo plugin with the same security fixes
+* Added WordPress coding standards compliance
+* Configured PHPStan with WordPress stubs for better static analysis
+* Improved CI/CD pipelines with automated quality checks
+* Enhanced code documentation and type hints
 
 = 0.9.10 =
 * Update: Plugin description and banner

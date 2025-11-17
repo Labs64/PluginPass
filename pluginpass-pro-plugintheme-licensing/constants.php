@@ -11,7 +11,7 @@ if ( ! defined( __NAMESPACE__ . '\NS' ) ) {
 
 if ( ! defined( NS . 'PLUGIN_VERSION' ) ) {
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound -- Constants are namespace-prefixed via NS
-	define( NS . 'PLUGIN_VERSION', '0.10.0' );
+	define( NS . 'PLUGIN_VERSION', '0.10.1' );
 }
 
 if ( ! defined( NS . 'PLUGIN_NAME' ) ) {
