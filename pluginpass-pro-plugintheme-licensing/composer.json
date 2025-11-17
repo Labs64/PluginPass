@@ -1,0 +1,79 @@
+{
+    "name": "labs64/pluginpass",
+    "description": "PluginPass - WordPress PRO Plugin/Theme Licensing",
+    "type": "wordpress-plugin",
+    "keywords": [
+        "wordpress",
+        "wordpress-plugin",
+        "wordpress-theme",
+        "wordpress-development",
+        "licensing",
+        "license-management",
+        "license",
+        "licensing-as-a-service",
+        "netlicensing",
+        "api",
+        "license-key",
+        "activation",
+        "validation",
+        "digital-downloads",
+        "purchase-validator",
+        "monetization",
+        "laas",
+        "monetize"
+    ],
+    "homepage": "https://wordpress.org/plugins/pluginpass-pro-plugintheme-licensing/",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Labs64 NetLicensing",
+            "email": "netlicensing@labs64.com",
+            "homepage": "https://netlicensing.io"
+        }
+    ],
+    "support": {
+        "email": "netlicensing@labs64.com",
+        "issues": "https://github.com/Labs64/PluginPass/issues",
+        "source": "https://github.com/Labs64/PluginPass",
+        "docs": "https://github.com/Labs64/PluginPass/wiki"
+    },
+
+    "require": {
+        "php": ">=8.2",
+        "labs64/netlicensingclient-php": "^2.6.0"
+    },
+
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^4.0",
+        "wp-coding-standards/wpcs": "^3.2",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/extension-installer": "^1.3",
+        "vimeo/psalm": "^5.22",
+        "psalm/plugin-wordpress": "^3.0"
+    },
+
+    "autoload": {
+        "files": [
+            "index.php",
+            "pluginpass.php",
+            "constants.php"
+        ],
+        "psr-4": {
+            "PluginPass\\": "inc/"
+        }
+    },
+
+    "autoload-dev": {
+        "psr-4": {
+            "PluginPass\\Tests\\": "tests/"
+        }
+    },
+
+    "scripts": {
+        "lint": "phpcs --standard=WordPress pluginpass-pro-plugintheme-licensing",
+        "phpstan": "phpstan analyse inc --memory-limit=1G",
+        "psalm": "psalm --show-info=true"
+    },
+
+    "prefer-stable": true
+}

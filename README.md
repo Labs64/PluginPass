@@ -1,4 +1,4 @@
-# PluginPass - WordPress PRO Plugin/Theme Licensing (Public Alpha)
+# PluginPass - WordPress PRO Plugin/Theme Licensing
 
 <p align="center"><img src="https://raw.githubusercontent.com/Labs64/PluginPass/master/assets/banner-1544x500.png" alt="PluginPass - WordPress PRO Plugin/Theme Licensing"></p>
 
@@ -10,6 +10,26 @@
 [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/pluginpass-pro-plugintheme-licensing.svg?style=flat-square)](https://wordpress.org/plugins/PluginPass/)
 [![License](https://img.shields.io/badge/license-GPLv2-red.svg?style=flat-square)](https://opensource.org/licenses/GPL-2.0)
 
+---
+
+## 🔒 Security Update (November 2025)
+
+**Version 0.10.0** includes critical security fixes. If you're using an older version, please update immediately.
+
+- Fixed critical SQL injection vulnerability
+- Fixed multiple XSS vulnerabilities  
+- Enhanced authorization checks
+- Improved input validation and output escaping
+
+See [SECURITY.md](SECURITY.md) for details and [UPGRADE.md](UPGRADE.md) for upgrade instructions.
+
+---
+
+## Requirements
+
+- WordPress 6.8 or newer
+- PHP 8.2+ (8.3 recommended)
+- Composer 2.6+ (for local development)
 
 ---
 
@@ -37,12 +57,6 @@ Payment gateways supported in the plugin:
 
 * PayPal
 * Stripe
-* MyCommerce
-* FastSpring
-* Braintree - *PLANNED*
-* Authorize.net - *PLANNED*
-* 2Checkout - *PLANNED*
-* SOFORT Banking - *PLANNED*
 
 ## PluginPass Overview
 
