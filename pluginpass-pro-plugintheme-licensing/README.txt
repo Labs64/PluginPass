@@ -7,7 +7,7 @@ Tags: plugin licensing, license manager, activation, monetization, subscription
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.2
-Stable tag: 0.10.1
+Stable tag: 0.10.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,9 @@ If an individual revokes consent, the controller will be responsible for initiat
 2. PluginPass Settings
 
 == Changelog ==
+
+= 0.10.2 =
+* Fix: Harden file read operations against path traversal attacks
 
 = 0.10.1 =
 * This release reactivates the PluginPass plugin with major security updates and modernization. The update addresses critical security vulnerabilities and ensures compatibility with modern WordPress and PHP versions.

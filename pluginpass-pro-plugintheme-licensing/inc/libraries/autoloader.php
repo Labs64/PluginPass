@@ -23,12 +23,17 @@ spl_autoload_register(
 	function ( $class_name ) {
 
 		// If the specified $class_name does not include our namespace, duck out.
-		if ( false === strpos( $class_name, 'PluginPass' ) ) {
+		if ( 0 !== strpos( $class_name, 'PluginPass\\' ) ) {
 				return;
 		}
 
 		// Skip the main PluginPass class as it's defined in the main plugin file.
 		if ( 'PluginPass\\PluginPass' === $class_name ) {
+			return;
+		}
+
+		// Security: Prevent directory traversal attacks.
+		if ( strpos( $class_name, '..' ) !== false || strpos( $class_name, "\0" ) !== false ) {
 			return;
 		}
 
@@ -69,12 +74,17 @@ spl_autoload_register(
 		}
 
 		// Now build a path to the file using mapping to the file location.
-		$filepath  = trailingslashit( untrailingslashit( plugin_dir_path( dirname( __DIR__ ) ) ) . $namespace );
+		$base_dir  = plugin_dir_path( dirname( __DIR__ ) );
+		$filepath  = trailingslashit( untrailingslashit( $base_dir ) . $namespace );
 		$filepath .= $file_name;
 
-		// If the file exists in the specified path, then include it.
-		if ( file_exists( $filepath ) ) {
-				include_once $filepath;
+		// Security: Validate the resolved file path is within the plugin directory.
+		$real_base = realpath( $base_dir );
+		$real_file = realpath( $filepath );
+
+		// If the file exists and is within our plugin directory, include it.
+		if ( $real_file && $real_base && 0 === strpos( $real_file, $real_base ) && file_exists( $real_file ) ) {
+				include_once $real_file;
 		} else {
 			wp_die(
 				esc_html( 'The file attempting to be loaded at ' . $filepath . ' does not exist.' )
