@@ -190,3 +190,8 @@ If an individual revokes consent, the controller will be responsible for initiat
 
 = 0.9.0 =
 * New: PluginPass is born! This release is only available via download at https://github.com/Labs64/PluginPass
+
+== Frequently Asked Questions ==
+= Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the PluginPass plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/f22afb52-2e43-4e7b-a07d-eaacf73651c5). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
