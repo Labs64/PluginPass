@@ -7,81 +7,33 @@
     "content-hash": "31b22632e4490b8f1b086dfb8613e670",
     "packages": [
         {
-            "name": "fr3d/xmldsig",
-            "version": "v3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Maks3w/xmldsig.git",
-                "reference": "e42980d022cede00f7ff34285e85db23cd89882a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Maks3w/xmldsig/zipball/e42980d022cede00f7ff34285e85db23cd89882a",
-                "reference": "e42980d022cede00f7ff34285e85db23cd89882a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-soap": "*",
-                "php": ">= 7.0",
-                "robrichards/xmlseclibs": "^3.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "phpunit/phpunit": "^6.0",
-                "sensiolabs/security-checker": "^5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "FR3D\\XmlDSig\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "description": "Tool for easy management of XML Signatures (http://www.w3.org/TR/xmldsig-core/)",
-            "homepage": "https://github.com/Maks3w/xmldsig/",
-            "keywords": [
-                "security",
-                "signature",
-                "soap",
-                "xml",
-                "xmldsig"
-            ],
-            "support": {
-                "issues": "https://github.com/Maks3w/xmldsig/issues",
-                "source": "https://github.com/Maks3w/xmldsig/tree/master"
-            },
-            "time": "2018-10-09T19:54:34+00:00"
-        },
-        {
             "name": "labs64/netlicensingclient-php",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Labs64/NetLicensingClient-php.git",
-                "reference": "329cb76720d18695299c20e11453cc5c0f62a5e7"
+                "reference": "73ab3e9bb45c4492af408b5f3ee7ad7b86a9ccef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Labs64/NetLicensingClient-php/zipball/329cb76720d18695299c20e11453cc5c0f62a5e7",
-                "reference": "329cb76720d18695299c20e11453cc5c0f62a5e7",
+                "url": "https://api.github.com/repos/Labs64/NetLicensingClient-php/zipball/73ab3e9bb45c4492af408b5f3ee7ad7b86a9ccef",
+                "reference": "73ab3e9bb45c4492af408b5f3ee7ad7b86a9ccef",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-json": "*",
+                "ext-libxml": "*",
                 "ext-mbstring": "*",
-                "fr3d/xmldsig": "^3.0",
+                "ext-openssl": "*",
                 "php": ">=8.2",
-                "php-curl-class/php-curl-class": "^11.0.0 || ^12.0.0"
+                "php-curl-class/php-curl-class": "^11.0.0 || ^12.0.0 || ^13.0.0",
+                "robrichards/xmlseclibs": "^3.1.5"
             },
             "require-dev": {
                 "fakerphp/faker": "^1.23",
-                "phpunit/phpunit": "^10.5",
-                "wp-cli/php-cli-tools": "^0.12"
+                "phpunit/phpunit": "^11.5.50",
+                "wp-cli/php-cli-tools": "^0.12 || ^0.13"
             },
             "type": "library",
             "autoload": {
@@ -127,20 +79,20 @@
                 "source": "https://github.com/Labs64/NetLicensingClient-php",
                 "wiki": "https://netlicensing.io/wiki/"
             },
-            "time": "2025-11-15T09:25:16+00:00"
+            "time": "2026-10-23T10:25:14+00:00"
         },
         {
             "name": "php-curl-class/php-curl-class",
-            "version": "12.0.1",
+            "version": "13.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-curl-class/php-curl-class.git",
-                "reference": "6484fdde6b1f64ffe77ac6a4c088c7e08e18a7f8"
+                "reference": "b92dab46aa56e25e377db48d9c7cca1fcbc34d10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/6484fdde6b1f64ffe77ac6a4c088c7e08e18a7f8",
-                "reference": "6484fdde6b1f64ffe77ac6a4c088c7e08e18a7f8",
+                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/b92dab46aa56e25e377db48d9c7cca1fcbc34d10",
+                "reference": "b92dab46aa56e25e377db48d9c7cca1fcbc34d10",
                 "shasum": ""
             },
             "require": {
@@ -205,9 +157,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-curl-class/php-curl-class/issues",
-                "source": "https://github.com/php-curl-class/php-curl-class/tree/12.0.1"
+                "source": "https://github.com/php-curl-class/php-curl-class/tree/13.0.1"
             },
-            "time": "2025-11-03T18:05:05+00:00"
+            "time": "2026-10-21T01:41:03+00:00"
         },
         {
             "name": "robrichards/xmlseclibs",
